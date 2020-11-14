@@ -231,9 +231,13 @@ function selectIntent($email,$intent, $confidence,$text,$resp,$parameters,$city)
                 $answer = getCityWeather($parameters,$text);
                 break;
 
-             case 'Meteo':
+            case 'Meteo':
                //$city = "Bari";
                 $answer = getWeather($city,$parameters,$text);
+                break;
+
+            case 'MusicPreference':
+                $answer = insertPreferenceMusic($parameters,$text,$email);
                 break;
 
             case 'attiva debug':

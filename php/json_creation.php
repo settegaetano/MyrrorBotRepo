@@ -10,6 +10,7 @@
     $cookie_name = "myrror";
 	$cookie_email = $email;
 	setcookie($cookie_name, $cookie_email, time() + (86400 * 30), "/"); // 86400 = 1 day
+	setcookie('token',$token, time() + (86400 * 30), "/")
 
     $credenziali = "email=" . $email . "&password=" . $password;
 

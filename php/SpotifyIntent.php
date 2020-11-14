@@ -877,3 +877,11 @@ function getMusicCustom($resp,$parameters,$text,$email){
 	return $answer;
 
 }
+
+function insertPreferenceMusic($parameters,$text,$email){
+
+	if (isset($_COOKIE['token'])) {
+		return $_COOKIE['token'];
+	}
+
+}

@@ -1,0 +1,2 @@
+Utilizzo in localhost con xampp
+Andare nel file js/script.js e seguire i comment

@@ -1,98 +1,50 @@
-$(".messages").animate({ scrollTop: $(document).height() }, "fast");
-var timestamp;
-var imageURL;
-var email;
-var flagcitta= false;
+  $(".messages").animate({ scrollTop: $(document).height() }, "fast");
+  var timestamp;
+  var imageURL;
+  var email = 'cat@cat.it';
+  var flagcitta= false;
 
-function getEmail() {
-	return email;
-}
+  function getEmail() {
+  	//return email;  //commentare se usato in localhost
+    return 'cat@cat.it'; //usato in localhost
+  }
 
-function getTimestampStart(){
-  return timestampStart;
-}
+  function getTimestampStart(){
+    return timestampStart;
+  }
 
   $("#profile-img").click(function() {
   	$("#status-options").toggleClass("active");
   });
-/*
-  $(".expand-button").click(function() {
-    $("#profile").toggleClass("expanded");
-  	$("#contacts").toggleClass("expanded");
-  });
-
-  $("#status-options ul li").click(function() {
-  	$("#profile-img").removeClass();
-  	$("#status-online").removeClass("active");
-  	$("#status-away").removeClass("active");
-  	$("#status-busy").removeClass("active");
-  	$("#status-offline").removeClass("active");
-  	$(this).addClass("active");
-  	
-  	if($("#status-online").hasClass("active")) {
-  		$("#profile-img").addClass("online");
-  	} else if ($("#status-away").hasClass("active")) {
-  		$("#profile-img").addClass("away");
-  	} else if ($("#status-busy").hasClass("active")) {
-  		$("#profile-img").addClass("busy");
-  	} else if ($("#status-offline").hasClass("active")) {
-  		$("#profile-img").addClass("offline");
-  	} else {
-  		$("#profile-img").removeClass();
-  	};
-  	
-  	$("#status-options").removeClass("active");
-  });
 
 
-   $("#toggle").unbind().click(function(){
-
-var text = $(this).html();
-if (text == "Disattiva modalità di debug"){
-    $(this).css("background-color","red");
-  $(this).html("Attiva modalità di debug");
-  debug = false;
-}else{
-  $(this).css("background-color","green");
-  $(this).html("Disattiva modalità di debug");
-  debug = true;
-}
-//$(this).attr("disabled", true);
-
-});
-   */
-
+   //Logout
    $("#logout").click(function(){
      $.cookie("myrror"+getEmail(), null, { path: '/' });
      $.removeCookie('myrror'+getEmail(), { path: '/' });
-
-  
    });
 
+
+  //Nuovo messaggio da inviare
   function newMessage() {
   	message = $(".message-input input").val();
   	if($.trim(message) == '') {
   		return false;
   	}else{
-  		 timestamp = new Date().getUTCMilliseconds();
-      
+  		timestamp = new Date().getUTCMilliseconds();
       timestampStart = Date.now();//Utente invia il messaggio
+    	$('<li class="sent"><img src="'+imageURL+'" alt="" /><p id="quest'+timestamp+'"">' + message + '</p></li>').appendTo($('.messages ul'));
+    	$('.message-input input').val(null);
+    	$('.contact.active .preview').html('<span>Tu: </span>' + message);
 
-  	$('<li class="sent"><img src="'+imageURL+'" alt="" /><p id="quest'+timestamp+'"">' + message + '</p></li>').appendTo($('.messages ul'));
-  	$('.message-input input').val(null);
-  	$('.contact.active .preview').html('<span>Tu: </span>' + message);
+      //Scroll verso il basso quando viene inviata una domanda
+    	$(".messages").animate({ scrollTop:( $(document).height() * 100)}, "fast");
 
-    //Scroll verso il basso quando viene inviata una domanda
-  	$(".messages").animate({ scrollTop:( $(document).height() * 100)}, "fast");
-
-    return message;
+      return message;
   	}
-
-   
   };
 
    
-
 
   $(document).on("click", "button.submit", function () {
    //all the action
@@ -105,7 +57,8 @@ if (text == "Disattiva modalità di debug"){
        return true;
     }
    
-});
+  });
+
 
   //Quando viene premuto 'invio' sulla tastiera
   $(window).on('keydown', function(e) {
@@ -116,6 +69,7 @@ if (text == "Disattiva modalità di debug"){
       return false;
     }
   });
+
 
  function send(query) {
       var text = query;
@@ -130,65 +84,71 @@ if (text == "Disattiva modalità di debug"){
       var name = "myrror";
 
       var value = "; " + document.cookie;
-if (value.match(/myrror/)) {
-      var parts = value.split("; " + name + "=");   
-      var tempStr = null;
-      while(tempStr == null){
-        tempStr =  parts.pop().split(";").shift();
-        if(tempStr.match(/@/)){
-          //alert(tempStr);
-        }
-      }  
+      
+      if (value.match(/myrror/)) {
+            var parts = value.split("; " + name + "=");   
+            var tempStr = null;
+            while(tempStr == null){
+              tempStr =  parts.pop().split(";").shift();
+              if(tempStr.match(/@/)){
+                //alert(tempStr);
+              }
+            }  
 
-}else{
-  window.location.href = 'index.html';
-}
+      }else{
+        //window.location.href = 'index.html'; //commentare se usato in localhost
+      }
   
-   
-    email = tempStr;
-   
-    if(text.match(/perchè/) || text.match(/spiegami/)){
-         var testo = $("#spiegazione").val();
-          $(".chat").append('<li class="replies"><img src="immagini/chatbot.png" alt="" /><p >'+testo+'</p></li>');
-   
-    }else{
+      //email = tempStr; //commentare se usato in localhost
+      email = 'cat@cat.it'; //usato in localhost
+      tempstr = 'cat@cat.it'; //usato in localhost
+     
+      if(text.match(/perchè/) || text.match(/spiegami/)){
+           var testo = $("#spiegazione").val();
+            $(".chat").append('<li class="replies"><img src="immagini/chatbot.png" alt="" /><p >'+testo+'</p></li>');
+     
+      }else{
        
   
 
-    if (text.match(/cambia/) || text.match(/cambio/) || text.match(/dammi un'altra/) || text.match(/leggi un'altra/) || text.match(/dammene un'altra/)
-      || text.match(/leggine un'altra/) || text.match(/leggi altra news/) || text.match(/altra canzone/) || text.match(/dimmi un'altra/) || text.match(/riproducine un'altra/)
-      || text.match(/cambia video/) || text.match(/fammi vedere un altro/) || text.match(/dammi un altro/) || text.match(/altro video/) || text.match(/altra canzone/) || text.match(/altra news/)) {
+      if (text.match(/cambia/) || text.match(/cambio/) || text.match(/dammi un'altra/) || text.match(/leggi un'altra/) || text.match(/dammene un'altra/)
+        || text.match(/leggine un'altra/) || text.match(/leggi altra news/) || text.match(/altra canzone/) || text.match(/dimmi un'altra/) || text.match(/riproducine un'altra/)
+        || text.match(/cambia video/) || text.match(/fammi vedere un altro/) || text.match(/dammi un altro/) || text.match(/altro video/) || text.match(/altra canzone/) || text.match(/altra news/)) {
 
-      text = $('#contesto').val();
-    }else{
-       if(flagcitta == false){
-        $('#contesto').val(text);
-       }
-      
-    }
-    $.ajax({
-              type: "POST",
-              url: "php/intentDetection.php",
-              data: {testo:text,city:citta,mail:email},
-              success: function(data) {
-                setResponse(data);
-              }
-            });
-    }
+        text = $('#contesto').val();
+      }else{
+         if(flagcitta == false){
+          $('#contesto').val(text);
+         }
+        
+      }
+
+      $.ajax({
+                type: "POST",
+                url: "php/intentDetection.php",
+                data: {testo:text,city:citta,mail:email},
+                success: function(data) {
+                  setResponse(data);
+                }
+              });
+      }
          
   }
 
-function setResponse(val) {
-var string = val;
-      console.log(val);
-    
-      if (/^[\],:{}\s]*$/.test(val.replace(/\\["\\\/bfnrtu]/g, '@').
-replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').
-replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
 
-  //the json is ok
- val = JSON.parse(val);
-    var musicaSpotify = "Ecco qui la tua richiesta!";
+
+
+function setResponse(val) {
+  var string = val;
+  console.log(val);
+    
+  if (/^[\],:{}\s]*$/.test(val.replace(/\\["\\\/bfnrtu]/g, '@').
+    replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').
+    replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
+
+      //the json is ok
+      val = JSON.parse(val);
+      var musicaSpotify = "Ecco qui la tua richiesta!";
       var spiegazione = "";
 
       var canzoneNomeSpotify = "Ecco qui la canzone richiesta!";
@@ -199,7 +159,8 @@ replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
       var canzoniPersonalizzateSpotify = "Ecco qui un brano consigliato che potrebbe piacerti";
       var video = "Ecco qui il video richiesto";
 
-      if (val["intentName"] == "Interessi" || val["intentName"] == "Contatti" || val["intentName"] == "Esercizio fisico" || val["intentName"] == "Personalita") {
+      if (val["intentName"] == "Interessi" || val["intentName"] == "Contatti" || val["intentName"] == "Esercizio fisico" 
+        || val["intentName"] == "Personalita" || val["intentName"] == "MusicPreference") {
        
          $(".chat").append('<li class="replies"><img src="immagini/chatbot.png" alt="" /><p id="par'+timestamp+'">' + val["answer"] + '</p></li>');
 
@@ -222,15 +183,12 @@ replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
         
       }else if(val["intentName"] == "News" ){
 
-
           if (val['answer'] == ""){
               $(".chat").append('<li class="replies"><img src="immagini/chatbot.png" alt="" /><p> sfortunatamente non sono stati trovati articoli a riguardo</p></li>');
          }else{
             if (val['answer']['explain'] != undefined && val['answer']['explain'] != null){
               spiegazione = val['answer']['explain'];
               $("#spiegazione").val(spiegazione);
-             // $(".chat").append('<li class="replies"><img src="immagini/chatbot.png" alt="" /><p id="par'+timestamp+'"> ' + spiegazione + '<br><img style="width: 100%;height: 100%;" src= "'+val['answer']['image']+'"/><a href="'+val['answer']['url']+'">'+val["answer"]['title']+'</a></p></li>');
-
             }
               $(".chat").append('<li class="replies"><img src="immagini/chatbot.png" alt="" /><p id="par'+timestamp+'"><img style="width: 100%;height: 100%;" src= "'+val['answer']['image']+'"/><a id="nw'+timestamp+'" class="news" target="_blank" href="'+val['answer']['url']+'">"'+val["answer"]['title']+'"</a></p></li>');
               $(".chat").append('<input value="false" type="hidden" id= "flagNews'+timestamp+'" >')
@@ -238,11 +196,9 @@ replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
        
       }else if(val["intentName"] == "Video in base alle emozioni" || val["intentName"] == "Ricerca Video"){
 
-
           $(".chat").append('<li class="replies"><img src="immagini/chatbot.png" alt="" /><p id="par'+timestamp+'">' + video + ' &#x1F603; <br>' +'<iframe id="ytplayer" type="text/html" width="260" height="260" src="' + val['answer']['ind'] + '" frameborder="0" allowfullscreen/></iframe></p></li>');
            if (val['answer']['explain'] != undefined && val['answer']['explain'] != null){
                $('#spiegazione').val(val['answer']['explain']);
-         
            }
           
       }else if (val["intentName"] == "meteo binario" ) {
@@ -267,7 +223,6 @@ replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
        
            if( json == ""){
             $(".chat").append('<li class="replies"><img src="immagini/chatbot.png" alt="" /><p >Sfortunatamente non sono disponibili dati riguardanti il periodo indicato</p></li>');
-      
            }else{
               var res = json.split("<br>");
            var str = res[0].split(";");
@@ -315,9 +270,6 @@ replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
               case 'neve':
               imglink = "icon-14.svg";
               break;
-
-
-
             }
 
            $(".chat").append(//'<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>'+
@@ -328,7 +280,6 @@ replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
             '<div class="num">'+Math.trunc( str[2])+'<sup>o</sup>C</div><div class="forecast-icon">'+
             '<img src="immagini/icons/'+imglink+'" alt="" style="width:90px;"> </div></div>'+
             '</div></div></div></div></li>'
-            //+'<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>'
             );
 
            str = null;
@@ -438,28 +389,26 @@ replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
     function welcomeIntent(){
       send("aiuto");
       var value = "; " + document.cookie;
-if (value.match(/myrror/)) {
-    var parts = value.split("; " + name + "=");   
-    var tempStr = null;
-   while(tempStr == null){
-    tempStr =  parts.pop().split(";").shift();
-     if(tempStr.match(/@/)){
-        //alert(tempStr);
-     }
-   }
-
-}else{
-  window.location.href = 'index.html';
-}
-setProfileImg(tempStr);
-setNominativo(tempStr); //Nome per la grafica del sito
       
+      if (value.match(/myrror/)) {
+        var parts = value.split("; " + name + "=");   
+        var tempStr = null;
+        while(tempStr == null){
+          tempStr =  parts.pop().split(";").shift();
+          if(tempStr.match(/@/)){
+              //alert(tempStr);
+          }
+        }
+      }else{
+        //window.location.href = 'index.html'; //commentare se usato in localhost
+      }
       
+      setProfileImg(tempStr);
+      setNominativo(tempStr); //Nome per la grafica del sito 
     }
 
-      function setProfileImg(email){
-    
-          $.ajax({
+    function setProfileImg(email){
+      $.ajax({
         type: "POST",
         url: "php/getProfileImage.php",
         data: {mail:email},
@@ -468,8 +417,7 @@ setNominativo(tempStr); //Nome per la grafica del sito
           $('#profile-img').attr('src',imageURL);
         }
       });
-
-}
+    }
 
     //Funzione usata per impostare il nome dell'utente nella schermata
     function setNominativo(tempStr) {
@@ -485,8 +433,8 @@ setNominativo(tempStr); //Nome per la grafica del sito
     }
 
 
+//Click sulle News
 $("ul.chat").on("click","a.news",function(evnt) {
- 
     var id = $(this).attr("id");
     id = id.substr(2,timestamp.length);
 
@@ -495,6 +443,8 @@ $("ul.chat").on("click","a.news",function(evnt) {
     //return false;
 });
 
+
+//Pulsante logout
 $("#logout").click(function(){
   window.location.href = 'index.html';
 });
