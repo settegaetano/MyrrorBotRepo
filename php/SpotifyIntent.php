@@ -4,6 +4,7 @@ require_once  'Affects.php'; //Per le emozioni
 require_once  'Demographics.php'; //Per l'età
 require_once  'Behaviors.php'; //Per i dati sull'attività fisica
 
+include "url.php";
 include 'connection_spotify.php';
 include 'spotifyFetch.php';
 
@@ -880,8 +881,47 @@ function getMusicCustom($resp,$parameters,$text,$email){
 
 function insertPreferenceMusic($parameters,$text,$email){
 
-	if (isset($_COOKIE['token'])) {
-		return $_COOKIE['token'];
+	if (isset($_COOKIE['x-access-token'] )) {
+		$token =  $_COOKIE['x-access-token']; 
+
+
+
+		 $musicPreference = [
+        'username'=> $email,
+        'song'=> 'one ciu tri',
+        'artist'=> 'Tiziano Ferro',
+        'genre'=> 'pop',
+        'like'=> 1,
+        'timestamp'=> time()
+	    ];
+
+	    $ch = curl_init();
+        $headers =[
+            "x-access-token:".$token
+        ];
+
+        curl_setopt($ch, CURLOPT_URL, "http://".$GLOBALS['url'].
+        	":5000/api/music/");
+
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_HTTPHEADER,$headers);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($musicPreference));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);       
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);   
+
+        curl_exec($ch);
+
+        //Decode JSON
+        //$json_data = json_decode($result2,true);
+
+        curl_close ($ch);
+
+        return "preferenza inserita";
+
+
+
+
 	}
 
 }

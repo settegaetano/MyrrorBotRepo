@@ -1,12 +1,12 @@
   $(".messages").animate({ scrollTop: $(document).height() }, "fast");
   var timestamp;
   var imageURL;
-  var email = 'cat@cat.it';
+  var email ;
   var flagcitta= false;
 
   function getEmail() {
-  	//return email;  //commentare se usato in localhost
-    return 'cat@cat.it'; //usato in localhost
+  	return email;  //commentare se usato in localhost
+    //return 'cat@cat.it'; //usato in localhost
   }
 
   function getTimestampStart(){
@@ -96,12 +96,12 @@
             }  
 
       }else{
-        //window.location.href = 'index.html'; //commentare se usato in localhost
+        window.location.href = 'index.html'; //commentare se usato in localhost
       }
   
-      //email = tempStr; //commentare se usato in localhost
-      email = 'cat@cat.it'; //usato in localhost
-      tempstr = 'cat@cat.it'; //usato in localhost
+      email = tempStr; //commentare se usato in localhost
+      //email = 'cat@cat.it'; //usato in localhost
+      //tempstr = 'cat@cat.it'; //usato in localhost
      
       if(text.match(/perchè/) || text.match(/spiegami/)){
            var testo = $("#spiegazione").val();
@@ -400,7 +400,7 @@ function setResponse(val) {
           }
         }
       }else{
-        //window.location.href = 'index.html'; //commentare se usato in localhost
+        window.location.href = 'index.html'; //commentare se usato in localhost
       }
       
       setProfileImg(tempStr);

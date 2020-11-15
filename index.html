@@ -58,9 +58,11 @@
 					data: "email=" + email + "&password=" + password + "&token=" + token,
 					dataType: "html",
 					success:function(response){
+
 						document.cookie ="myrror="+email;
+						showPage();
 						if (response.localeCompare("ok") == 1) {
-							showPage(); //Termino il caricmaneto e mostro la pagina
+							 //Termino il caricmaneto e mostro la pagina
 						}
 					}
 				});

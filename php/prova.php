@@ -1,11 +1,11 @@
 <?php
 
     //Recupero email e password
-    $email      = 'rakes@gmail.com';
+    $email      = 'rakes@rakes.it';
     $password  = 'rakes';
 
     //Url per inviare la richiesta POST
-    $url = 'http://127.0.0.1:5000/auth/login';
+    $url = 'http://192.168.1.9:5000/auth/login';
 
     //Dati da inviare nella richiesta
     $credenziali = [
@@ -20,7 +20,7 @@
     $ch = curl_init();
     $json_data = null;
 
-    curl_setopt($ch, CURLOPT_URL,"http://127.0.0.1:5000/auth/login");
+    curl_setopt($ch, CURLOPT_URL,$url);
     curl_setopt($ch, CURLOPT_POST, 1);
     curl_setopt($ch, CURLOPT_POSTFIELDS, $fields_string);
 
@@ -30,10 +30,12 @@
 
     $server_output = curl_exec($ch);
     $result = json_decode($server_output);
-    curl_close ($ch);
+    curl_close($ch);
     $out = $result -> auth;
 
     $username = $result -> username;
+    //$token = $result -> token;
+    //echo $token;
     
     $musicPreference = [
         'username'=> $username,
@@ -44,40 +46,53 @@
         'timestamp'=> time()
     ];
 
+    
     // Further processing ...
     if ($out == 1) {
          $token = $result -> token;
-         $ch = curl_init();
+         
+         if(!isset($_COOKIE['x-access-token'])){
+             setcookie('x-access-token', $token, time() + 60 * 60 * 24 * 30, "/", false);
+         }
+        
 
+        $ch = curl_init();
         $headers =[
             "x-access-token:".$token
         ];
 
-        curl_setopt($ch, CURLOPT_URL, "http://127.0.0.1:5000/api/music/");
+        curl_setopt($ch, CURLOPT_URL, "http://192.168.1.9:5000/api/music/");
 
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_HTTPHEADER,$headers);
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($musicPreference));
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);          
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);       
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);   
 
-        $result2 = curl_exec($ch);
+        curl_exec($ch);
 
         //Decode JSON
-        $json_data = json_decode($result2,true);
+        //$json_data = json_decode($result2,true);
 
         curl_close ($ch);
 
-        //Creating file
+        /*Creating file
         $fp = fopen('../prova'. $email . ".json", 'w+');
         fwrite($fp, json_encode($json_data));
         fclose($fp);
+        */
 
-        //return $json_data;
+
+        
+
+        
     }
 
 
-
+    if(isset($_COOKIE['x-access-token'])){
+        echo $_COOKIE['x-access-token']; 
+    }
 
 ?>
 

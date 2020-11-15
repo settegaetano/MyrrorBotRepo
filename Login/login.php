@@ -1,11 +1,12 @@
 <?php
-
+    
+    include "url.php";
     //Recupero email e password
     $email      = trim($_POST['email']);
     $password  = trim($_POST['password']);
 
     //Url per inviare la richiesta POST
-    $url = 'http://90.147.102.243:5000/auth/login';
+    $url = "http://".$GLOBALS['url'].":5000/auth/login";
 
     //Dati da inviare nella richiesta
     $fields = [
@@ -37,7 +38,12 @@
 
     if ($auth == 1) {//Credenziali corrette
         $token = $json -> token;
+        if(!isset($_COOKIE['x-access-token'])){
+             setcookie('x-access-token', $token, time() + 60 * 60 * 24 * 30, "/", false);
+             //echo $_COOKIE['x-access-token'];
+         }
         echo $token;
+
     }else{
         echo ""; //Credenziali errate
     }

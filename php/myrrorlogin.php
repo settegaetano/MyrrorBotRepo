@@ -1,12 +1,14 @@
 <?php
 
+include "url.php";
 
 function queryMyrror($param, $credenziali){
 
 	$ch = curl_init();
     $json_data = null;
 
-	curl_setopt($ch, CURLOPT_URL,"http://90.147.102.243:5000/auth/login");
+	curl_setopt($ch, CURLOPT_URL,"http://".$GLOBALS['url'].
+		":5000/auth/login");
 	curl_setopt($ch, CURLOPT_POST, 1);
 	curl_setopt($ch, CURLOPT_POSTFIELDS, $credenziali);
 
@@ -26,7 +28,7 @@ function queryMyrror($param, $credenziali){
 			"x-access-token:".$token
 		];
 
-		curl_setopt($ch, CURLOPT_URL, "http://90.147.102.243:5000/api/profile/".$result['username'].$param);
+		curl_setopt($ch, CURLOPT_URL, "http://".$GLOBALS['url'].":5000/api/profile/".$result['username'].$param);
 
 		curl_setopt($ch, CURLOPT_POST, 0);
 		curl_setopt($ch, CURLOPT_HEADER, 0);
