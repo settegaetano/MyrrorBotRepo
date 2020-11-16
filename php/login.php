@@ -1,6 +1,6 @@
 <?php
     
-    include "url.php";
+    require_once("url.php");
     //Recupero email e password
     $email      = trim($_POST['email']);
     $password  = trim($_POST['password']);
