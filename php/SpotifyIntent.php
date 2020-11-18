@@ -903,6 +903,22 @@ function insertPreferenceMusic($parameters,$text,$email){
 				$likeMusic = 1; //Preference positive alla canzone
 				$likeArtist = 1; //Preference positive all'artista
 
+				//Controllo se ho il genere
+				if ($genres == null){
+					$genre = null;
+				}else{
+					$genre = checkGenre($genres[0]);
+				}
+
+				$musicPreference = [
+			        'username'=> $email,
+			        'song'=> $parameters['any'],
+			        'artist'=> $parameters['music-artist'],
+			        'genre'=> $genre,
+			        'like'=> 1,
+			        'timestamp'=> time()
+			    ];
+
 			} else if ($parameters['any'] == "" && $parameters['music-artist'] != "") {//conosco solo l'artista
 				
 				/*Input: artist
@@ -911,6 +927,22 @@ function insertPreferenceMusic($parameters,$text,$email){
 				$artist = $parameters['music-artist']; //Artista del brano
 				$genres = getGenreFromArtist($artist); //generi musicali dell'artista
 				$likeArtist = 1; //Preference positive all'artista
+
+				//Controllo se ho il genere
+				if ($genres == null){
+					$genre = null;
+				}else{
+					$genre = checkGenre($genres[0]);
+				}
+
+				$musicPreference = [
+			        'username'=> $email,
+			        'song'=> null,
+			        'artist'=> $parameters['music-artist'],
+			        'genre'=> $genre,
+			        'like'=> 1,
+			        'timestamp'=> time()
+			    ];
 
 			} else if ($parameters['any'] != "" && $parameters['music-artist'] == "") {//conosco solo la canzone
 
@@ -923,9 +955,34 @@ function insertPreferenceMusic($parameters,$text,$email){
 				$likeMusic = 1; //Preference positive alla canzone
 				$likeArtist = 1; //Preference positive all'artista
 
+				//Controllo se ho il genere
+				if ($genres == null){
+					$genre = null;
+				}else{
+					$genre = checkGenre($genres[0]);
+				}
+
+				$musicPreference = [
+			        'username'=> $email,
+			        'song'=> $parameters['any'],
+			        'artist'=> $artist,
+			        'genre'=> $genre,
+			        'like'=> 1,
+			        'timestamp'=> time()
+			    ];
+
 
 			} else if ($parameters['GeneriMusicali'] != ""){//conosco il genere musicale
 				$likeGenre = 1; //Preference positive al genere
+
+				$musicPreference = [
+			        'username'=> $email,
+			        'song'=> null,
+			        'artist'=> null,
+			        'genre'=> $parameters['GeneriMusicali'],
+			        'like'=> 1,
+			        'timestamp'=> time()
+			    ];
 			}
 
 		} elseif ($parameters['PreferenceNegative'] != "") {//Preference NEGATIVE
@@ -938,6 +995,23 @@ function insertPreferenceMusic($parameters,$text,$email){
 				$likeMusic = 0; //Preference negative alla canzone
 				$likeArtist = 0; //Preference negative all'artista
 
+				//Controllo se ho il genere
+				if ($genres == null){
+					$genre = null;
+				}else{
+					$genre = checkGenre($genres[0]);
+				}
+
+				$musicPreference = [
+			        'username'=> $email,
+			        'song'=> $parameters['any'],
+			        'artist'=> $parameters['music-artist'],
+			        'genre'=> $genre,
+			        'like'=> 0,
+			        'timestamp'=> time()
+			    ];
+
+
 			} else if ($parameters['any'] == "" && $parameters['music-artist'] != "") {//conosco solo l'artista
 				
 				/*Input: artist
@@ -946,6 +1020,22 @@ function insertPreferenceMusic($parameters,$text,$email){
 				$artist = $parameters['music-artist']; //Artista del brano
 				$genres = getGenreFromArtist($artist); //generi musicali dell'artista
 				$likeArtist = 0; //Preference negative all'artista
+
+				//Controllo se ho il genere
+				if ($genres == null){
+					$genre = null;
+				}else{
+					$genre = checkGenre($genres[0]);
+				}
+
+				$musicPreference = [
+			        'username'=> $email,
+			        'song'=> null,
+			        'artist'=> $parameters['music-artist'],
+			        'genre'=> $genre,
+			        'like'=> 0,
+			        'timestamp'=> time()
+			    ];
 
 			} else if ($parameters['any'] != "" && $parameters['music-artist'] == "") {//conosco solo la canzone
 
@@ -958,21 +1048,38 @@ function insertPreferenceMusic($parameters,$text,$email){
 				$likeMusic = 0; //Preference negative alla canzone
 				$likeArtist = 0; //Preference negative all'artista
 
+				//Controllo se ho il genere
+				if ($genres == null){
+					$genre = null;
+				}else{
+					$genre = checkGenre($genres[0]);
+				}
+
+				$musicPreference = [
+			        'username'=> $email,
+			        'song'=> $parameters['any'],
+			        'artist'=> $artist,
+			        'genre'=> $genre,
+			        'like'=> 0,
+			        'timestamp'=> time()
+			    ];
+
 
 			} else if ($parameters['GeneriMusicali'] != ""){//conosco il genere musicale
 				$likeGenre = 0; //Preference negative al genere
+
+				$musicPreference = [
+			        'username'=> $email,
+			        'song'=> null,
+			        'artist'=> null,
+			        'genre'=> $parameters['GeneriMusicali'],
+			        'like'=> 0,
+			        'timestamp'=> time()
+			    ];
 			}
 		}
 
 
-		$musicPreference = [
-	        'username'=> $email,
-	        'song'=> 'one ciu tri',
-	        'artist'=> 'Tiziano Ferro',
-	        'genre'=> 'pop',
-	        'like'=> 1,
-	        'timestamp'=> time()
-	    ];
 
 	    $ch = curl_init();
         $headers =[
@@ -1037,7 +1144,7 @@ function getGenreFromArtist($artist){
 		}
 		return $genres;
 	}else{
-		return "Scusami ma non sono riuscito ad identificare l'artista richiesto. Prova a riscriverlo!";
+		return null;
 	}
 }
 
@@ -1065,6 +1172,35 @@ function getArtistFromMusic($music){
 	if ($artist != "") {
 		return $artist;
 	}else{
-		return "Scusami ma non sono riuscito ad identificare l'artista. Prova a riscrivere!";
+		return null;
 	}
 }
+
+//Controlla il genere della canzone in relazione ai generi predefiniti inseriti nel file generi.csv
+function checkGenre($genere){
+
+        // Open the file for reading
+        if (($h = fopen("../fileMyrror/generi.csv", "r")) !== FALSE) {
+          
+            // Convert each line into the local $data variable
+            while (($data = fgetcsv($h, 1000, ",")) !== FALSE) {      
+                
+                // Read the data from a single line
+                $i = 0;
+                $flag = false;
+                while (isset($data[$i])){
+                    if (strpos($genere, $data[$i]) !== false) {
+                        $flag = true;
+                        return $data[0];
+                    }
+                  
+                    $i++;
+                }
+
+            }
+
+            // Close the file
+            fclose($h);
+        }
+    }
+

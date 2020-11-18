@@ -98,7 +98,7 @@ function detect_intent_texts($projectId,$city,$email, $text, $sessionId, $langua
 
 function selectIntent($email,$intent, $confidence,$text,$resp,$parameters,$city){
 
-    if(($confidence > 0.86 ||  str_word_count($text) >= 2) && $confidence >= 0.50){              
+    if(($confidence > 0.86 ||  str_word_count($text) >= 3) && $confidence >= 0.35){              
 
         $answer = null;
 
@@ -238,6 +238,9 @@ function selectIntent($email,$intent, $confidence,$text,$resp,$parameters,$city)
 
             case 'MusicPreference':
                 $answer = insertPreferenceMusic($parameters,$text,$email);
+                break;
+            case 'Preference-music':
+                $answer = $resp;
                 break;
 
             case 'attiva debug':
