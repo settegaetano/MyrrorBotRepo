@@ -243,6 +243,13 @@ function selectIntent($email,$intent, $confidence,$text,$resp,$parameters,$city)
                 $answer = $resp;
                 break;
 
+            case 'AllenamentoPreference':
+                $answer = insertPreferenceTraining($parameters,$text,$email);
+                break;
+            case 'Preference-allenamento':
+                $answer = $resp;
+                break;
+
             case 'attiva debug':
                 $answer = $resp;
                 break;
