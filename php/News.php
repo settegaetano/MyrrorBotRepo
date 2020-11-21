@@ -332,6 +332,7 @@ if($parameters['preferencenegative'] != null){
         curl_setopt($ch, CURLOPT_URL, "http://".$GLOBALS['url'].
         	":5000/api/news/");
 
+
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_HTTPHEADER,$headers);
@@ -346,9 +347,12 @@ if($parameters['preferencenegative'] != null){
 
         curl_close ($ch);
 
+        return "preferenza inserita correttamente";
+
 	}
 
-	return $res;
+		return "non ho capito la tua preferenza,riprova.";
+	
 
 
 }
