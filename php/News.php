@@ -230,6 +230,132 @@ return "Non ho trovato articoli adatti a te e ti ho dato l'ultima notizia  &#x1f
 
 }
 
+
+function checkTopic($topic,$file){
+
+        // Open the file for reading
+     if (($h = fopen("../fileMyrror/".$file, "r")) !== FALSE) {
+          
+
+          		$flag = false;
+                $bestk = 10;
+                $best = "";
+            // Convert each line into the local $data variable
+            while (($data = fgetcsv($h, 1000, ",")) !== FALSE) {      
+                
+                // Read the data from a single line
+                $i = 0;
+        
+                    //echo "<br>";
+                while (isset($data[$i])){
+                    //print($data[$i]."\r\n");
+                    $k = abs(strcmp(strtolower($data[$i]),strtolower($topic)));
+                   if (strpos(strtolower($data[$i]),strtolower($topic)) !== false   || strpos(strtolower($topic),strtolower($data[$i])) !== false)  {
+                    //|| 
+                        $flag = true;
+                        return $data[0];
+                    }else if($k <= 3 && $k<$bestk){
+                        $best = $data[0];
+                        $bestk = $k;
+                    }
+  
+                    $i++;
+                }
+                
+            }
+
+            if($flag == false){
+                return $best;
+            }
+            
+
+            // Close the file
+            fclose($h);
+        }
+}
+
+
+function insertNewsPreference($parameters,$text,$email){
+
+$res = "";
+
+if ($parameters['sports'] != null) {
+	$val = $parameters['sports'];
+	$res = checkTopic($val,'sport.csv');
+
+	
+}elseif ($parameters['health'] != null) {
+	$val = $parameters['health'];
+	$res = checkTopic($val,'health.csv');
+	
+}elseif ($parameters['science'] != null) {
+	$res = 'scienza';
+	
+}elseif ($parameters['entertainment'] != null) {
+	$val = $parameters['entertainment'];
+	$res = checkTopic($val,'entertainment.csv');
+	
+}elseif ($parameters['Technology'] != null) {
+	$res = 'tecnologia';
+	
+}elseif ($parameters['business'] != null) {
+	$val = $parameters['business'];
+	$res = checkTopic($val,'business.csv');
+	
+    
+}else{
+	return "non ho capito la tua preferenza,riprova";
+
+}
+
+if($parameters['preferencenegative'] != null){
+	$like = 0;
+}else{
+	$like = 1;
+}
+
+        $Preference = [
+			        'email'=> $email,
+			        'topic'=> $res,
+			        'like'=> $like,
+			        'timestamp'=> time()
+			    ];
+
+	if (isset($_COOKIE['x-access-token'] )) {
+		$token =  $_COOKIE['x-access-token'];
+
+		$ch = curl_init();
+        $headers =[
+            "x-access-token:".$token
+        ];
+
+        curl_setopt($ch, CURLOPT_URL, "http://".$GLOBALS['url'].
+        	":5000/api/news/");
+
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_HTTPHEADER,$headers);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($Preference));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);       
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);   
+
+        curl_exec($ch);
+
+        //Decode JSON
+        //$json_data = json_decode($result2,true);
+
+        curl_close ($ch);
+
+	}
+
+	return $res;
+
+
+}
+
+
+
+
 /*
 Questo metodo usa googleNewsQuery($link) per ottenere
 l'elenco delle maggiori notizie odierne e ne resituisce la prima

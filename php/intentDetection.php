@@ -242,6 +242,9 @@ function selectIntent($email,$intent, $confidence,$text,$resp,$parameters,$city)
             case 'Preference-music':
                 $answer = $resp;
                 break;
+            case 'NewsPreference':
+                $answer = insertNewsPreference($parameters,$text,$email);
+                break;
 
             case 'AllenamentoPreference':
                 $answer = insertPreferenceTraining($parameters,$text,$email);
