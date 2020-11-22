@@ -18,6 +18,7 @@ include 'CognitiveAspects.php';
 include 'SpotifyIntent.php';
 include 'Video.php';
 include 'News.php';
+include 'Allenamento.php';
 include 'Meteo.php';
 
 $city = "Bari";

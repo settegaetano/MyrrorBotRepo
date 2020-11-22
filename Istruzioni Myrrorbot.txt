@@ -1,2 +1,2 @@
 Utilizzo in localhost con xampp
-Andare nel file js/script.js e seguire i comment
+Andare nel file php/url.php e cambiare l'url in 127.0.0.1
