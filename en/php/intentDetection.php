@@ -101,7 +101,7 @@ function detect_intent_texts($projectId,$city,$email, $text, $sessionId, $langua
 
 function selectIntent($email,$intent, $confidence,$text,$resp,$parameters,$city){
 
-    if(($confidence > 0.86 ||  str_word_count($text) >= 2) && $confidence >= 0.60){              
+    if(($confidence > 0.86 ||  str_word_count($text) >= 3) && $confidence >= 0.35){              
 
         $answer = null;
 
@@ -238,6 +238,23 @@ function selectIntent($email,$intent, $confidence,$text,$resp,$parameters,$city)
                //$city = "Bari";
                 $answer = getWeather($city,$parameters,$text);
                 break;
+            case 'MusicPreference':
+                $answer = insertPreferenceMusic($parameters,$text,$email);
+                break;
+            case 'Preference-music':
+                $answer = $resp;
+                break;
+            case 'NewsPreference':
+                $answer = insertNewsPreference($parameters,$text,$email);
+                break;
+
+            case 'AllenamentoPreference':
+                $answer = insertPreferenceTraining($parameters,$text,$email);
+                break;
+            case 'Preference-allenamento':
+                $answer = $resp;
+                break;
+
 
             case 'attiva debug':
                 $answer = $resp;
