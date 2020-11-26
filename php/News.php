@@ -281,27 +281,30 @@ $res = "";
 
 if ($parameters['sports'] != null) {
 	$val = $parameters['sports'];
-	$res = checkTopic($val,'sport.csv');
+	$res = 'Topic:'.checkTopic($val,'sport.csv');
 
 	
 }elseif ($parameters['health'] != null) {
 	$val = $parameters['health'];
-	$res = checkTopic($val,'health.csv');
+	$res = 'Topic:'.checkTopic($val,'health.csv');
 	
 }elseif ($parameters['science'] != null) {
-	$res = 'scienza';
+	$res = 'Topic:'.'scienza';
 	
 }elseif ($parameters['entertainment'] != null) {
 	$val = $parameters['entertainment'];
 	$res = checkTopic($val,'entertainment.csv');
 	
 }elseif ($parameters['Technology'] != null) {
-	$res = 'tecnologia';
+	$res = 'Topic:'.'tecnologia';
 	
 }elseif ($parameters['business'] != null) {
 	$val = $parameters['business'];
-	$res = checkTopic($val,'business.csv');
+	$res = 'Topic:'.checkTopic($val,'business.csv');
 	
+    
+}elseif($parameters['any'] != null){
+    $res = $parameters['any'];
     
 }else{
 	return "non ho capito la tua preferenza,riprova";

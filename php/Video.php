@@ -6,6 +6,8 @@
     require_once ('google-api-php-client/src/Google_Client.php');
     require_once ('google-api-php-client/src/contrib/Google_YouTubeService.php');
 
+    include "url.php";
+
 
 function explainVideo($email){
 
@@ -175,5 +177,72 @@ function explainVideo($email){
 
 
   }
+
+
+
+  //Inserisci la preferenza dell'utente relativo ai VIDEO
+function insertPreferenceVideo($parameters,$text,$email){
+
+  if (isset($_COOKIE['x-access-token'])) {
+    $token =  $_COOKIE['x-access-token']; 
+
+
+    if ($parameters['preferencepositive'] != "") { //Preference POSITIVE
+
+      if ($parameters['any'] != ""){
+
+        
+        $videoPreference = [
+              'username'=> $email,
+              'title'=> $parameters['any'],
+              'like'=> 1,
+              'timestamp'=> time()
+        ];
+
+      }
+
+
+    } elseif ($parameters['preferencenegative'] != "") {//Preference NEGATIVE
+        
+        if ($parameters['any'] != ""){
+
+          $videoPreference = [
+                'username'=> $email,
+                'title'=> $parameters['any'],
+                'like'=> 0,
+                'timestamp'=> time()
+          ];
+
+      }
+    }
+
+
+      $ch = curl_init();
+        $headers =[
+            "x-access-token:".$token
+        ];
+
+        curl_setopt($ch, CURLOPT_URL, "http://".$GLOBALS['url'].
+          ":5000/api/video/");
+
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_HTTPHEADER,$headers);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($videoPreference));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);       
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);   
+
+        curl_exec($ch);
+
+        //Decode JSON
+        //$json_data = json_decode($result2,true);
+
+        curl_close ($ch);
+
+        return "Preferenza sui video inserita";
+
+  }
+
+}
 
 ?>

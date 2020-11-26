@@ -1077,6 +1077,70 @@ function insertPreferenceMusic($parameters,$text,$email){
 			        'timestamp'=> time()
 			    ];
 			}
+		} elseif ($parameters['GeneriMusicali'] != "") {//Non ho nessuna preference ma l'utente scrive il genere allora metto il like al genere
+
+			$likeGenre = 1; //Preference positive al genere
+
+			$musicPreference = [
+		        'username'=> $email,
+		        'song'=> null,
+		        'artist'=> null,
+		        'genre'=> $parameters['GeneriMusicali'],
+		        'like'=> 1,
+		        'timestamp'=> time()
+		    ];
+		} elseif ($parameters['music-artist'] != "") {//Non ho nessuna preference ma l'utente scrive l'artista allora metto il like all'artista
+
+			/*Input: artist
+			Output: array contenente i generi dell'artista*/
+
+			$artist = $parameters['music-artist']; //Artista del brano
+			$genres = getGenreFromArtist($artist); //generi musicali dell'artista
+			$likeArtist = 1; //Preference positive all'artista
+
+			//Controllo se ho il genere
+			if ($genres == null){
+				$genre = null;
+			}else{
+				$genre = checkGenre($genres[0]);
+			}
+
+			$musicPreference = [
+		        'username'=> $email,
+		        'song'=> null,
+		        'artist'=> $parameters['music-artist'],
+		        'genre'=> $genre,
+		        'like'=> 1,
+		        'timestamp'=> time()
+		    ];
+			
+		} elseif ($parameters['any'] != "") {//Non ho nessuna preference ma l'utente scrive la canzone allora metto il like alla canzone
+
+			/*Input: music
+			Output: artista, generi dell'artista*/
+
+			$brano = $parameters['any']; //Canzone dell'utente
+			$artist = getArtistFromMusic($brano); //artista del brano
+			$genres = getGenreFromArtist($artist); //generi musicali dell'artista
+			$likeMusic = 1; //Preference positive alla canzone
+			$likeArtist = 1; //Preference positive all'artista
+
+			//Controllo se ho il genere
+			if ($genres == null){
+				$genre = null;
+			}else{
+				$genre = checkGenre($genres[0]);
+			}
+
+			$musicPreference = [
+		        'username'=> $email,
+		        'song'=> $parameters['any'],
+		        'artist'=> $artist,
+		        'genre'=> $genre,
+		        'like'=> 1,
+		        'timestamp'=> time()
+		    ];
+			
 		}
 
 

@@ -48,10 +48,11 @@
             //Quando le credenziali sono errate, viene rilasciata un token con 7 spazi vuoti
             if(risposta.length != 7){
                 var token = risposta; //Token utilizzato per effettuare le richieste
-
+				
                 caricaPagina();//Inizia il caricamento della pagina fino a quando i file non sono stati creati
 
                 //Se le credenziali sono corrette, creo i file json per la lettura
+
                 $.ajax({
 					type:'POST',
 					url: 'php/json_creation.php',
@@ -60,9 +61,11 @@
 					success:function(response){
 
 						document.cookie ="myrror="+email;
-						showPage();
+						console.log(response);
+						
 						if (response.localeCompare("ok") == 1) {
 							 //Termino il caricmaneto e mostro la pagina
+							 showPage();
 						}
 					}
 				});

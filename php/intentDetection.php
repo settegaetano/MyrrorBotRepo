@@ -20,6 +20,8 @@ include 'Video.php';
 include 'News.php';
 include 'Allenamento.php';
 include 'Meteo.php';
+include 'Programmatv.php';
+include 'Recipes.php';
 
 $city = "Bari";
 header('Content-type: text/plain; charset=utf-8');
@@ -99,7 +101,7 @@ function detect_intent_texts($projectId,$city,$email, $text, $sessionId, $langua
 
 function selectIntent($email,$intent, $confidence,$text,$resp,$parameters,$city){
 
-    if(($confidence > 0.86 ||  str_word_count($text) >= 3) && $confidence >= 0.35){              
+    if(($confidence > 0.86 ||  str_word_count($text) >= 3) && $confidence >= 0.30){              
 
         $answer = null;
 
@@ -246,12 +248,26 @@ function selectIntent($email,$intent, $confidence,$text,$resp,$parameters,$city)
             case 'NewsPreference':
                 $answer = insertNewsPreference($parameters,$text,$email);
                 break;
-
             case 'AllenamentoPreference':
                 $answer = insertPreferenceTraining($parameters,$text,$email);
                 break;
             case 'Preference-allenamento':
                 $answer = $resp;
+                break;
+            case 'VideoPreference':
+                $answer = insertPreferenceVideo($parameters,$text,$email);
+                break;
+            case 'Preference-video':
+                $answer = $resp;
+                break;
+            case 'ProgrammitvPreference':
+                $answer = insertPreferenceProgrammitv($parameters,$text,$email);
+                break;
+            case 'Preference-programmitv':
+                $answer = $resp;
+                break;
+            case 'RicettePreference':
+                $answer = insertRecipesPreference($parameters,$text,$email);
                 break;
 
             case 'attiva debug':
