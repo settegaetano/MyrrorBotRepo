@@ -270,6 +270,10 @@ function selectIntent($email,$intent, $confidence,$text,$resp,$parameters,$city)
                 $answer = insertRecipesPreference($parameters,$text,$email);
                 break;
 
+            case 'DeletePreference':
+                $answer = getLastInterest($email);
+                break;
+
             case 'attiva debug':
                 $answer = $resp;
                 break;

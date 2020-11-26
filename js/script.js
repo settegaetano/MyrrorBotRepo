@@ -99,9 +99,11 @@
         window.location.href = 'index.html'; //commentare se usato in localhost
       }
   
-      email = tempStr; //commentare se usato in localhost
+      email = decodeURIComponent(tempStr); //commentare se usato in localhost
       //email = 'cat@cat.it'; //usato in localhost
       //tempstr = 'cat@cat.it'; //usato in localhost
+
+      //console.log(email);
      
       if(text.match(/perchè/) || text.match(/spiegami/)){
            var testo = $("#spiegazione").val();
@@ -210,6 +212,22 @@ function setResponse(val) {
         }else{
           $(".chat").append('<li class="replies"><img src="immagini/chatbot.png" alt="" /><p >'+ val['answer']['res']+'</p></li>');
         }
+
+
+      }else if((val["intentName"] == "DeletePreference" ) && val['confidence'] > 0.60 ){
+
+          var sum = '';
+          var i = 1;
+          $.each(val["answer"], function( index, value ){
+              sum += '<li><p id = "pc' + i + '">' + value + '</p><span id = "spc' + i + '" class="close">&times;</span></li>';
+              i++;
+          });
+
+         $(".chat").append(//'<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>'+
+            '<li id="par' + timestamp + '" class="replies"><img src="immagini/chatbot.png" alt="" /><div class="container"><ul>'+
+              sum + 
+            '</ul></div></li>'
+            );
 
 
       }else if((val["intentName"] == "Meteo" ) && val['confidence'] > 0.60 ){
@@ -448,3 +466,29 @@ $("ul.chat").on("click","a.news",function(evnt) {
 $("#logout").click(function(){
   window.location.href = 'index.html';
 });
+
+
+//Click sulle preferenze da rimuovere
+$("ul.chat").on("click","span.close",function(evnt) {
+  
+  var id = $(this).attr("id");
+  id = id.replace('spc','pc');
+  //console.log(id);
+
+  var par = $('#'+id).text();
+  //console.log(par);
+
+  $(this).parent().removeAttr('style').hide(); //Al click sulla 'X' rimuovo la preferenza dal display
+
+  //Passo i dati al php
+  $.ajax({
+        type: "POST",
+        url: "php/removeInterest.php",
+        data:{mail:email,value:par},
+        success: function(data) {
+          console.log(data);
+        }
+      });
+
+});
+
