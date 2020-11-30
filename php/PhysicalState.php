@@ -157,8 +157,8 @@ function getCardio($resp,$parameters,$text,$email){
       }else{
 
         //risposta standard
-        $answer = "Gli ultimi dati in mio possesso sono relativi al ".$arr['date']
-        .". Il battito cardiaco è di ".$arr['heart']." bpm";
+        $answer = $GLOBALS['physical1'].$arr['date']
+        .$GLOBALS['physical2'].$arr['heart']." bpm";
       }
 
     }elseif($yesterday ==  $date1){
@@ -167,12 +167,12 @@ function getCardio($resp,$parameters,$text,$email){
       $arr = cardioToday($parameters,$yesterday,$email);
 
       if($arr['date'] == $yesterday){
-        $answer = "Il tuo battito cardiaco era di ".$arr['heart']." bpm"; //risposta oggi
+        $answer = $GLOBALS['physical3'].$arr['heart']." bpm"; //risposta oggi
       }else{
 
         //risposta standard
-        $answer = "Gli ultimi dati in mio possesso sono relativi al ".$arr['date']
-        .". Il battito cardiaco è di ".$arr['heart']." bpm";
+        $answer = $GLOBALS['physical1'].$arr['date']
+        .$GLOBALS['physical2'].$arr['heart']." bpm";
       }
 
    }elseif(isset($parameters['date-period']['startDate'])){
@@ -183,17 +183,17 @@ function getCardio($resp,$parameters,$text,$email){
     $average = cardioInterval($startDate,$endDate,$email);
 
     if($average != 0){
-      $answer = "In media, il tuo battito cardiaco è di ".$average." bpm.";
+      $answer = $GLOBALS['physical4'].$average." bpm.";
     }else{
       $arr = cardioToday($parameters,"",$email);
-      $answer = "Gli ultimi dati in mio possesso sono relativi al ".$arr['date']
-        ." ed il battito cardiaco era pari a ".$arr['heart']." bpm";
+      $answer = $GLOBALS['physical1'].$arr['date']
+        .$GLOBALS['physical5'].$arr['heart']." bpm";
     }
 
     }else{
        $arr = cardioToday($parameters,"",$email);
-       $answer = "Gli ultimi dati in mio possesso sono relativi al ".$arr['date']
-        ." ed il battito cardiaco era pari a ".$arr['heart']." bpm";
+       $answer = $GLOBALS['physical1'].$arr['date']
+        .$GLOBALS['physical5'].$arr['heart']." bpm";
     }
 
   }elseif (isset($parameters['date-period']['startDate'])) {
@@ -203,19 +203,19 @@ function getCardio($resp,$parameters,$text,$email){
     $endDate =  substr($parameters['date-period']['endDate'],0,10);
     $average = cardioInterval($startDate,$endDate,$email);
     if($average != 0){
-      $answer = "In media, il tuo battito cardiaco è di ".$average." bpm.";
+      $answer = $GLOBALS['physical4'].$average." bpm.";
     }else{
       $arr = cardioToday($parameters,"",$email);
-      $answer = "Gli ultimi dati in mio possesso sono relativi al ".$arr['date']
-        ." ed il battito cardiaco era pari a ".$arr['heart']." bpm";
+      $answer = $GLOBALS['physical1'].$arr['date']
+        .$GLOBALS['physical5'].$arr['heart']." bpm";
     }
 
   }else{
 
    //dati ultimo giorno trovato
      $arr = cardioToday($parameters,"",$email);
-     $answer = "Gli ultimi dati in mio possesso sono relativi al ".$arr['date']
-        ." ed il battito cardiaco era pari a ".$arr['heart']." bpm";
+     $answer = $GLOBALS['physical1'].$arr['date']
+        .$GLOBALS['physical5'].$arr['heart']." bpm";
   }
   return $answer;
 
@@ -253,23 +253,23 @@ function getCardioBinary($resp,$parameters,$text,$email){
       $average = cardioInterval($startDate,$endDate,$email);
 
       if($average == 0){
-        $answer = "Non sono riuscito a recuperare i dati relativi al periodo che mi hai indicato &#x1F62D;"; 
+        $answer = $GLOBALS['physical6']; 
       }else{
-          if(strpos($text, 'buono') || strpos($text, 'buone') || strpos($text, 'bene') || strpos($text, 'ottimo') || strpos($text, 'nella norma') || strpos($text, 'buona')){
+          if(strpos($text, $GLOBALS['physical7']) || strpos($text, $GLOBALS['physical8']) || strpos($text, $GLOBALS['physical9']) || strpos($text, $GLOBALS['physical10']) || strpos($text, $GLOBALS['physical11']) || strpos($text, $GLOBALS['physical12'])){
        
             if($average >= 60 && $average <= 100){
-              $answer = "Si, in media le tue pulsazioni sono nella norma. Infatti ho rilevato ".$average." bpm";
+              $answer = $GLOBALS['physical18'].$average." bpm";
             }else{
-              $answer = "No, in media le tue pulsazioni non sono nella norma. Infatti ho rilevato ".$average." bpm";
+              $answer = $GLOBALS['physical19'].$average." bpm";
             }
 
-          }elseif (strpos($text, 'pessimo') || strpos($text, 'cattivo') || strpos($text, 'cattive') ||
-            strpos($text, 'male ') || strpos($text, 'fuori norma') ) {
+          }elseif (strpos($text, $GLOBALS['physical13']) || strpos($text, $GLOBALS['physical14']) || strpos($text, $GLOBALS['physical15']) ||
+            strpos($text, $GLOBALS['physical16']) || strpos($text, $GLOBALS['physical17']) ) {
         
             if($average >= 60 && $average <= 100){
-             $answer = "No, in media le tue pulsazioni sono nella norma. Infatti ho rilevato ".$average." bpm";
+             $answer = $GLOBALS['physical20'].$average." bpm";
             }else{
-             $answer = "Si, in media le tue pulsazioni non sono nella norma. Infatti ho rilevato ".$average." bpm";
+             $answer = $GLOBALS['physical21'].$average." bpm";
             }
 
           }
@@ -283,44 +283,43 @@ function getCardioBinary($resp,$parameters,$text,$email){
         case $today:
           $arr = cardioToday($parameters,$today,$email);
 
-          if(strpos($text, 'buono') || strpos($text, 'buone') || strpos($text, 'bene') || strpos($text, 'ottimo') 
-            || strpos($text, 'nella norma') || strpos($text, 'buona')){
+          if(strpos($text, $GLOBALS['physical7']) || strpos($text, $GLOBALS['physical8']) || strpos($text, $GLOBALS['physical9']) || strpos($text, $GLOBALS['physical10']) || strpos($text, $GLOBALS['physical11']) || strpos($text, $GLOBALS['physical12'])){
 
             if($arr['date'] == $today){
 
                 if($arr['heart'] >= 60 && $arr['heart'] <= 100)
-                  $answer = "Si, le tue pulsazioni sono nella norma. Infatti ho rilevato ".$arr['heart']." bpm";
+                  $answer = $GLOBALS['physical22'].$arr['heart']." bpm";
                 else
-                   $answer = "No, le tue pulsazioni non sono nella norma. Infatti ho rilevato ".$arr['heart']." bpm";
+                   $answer = $GLOBALS['physical23'].$arr['heart']." bpm";
             }else{
 
                if($arr['heart'] >= 60 && $arr['heart'] <= 100){
-                  $answer = "Gli ultimi dati in mio possesso sono relativi al ".$arr['date'].
-                            ". Le tue pulsazioni erano nella norma, infatti ho rilevato ".$arr['heart']." bpm";
+                  $answer = $GLOBALS['physical1'].$arr['date'].
+                            $GLOBALS['physical24'] .$arr['heart']." bpm";
                }else{
 
-                   $answer = "Gli ultimi dati in mio possesso sono relativi al ".$arr['date'].
-                   ". Le tue pulsazione non erano nella norma, infatti ho rilevato ".$arr['heart']." bpm";
+                   $answer = $GLOBALS['physical1'].$arr['date'].
+                   $GLOBALS['physical25'].$arr['heart']." bpm";
                }
                  
             }
                     
-            }elseif (strpos($text, 'pessimo') || strpos($text, 'cattivo') || strpos($text, 'cattive') ||
-                   strpos($text, 'male ') || strpos($text, 'fuori norma') ) {
+            }elseif (strpos($text, $GLOBALS['physical13']) || strpos($text, $GLOBALS['physical14']) || strpos($text, $GLOBALS['physical15']) ||
+            strpos($text, $GLOBALS['physical16']) || strpos($text, $GLOBALS['physical17'])) {
 
                if($arr['date'] == $today){
                 if($arr['heart'] >= 60 && $arr['heart'] <= 100)
-                  $answer = "No, le tue pulsazioni sono nella norma. Infatti ho rilevato ".$arr['heart']." bpm";
+                  $answer = $GLOBALS['physical26'].$arr['heart']." bpm";
                 else
-                   $answer = "Si, le tue pulsazioni non sono nella norma. Infatti ho rilevato  ".$arr['heart']." bpm";
+                   $answer = $GLOBALS['physical27'].$arr['heart']." bpm";
             }else{
                if($arr['heart'] >= 60 && $arr['heart'] <= 100){
-                  $answer = "Gli ultimi dati in mio possesso sono relativi al ".$arr['date'].
-                            ". Le tue pulsazioni erano nella norma, ovvero ".$arr['heart']." bpm";
+                  $answer = $GLOBALS['physical1'].$arr['date'].
+                            $GLOBALS['physical28'].$arr['heart']." bpm";
                }else{
 
-                   $answer = "Gli ultimi dati in mio possesso sono relativi al ".$arr['date'].
-                   ". Le tue pulsazione non erano nella norma, infatti ho rilevato ".$arr['heart']." bpm";
+                   $answer = $GLOBALS['physical1'].$arr['date'].
+                   $GLOBALS['physical29'].$arr['heart']." bpm";
                }
                  
             }
@@ -331,41 +330,41 @@ function getCardioBinary($resp,$parameters,$text,$email){
         case $yesterday:
         
           $arr = cardioToday($parameters,$yesterday,$email);  
-          if(strpos($text, 'buono') || strpos($text, 'buone') || strpos($text, 'bene') || strpos($text, 'ottimo') || strpos($text, 'nella norma') || strpos($text, 'buona')){
+          if(strpos($text, $GLOBALS['physical7']) || strpos($text, $GLOBALS['physical8']) || strpos($text, $GLOBALS['physical9']) || strpos($text, $GLOBALS['physical10']) || strpos($text, $GLOBALS['physical11']) || strpos($text, $GLOBALS['physical12'])){
 
           if($arr['date'] == $yesterday){
               if($arr['heart'] >= 60 && $arr['heart'] <= 100)
-                $answer = "Si, le tue pulsazioni erano nella norma, infatti ho rilevato ".$arr['heart']." bpm";
+                $answer = $GLOBALS['physical30'].$arr['heart']." bpm";
               else
-                 $answer = "No, le tue pulsazioni non erano nella norma, infatti ho rilevato ".$arr['heart']." bpm";
+                 $answer = $GLOBALS['physical31'].$arr['heart']." bpm";
           }else{
              if($arr['heart'] >= 60 && $arr['heart'] <= 100){
-                $answer = "Gli ultimi dati in mio possesso sono relativi al ".$arr['date'].
-                          ". Le tue pulsazioni erano nella norma, infatti ho rilevato ".$arr['heart']." bpm";
+                $answer = $GLOBALS['physical1'].$arr['date'].
+                          $GLOBALS['physical24'].$arr['heart']." bpm";
              }else{
 
-                 $answer = "Gli ultimi dati in mio possesso sono relativi al ".$arr['date'].
-                 ". Le tue pulsazione non erano nella norma, infatti ho rilevato ".$arr['heart']." bpm";
+                 $answer = $GLOBALS['physical1'].$arr['date'].
+                 $GLOBALS['physical25'].$arr['heart']." bpm";
              }
                
           }
                   
-          }elseif (strpos($text, 'pessimo') || strpos($text, 'cattivo') || strpos($text, 'cattive') ||
-                 strpos($text, 'male ') || strpos($text, 'fuori norma') ) {
+          }elseif (strpos($text, $GLOBALS['physical13']) || strpos($text, $GLOBALS['physical14']) || strpos($text, $GLOBALS['physical15']) ||
+            strpos($text, $GLOBALS['physical16']) || strpos($text, $GLOBALS['physical17'])) {
 
              if($arr['date'] == $yesterday){
               if($arr['heart'] >= 60 && $arr['heart'] <= 100)
-                $answer = "No, le tue pulsazioni erano nella norma, infatti ho rilevato  ".$arr['heart']." bpm";
+                $answer = $GLOBALS['physical32'].$arr['heart']." bpm";
               else
-                 $answer = "Si, le tue pulsazioni non erano nella norma, infatti ho rilevato  ".$arr['heart']." bpm";
+                 $answer = $GLOBALS['physical33'].$arr['heart']." bpm";
           }else{
              if($arr['heart'] >= 60 && $arr['heart'] <= 100){
-                $answer = "Gli ultimi dati in mio possesso sono relativi al ".$arr['date'].
-                          ". Le tue pulsazioni erano nella norma, infatti ho rilevato  ".$arr['heart']." bpm";
+                $answer = $GLOBALS['physical1'].$arr['date'].
+                          $GLOBALS['physical24'].$arr['heart']." bpm";
              }else{
 
-                 $answer = "Gli ultimi dati in mio possesso sono relativi al ".$arr['date'].
-                 ". Le tue pulsazione non erano nella norma, infatti ho rilevato  ".$arr['heart']." bpm";
+                 $answer = $GLOBALS['physical1'].$arr['date'].
+                 $GLOBALS['physical25'].$arr['heart']." bpm";
              }
                
           }
@@ -378,53 +377,53 @@ function getCardioBinary($resp,$parameters,$text,$email){
              //ultima data disponibile
              $arr = cardioToday($parameters,"",$email);
             if($arr['heart'] >= 60 && $arr['heart'] <= 100){
-                $answer = "Gli ultimi dati in mio possesso sono relativi al ".$arr['date'].
-                          ". Le tue pulsazioni erano nella norma, infatti ho rilevato ".$arr['heart']." bpm";
+                $answer = $GLOBALS['physical1'].$arr['date'].
+                          $GLOBALS['physical24'].$arr['heart']." bpm";
              }else{
 
-                 $answer = "Gli ultimi dati in mio possesso sono relativi al ".$arr['date'].
-                 ". Le tue pulsazione non erano nella norma, infatti ho rilevato ".$arr['heart']." bpm";
+                 $answer = $GLOBALS['physical1'].$arr['date'].
+                 $GLOBALS['physical25'].$arr['heart']." bpm";
              }
           break;
       }
       
     }else{
          $arr = cardioToday($parameters,$today,$email);
-             if(strpos($text, 'buono') || strpos($text, 'buone') || strpos($text, 'bene') || strpos($text, 'ottimo') || strpos($text, 'nella norma') || strpos($text, 'buona')){
+             if(strpos($text, $GLOBALS['physical7']) || strpos($text, $GLOBALS['physical8']) || strpos($text, $GLOBALS['physical9']) || strpos($text, $GLOBALS['physical10']) || strpos($text, $GLOBALS['physical11']) || strpos($text, $GLOBALS['physical12'])){
 
           if($arr['date'] == $today){
               if($arr['heart'] >= 60 && $arr['heart'] <= 100)
-                $answer = "Si, le tue pulsazioni sono nella norma, infatti ho rilevato ".$arr['heart']." bpm";
+                $answer = $GLOBALS['physical22'].$arr['heart']." bpm";
               else
-                 $answer = "No, le tue pulsazioni non sono nella norma, infatti ho rilevato ".$arr['heart']." bpm";
+                 $answer = $GLOBALS['physical23'].$arr['heart']." bpm";
           }else{
              if($arr['heart'] >= 60 && $arr['heart'] <= 100){
-                $answer = "Gli ultimi dati in mio possesso sono relativi al ".$arr['date'].
-                          ". Le tue pulsazioni erano nella norma, infatti ho rilevato ".$arr['heart']." bpm";
+                $answer = $GLOBALS['physical1'].$arr['date'].
+                          $GLOBALS['physical24'].$arr['heart']." bpm";
              }else{
 
-                 $answer = "Gli ultimi dati in mio possesso sono relativi al ".$arr['date'].
-                 ". Le tue pulsazione non erano nella norma, infatti ho rilevato ".$arr['heart']." bpm";
+                 $answer = $GLOBALS['physical1'].$arr['date'].
+                 $GLOBALS['physical25'].$arr['heart']." bpm";
              }
                
           }
                   
-          }elseif (strpos($text, 'pessimo') || strpos($text, 'cattivo') || strpos($text, 'cattive') ||
-                 strpos($text, 'male ') || strpos($text, 'fuori norma') ) {
+          }elseif (strpos($text, $GLOBALS['physical13']) || strpos($text, $GLOBALS['physical14']) || strpos($text, $GLOBALS['physical15']) ||
+            strpos($text, $GLOBALS['physical16']) || strpos($text, $GLOBALS['physical17'])) {
 
              if($arr['date'] == $today){
               if($arr['heart'] >= 60 && $arr['heart'] <= 100)
-                $answer = "No, le tue pulsazioni sono nella norma, infatti ho rilevato ".$arr['heart']." bpm";
+                $answer = $GLOBALS['physical26'].$arr['heart']." bpm";
               else
-                 $answer = "Si,le tue pulsazioni non sono nella norma, infatti ho rilevato ".$arr['heart']." bpm";
+                 $answer = $GLOBALS['physical27'].$arr['heart']." bpm";
           }else{
              if($arr['heart'] >= 60 && $arr['heart'] <= 100){
-                $answer = "Gli ultimi dati in mio possesso sono relativi al ".$arr['date'].
-                          ". Le tue pulsazioni erano nella norma, infatti ho rilevato ".$arr['heart']." bpm";
+                $answer = $GLOBALS['physical1'].$arr['date'].
+                          $GLOBALS['physical24'].$arr['heart']." bpm";
              }else{
 
-                 $answer = "Gli ultimi dati in mio possesso sono relativi al ".$arr['date'].
-                 ". Le tue pulsazione non erano nella norma, infatti ho rilevato ".$arr['heart']." bpm";
+                 $answer = $GLOBALS['physical1'].$arr['date'].
+                 $GLOBALS['physical25'].$arr['heart']." bpm";
              }
                
           }
@@ -519,115 +518,115 @@ function pastSleepBinary($resp,$parameters,$text,$email){
 
   if($count == 0){
     //non ci sono riferimenti per quel periodo
-    return "Non sono riuscito a recuperare i dati relativi al periodo che mi hai indicato &#x1F62D;";
+    return $GLOBALS['physical6'];
   }
   $asleepAV = intval($sumAsleep/$count);
   $inBedAV =intval($sumInBed/$count);
 
   //Conversione minuti in ore e minuti
   if ($asleepAV < 1) {
-    return "Non mi risulta che tu abbia dormito &#x1F631;";
+    return $GLOBALS['physical34'];
   }
   $hours = floor($asleepAV / 60);
   $minutes = ($asleepAV % 60);
 
-  if(strpos($text, 'abbastanza')){
+  if(strpos($text, $GLOBALS['physical35'])){
 
      if($asleepAV >= 390){
           if ($hours == 1) {
-            $result = "Si, dormi abbastanza. In media dormi " .$hours. " ora e " . $minutes . " minuti";
+            $result = $GLOBALS['physical45'] .$hours. $GLOBALS['physical44'] . $minutes . $GLOBALS['physical43'];
           }else{
-            $result = "Si, dormi abbastanza. In media dormi " .$hours. " ore e " . $minutes . " minuti";
+            $result = $GLOBALS['physical45'] .$hours. $GLOBALS['physical42'] . $minutes . $GLOBALS['physical43'];
           }
      }else{
         if ($hours == 1) {
-          $result = "No, non dormi abbastanza. In media dormi " .$hours. " ora e " . $minutes . " minuti";
+          $result = $GLOBALS['physical46'] .$hours. $GLOBALS['physical44'] . $minutes . $GLOBALS['physical43'];
         }else{
-          $result = "No, non dormi abbastanza. In media dormi " .$hours. " ore e " . $minutes . " minuti";
+          $result = $GLOBALS['physical46'] .$hours. $GLOBALS['physical42'] . $minutes . $GLOBALS['physical43'];
         }
       }
-  }elseif (strpos($text, 'tanto')) {
+  }elseif (strpos($text, $GLOBALS['physical36'])) {
 
      if($asleepAV >= 390){
         if ($hours == 1) {
-          $result = "Si, dormi tanto. In media dormi " .$hours. " ora e " . $minutes . " minuti";
+          $result = $GLOBALS['physical47'] .$hours. $GLOBALS['physical44'] . $minutes . $GLOBALS['physical43'];
         }else{
-            $result = "Si, dormi tanto. In media dormi " .$hours. " ore e " . $minutes . " minuti";
+            $result = $GLOBALS['physical47'] .$hours. $GLOBALS['physical42'] . $minutes . $GLOBALS['physical43'];
         }
       }else{
         if ($hours == 1) {
-          $result = "No, non dormi tanto. In media dormi " .$hours. " ora e " . $minutes . " minuti";
+          $result = $GLOBALS['physical48'] .$hours. $GLOBALS['physical44'] . $minutes . $GLOBALS['physical43'];
         } else{
-          $result = "No, non dormi tanto. In media dormi " .$hours. " ore e " . $minutes . " minuti";
+          $result = $GLOBALS['physical48'] .$hours. $GLOBALS['physical42'] . $minutes . $GLOBALS['physical43'];
         }
       }
 
-  }elseif (strpos($text, 'bene')) {
+  }elseif (strpos($text, $GLOBALS['physical37'])) {
 
      if($asleepAV >= 390){
         if ($hours == 1) {
-         $result = "Si, dormi bene. In media dormi " .$hours. " ora e " . $minutes . " minuti";
+         $result = $GLOBALS['physical49'] .$hours. $GLOBALS['physical44'] . $minutes . $GLOBALS['physical43'];
         }else{
-         $result = "Si, dormi bene. In media dormi " .$hours. " ore e " . $minutes . " minuti";
+         $result = $GLOBALS['physical49'] .$hours. $GLOBALS['physical42'] . $minutes . $GLOBALS['physical43'];
         }
      }else{
         if ($hours == 1) {
-         $result = "No, non dormi bene. In media dormi " .$hours. " ora e " . $minutes . " minuti";
+         $result = $GLOBALS['physical50'] .$hours. $GLOBALS['physical44'] . $minutes . $GLOBALS['physical43'];
         }else{
-          $result = "No, non dormi bene. In media dormi " .$hours. " ore e " . $minutes . " minuti";
+          $result = $GLOBALS['physical50'] .$hours. $GLOBALS['physical42'] . $minutes . $GLOBALS['physical43'];
         }
       }
-  }elseif (strpos($text, 'di meno')) {
+  }elseif (strpos($text, $GLOBALS['physical38'])) {
       if($asleepAV >= 480){
         if ($hours == 1) {
-          $result = "Si, dovresti dormire di meno. In media dormi " .$hours. " ora e " . $minutes . " minuti";
+          $result = $GLOBALS['physical51'] .$hours. $GLOBALS['physical44'] . $minutes . $GLOBALS['physical43'];
         }else{
-          $result = "Si, dovresti dormire di meno. In media dormi " .$hours. " ore e " . $minutes . " minuti";
+          $result = $GLOBALS['physical51'] .$hours. $GLOBALS['physical42'] . $minutes . $GLOBALS['physical43'];
         }
      }else{
         if ($hours == 1) {
-         $result = "No, dormi abbastanza. In media dormi " .$hours. " ora e " . $minutes . " minuti";
+         $result = $GLOBALS['physical52'] .$hours. $GLOBALS['physical44'] . $minutes . $GLOBALS['physical43'];
         }else{
-          $result = "No, dormi abbastanza. In media dormi " .$hours. " ore e " . $minutes . " minuti";
+          $result = $GLOBALS['physical52'] .$hours. $GLOBALS['physical42'] . $minutes . $GLOBALS['physical43'];
         }
     }
-  }elseif (strpos($text, 'di più')) {
+  }elseif (strpos($text, $GLOBALS['physical39'])) {
 
      if($asleepAV >= 390){
       if ($hours == 1) {
-       $result = "No, non dovresti dormire di più. In media dormi " .$hours. " ora e " . $minutes . " minuti";
+       $result = $GLOBALS['physical53'] .$hours. $GLOBALS['physical44'] . $minutes . $GLOBALS['physical43'];
       }else{
-        $result = "No, non dovresti dormire di più. In media dormi " .$hours. " ore e " . $minutes . " minuti";
+        $result = $GLOBALS['physical53'] .$hours. $GLOBALS['physical42'] . $minutes . $GLOBALS['physical43'];
       }
      }else{
       if ($hours == 1) {
-        $result = "Si, dovresti dormire di più. In media dormi " .$hours. " ora e " . $minutes . " minuti";
+        $result = $GLOBALS['physical54'] .$hours. $GLOBALS['physical44'] . $minutes . $GLOBALS['physical43'];
       }else{
-        $result = "Si, dovresti dormire di più. In media dormi " .$hours. " ore e " . $minutes . " minuti";
+        $result = $GLOBALS['physical54'] .$hours. $GLOBALS['physical42'] . $minutes . $GLOBALS['physical43'];
       }
     }
     
-  }elseif (strpos($text, 'poco')){
+  }elseif (strpos($text, $GLOBALS['physical40'])){
     
      if($asleepAV >= 390){
       if ($hours == 1) {
-       $result = "No, dormi abbastanza. In media dormi " .$hours. " ora e " . $minutes . " minuti";
+       $result = $GLOBALS['physical55'] .$hours. $GLOBALS['physical44'] . $minutes . $GLOBALS['physical43'];
       }else{
-        $result = "No, dormi abbastanza. In media dormi " .$hours. " ore e " . $minutes . " minuti";
+        $result = $GLOBALS['physical55'] .$hours. $GLOBALS['physical42'] . $minutes . $GLOBALS['physical43'];
       }
      }else{
       if ($hours == 1) {
-       $result = "Si, dovresti dormire di più. In media dormi " .$hours. " ora e " . $minutes . " minuti";
+       $result = $GLOBALS['physical56'] .$hours. $GLOBALS['physical44'] . $minutes . $GLOBALS['physical43'];
       }else{
-       $result = "Si, dovresti dormire di più. In media dormi " .$hours. " ora e " . $minutes . " minuti";
+       $result = $GLOBALS['physical56'] .$hours. $GLOBALS['physical44'] . $minutes . $GLOBALS['physical43'];
       }
      }
 
   }else{
     if ($hours == 1) {
-      $result = "In media dormi " .$hours. " ora e " . $minutes . " minuti";;
+      $result = $GLOBALS['physical57'] .$hours. $GLOBALS['physical44'] . $minutes . $GLOBALS['physical43'];;
     }else{
-      $result = "In media dormi " .$hours. " ore e " . $minutes . " minuti";;
+      $result = $GLOBALS['physical57'] .$hours. $GLOBALS['physical42'] . $minutes . $GLOBALS['physical43'];;
     }
   }
 
@@ -701,7 +700,7 @@ function yestSleepBinary($resp,$parameters,$text,$data,$email){
     if (isset($timestamp)) {
       $data2 = date('d-m-Y',$timestamp/1000);
     }else{
-      return "Non sono riuscito a recuperare i dati relativi al tuo sonno &#x1F62D; Controlla se sono presenti nel tuo profilo!";
+      return $GLOBALS['physical58'];
     }
 
     if($result['minutesAsleep'] != null){
@@ -710,33 +709,33 @@ function yestSleepBinary($resp,$parameters,$text,$data,$email){
       $timeinbed = $result['timeInBed'];
 
     }else{
-      return "Non sono riuscito a recuperare i dati relativi al tuo sonno &#x1F62D; Controlla se sono presenti nel tuo profilo!";
+      return $GLOBALS['physical58'];
     }
   }
 
   //Conversione minuti in ore e minuti
   if ($minutesAsleep < 1) {
-    return "Non mi risulta che tu abbia dormito &#x1F631;";
+    return $GLOBALS['physical34'];
   }
   $hours = floor($minutesAsleep / 60);
   $minutes = ($minutesAsleep % 60);
 
 
-  if(strpos($text, 'abbastanza') || strpos($text, 'bene')){
+  if(strpos($text, $GLOBALS['physical35']) || strpos($text, $GLOBALS['physical37'])){
 
     if($minutesAsleep >= 390 ){
        
        if($flag == true){
           if ($hours == 1) {
-            $answer = "Si, hai dormito abbastanza. Hai dormito per ben ".$hours. " ora e " . $minutes . " minuti";
+            $answer = $GLOBALS['physical59'].$hours. $GLOBALS['physical44'] . $minutes . $GLOBALS['physical43'];
           }else{
-            $answer = "Si, hai dormito abbastanza. Hai dormito per ben ".$hours. " ore e " . $minutes . " minuti";
+            $answer = $GLOBALS['physical59'].$hours. $GLOBALS['physical42'] . $minutes . $GLOBALS['physical43'];
           }
        }else{
           if ($hours == 1) {
-            $answer ="Gli ultimi in mio possesso risalgono al ".$data." ed hai dormito abbastanza. Ovvero " .$hours. " ora e " . $minutes . " minuti"; 
+            $answer =$GLOBALS['physical60'].$data.$GLOBALS['physical61'] .$hours. $GLOBALS['physical44'] . $minutes . $GLOBALS['physical43']; 
           }else{
-              $answer ="Gli ultimi in mio possesso risalgono al ".$data." ed hai dormito abbastanza. Ovvero ".$hours. " ore e " . $minutes . " minuti";   
+              $answer =$GLOBALS['physical60'].$data.$GLOBALS['physical61'].$hours. $GLOBALS['physical42'] . $minutes . $GLOBALS['physical43'];   
           }
           
        }
@@ -744,86 +743,42 @@ function yestSleepBinary($resp,$parameters,$text,$data,$email){
     }else{
         if($flag == true){
           if ($hours == 1) {
-            $answer = "No, non hai dormito abbastanza. Hai dormito solo per ".$hours. " ora e " . $minutes . " minuti";
+            $answer = $GLOBALS['physical62'].$hours. $GLOBALS['physical44'] . $minutes . $GLOBALS['physical43'];
           }else{
-            $answer = "No, non hai dormito abbastanza. Hai dormito solo per ".$hours. " ore e " . $minutes . " minuti";
+            $answer = $GLOBALS['physical62'].$hours. $GLOBALS['physical42'] . $minutes . $GLOBALS['physical43'];
           }
           
        }else{
         if ($hours == 1) {
-          $answer ="Gli ultimi in mio possesso risalgono al ".$data." e vedo che non hai dormito abbastanza. Infatti solo per  "
-          .$hours. " ora e " . $minutes . " minuti";
+          $answer =$GLOBALS['physical60'].$data.$GLOBALS['physical63'] 
+          .$hours. $GLOBALS['physical44'] . $minutes . $GLOBALS['physical43'];
         }else{
-          $answer ="Gli ultimi in mio possesso risalgono al ".$data." e vedo che non hai dormito abbastanza. Infatti solo per  "
-          .$hours. " ore e " . $minutes . " minuti";
+          $answer =$GLOBALS['physical60'].$data.$GLOBALS['physical63'] 
+          .$hours. $GLOBALS['physical42'] . $minutes . $GLOBALS['physical43'];
         }
 
        }
 
     }
-/*
-  }
 
-  elseif( strpos($text, 'bene')){
-
-      if($minutesAsleep >= 390 ){
-       
-       if($flag == true){
-          if ($hours == 1) {
-            $answer = "Si, hai dormito bene. Hai dormito ben ".$hours. " ora e " . $minutes . " minuti";
-          }else{
-            $answer = "Si, hai dormito bene. Hai dormito ben ".$hours. " ore e " . $minutes . " minuti";
-          }
-          
-       }else{
-        if ($hours == 1) {
-            $answer ="Gli ultimi in mio possesso risalgono al ".$data." e noto che hai dormito bene ovvero per ben "
-          .$hours. " ora e " . $minutes . " minuti";
-        }else{
-            $answer ="Gli ultimi in mio possesso risalgono al ".$data." e noto che hai dormito bene ovvero per ben "
-          .$hours. " ore e " . $minutes . " minuti";
-        }
-       }
-       
-    }else{
-        if($flag == true){
-          if ($hours == 1) {
-            $answer = "No, non hai dormito bene. Hai dormito solo per ".$hours. " ora e " . $minutes . " minuti";
-          }else{
-            $answer = "No, non hai dormito bene. Hai dormito solo per ".$hours. " ore e " . $minutes . " minuti";
-          }
-          
-       }else{
-        if ($hours == 1) {
-          $answer ="Gli ultimi in mio possesso risalgono al ".$data." e non hai dormito molto bene. Infatti hai dormito solo per "
-          .$hours. " ora e " . $minutes . " minuti";
-        }else{
-          $answer ="Gli ultimi in mio possesso risalgono al ".$data." e non hai dormito molto bene. Infatti hai dormito solo per "
-          .$hours. " ore e " . $minutes . " minuti";
-        }
-          
-       }
-
-    }
-*/
-  }elseif (strpos($text, 'tanto')) {
+  }elseif (strpos($text, $GLOBALS['physical36'])) {
 
       if($minutesAsleep >= 390 ){
        
        if($flag == true){
         if ($hours == 1) {
-          $answer = "Si, hai dormito tanto. Hai dormito per ben ".$hours. " ora e " . $minutes . " minuti";
+          $answer = $GLOBALS['physical64'].$hours. $GLOBALS['physical44'] . $minutes . $GLOBALS['physical43'];
         }else{
-          $answer = "Si, hai dormito tanto. Hai dormito per ben ".$hours. " ore e " . $minutes . " minuti";
+          $answer = $GLOBALS['physical64'].$hours. $GLOBALS['physical42'] . $minutes . $GLOBALS['physical43'];
         }
           
        }else{
         if ($hours == 1) {
-          $answer ="Gli ultimi in mio possesso risalgono al ".$data." e noto che hai dormito tanto. Ovvero per "
-          .$hours. " ora e " . $minutes . " minuti";
+          $answer =$GLOBALS['physical60'].$data.$GLOBALS['physical65']
+          .$hours. $GLOBALS['physical44'] . $minutes . $GLOBALS['physical43'];
         }else{
-          $answer ="Gli ultimi in mio possesso risalgono al ".$data." e noto che hai dormito tanto. Ovvero per "
-          .$hours. " ore e " . $minutes . " minuti";
+          $answer =$GLOBALS['physical60'].$data.$GLOBALS['physical65']
+          .$hours. $GLOBALS['physical42'] . $minutes . $GLOBALS['physical43'];
         }
           
        }
@@ -831,18 +786,18 @@ function yestSleepBinary($resp,$parameters,$text,$data,$email){
     }else{
         if($flag == true){
           if ($hours == 1) {
-            $answer = "No, non hai dormito tanto. Hai dormito solo per ".$hours. " ora e " . $minutes . " minuti";
+            $answer = $GLOBALS['physical66'].$hours. $GLOBALS['physical44'] . $minutes . $GLOBALS['physical43'];
           }else{
-            $answer = "No, non hai dormito tanto. Hai dormito solo per ".$hours. " ore e " . $minutes . " minuti";
+            $answer = $GLOBALS['physical66'].$hours. $GLOBALS['physical42'] . $minutes . $GLOBALS['physical43'];
           }
           
        }else{
           if ($hours == 1) {
-              $answer ="Gli ultimi in mio possesso risalgono al ".$data." e noto che non hai dormito tanto. Solo "
-            .$hours. " ora e " . $minutes . " minuti";
+              $answer =$GLOBALS['physical60'].$data.$GLOBALS['physical67']
+            .$hours. $GLOBALS['physical44'] . $minutes . $GLOBALS['physical43'];
           }else{
-            $answer ="Gli ultimi in mio possesso risalgono al ".$data." e noto che non hai dormito tanto. Solo "
-            .$hours. " ore e " . $minutes . " minuti";
+            $answer =$GLOBALS['physical60'].$data.$GLOBALS['physical67']
+            .$hours. $GLOBALS['physical42'] . $minutes . $GLOBALS['physical43'];
           }
           
        }
@@ -851,24 +806,24 @@ function yestSleepBinary($resp,$parameters,$text,$data,$email){
     
   }
 
-  elseif(strpos($text, 'meno')){
+  elseif(strpos($text, $GLOBALS['physical41'])){
 
       if($minutesAsleep >= 480 ){
        
        if($flag == true){
         if ($hours == 1) {
-          $answer = "Si, dovresti dormire di meno. Vedo che hai dormito per ".$hours. " ora e " . $minutes . " minuti";
+          $answer = $GLOBALS['physical68'].$hours. $GLOBALS['physical44'] . $minutes . $GLOBALS['physical43'];
         }else{
-          $answer = "Si, dovresti dormire di meno. Vedo che hai dormito per ".$hours. " ore e " . $minutes . " minuti";
+          $answer = $GLOBALS['physical68'].$hours. $GLOBALS['physical42'] . $minutes . $GLOBALS['physical43'];
         }
           
        }else{
         if ($hours == 1) {
-            $answer ="Gli ultimi in mio possesso risalgono a ".$data." e noto che dovresti dormire di meno. Hai dormito per "
-          .$hours. " ora e " . $minutes . " minuti";
+            $answer =$GLOBALS['physical60'].$data.$GLOBALS['physical69']
+          .$hours. $GLOBALS['physical44'] . $minutes . $GLOBALS['physical43'];
         }else{
-          $answer ="Gli ultimi in mio possesso risalgono a ".$data." e noto che dovresti dormire di meno. Hai dormito per "
-          .$hours. " ore e " . $minutes . " minuti";
+          $answer =$GLOBALS['physical60'].$data.$GLOBALS['physical69']
+          .$hours. $GLOBALS['physical42'] . $minutes . $GLOBALS['physical43'];
         }
           
        }
@@ -876,42 +831,42 @@ function yestSleepBinary($resp,$parameters,$text,$data,$email){
     }else{
         if($flag == true){
           if ($hours == 1) {
-            $answer = "No, non hai dormito abbastanza. Hai dormito solamente per ".$hours. " ora e " . $minutes . " minuti";
+            $answer = $GLOBALS['physical70'].$hours. $GLOBALS['physical44'] . $minutes . $GLOBALS['physical43'];
           }else{
-            $answer = "No, non hai dormito abbastanza. Hai dormito solamente per ".$hours. " ore e " . $minutes . " minuti";
+            $answer = $GLOBALS['physical70'].$hours. $GLOBALS['physical42'] . $minutes . $GLOBALS['physical43'];
           }
           
        }else{
         if ($hours == 1) {
-          $answer ="Gli ultimi in mio possesso risalgono al ".$data." e noto che non hai dormito abbastanza. Solo "
-          .$hours. " ora e " . $minutes . " minuti";
+          $answer =$GLOBALS['physical60'].$data.$GLOBALS['physical71']
+          .$hours. $GLOBALS['physical44'] . $minutes . $GLOBALS['physical43'];
         }else{
-          $answer ="Gli ultimi in mio possesso risalgono al ".$data." e noto che non hai dormito abbastanza. Solo "
-          .$hours. " ore e " . $minutes . " minuti";
+          $answer =$GLOBALS['physical60'].$data.$GLOBALS['physical71']
+          .$hours. $GLOBALS['physical42'] . $minutes . $GLOBALS['physical43'];
         }
           
        }
 
     }
 
-  }elseif(strpos($text,'di più')){
+  }elseif(strpos($text,$GLOBALS['physical39'])){
 
         if($minutesAsleep >= 390 ){
        
        if($flag == true){
         if ($hours == 1) {
-          $answer = "No, non dovresti dormire di più perchè hai dormito per ".$hours. " ora e " . $minutes . " minuti";
+          $answer = $GLOBALS['physical72'].$hours. $GLOBALS['physical44'] . $minutes . $GLOBALS['physical43'];
         }else{
-          $answer = "No, non dovresti dormire di più perchè hai dormito per ".$hours. " ore e " . $minutes . " minuti";
+          $answer = $GLOBALS['physical72'].$hours. $GLOBALS['physical42'] . $minutes . $GLOBALS['physical43'];
         }
           
        }else{
         if ($hours == 1) {
-          $answer ="Gli ultimi in mio possesso risalgono al ".$data." e noto che non dovresti dormire di più visto che hai dormito "
-          .$hours. " ora e " . $minutes . " minuti";
+          $answer =$GLOBALS['physical60'].$data.$GLOBALS['physical73']
+          .$hours. $GLOBALS['physical44'] . $minutes . $GLOBALS['physical43'];
         }else{
-          $answer ="Gli ultimi in mio possesso risalgono al ".$data." e noto che non dovresti dormire di più visto che hai dormito "
-          .$hours. " ore e " . $minutes . " minuti";
+          $answer =$GLOBALS['physical60'].$data.$GLOBALS['physical73']
+          .$hours. $GLOBALS['physical42'] . $minutes . $GLOBALS['physical43'];
         }
           
        }
@@ -919,42 +874,42 @@ function yestSleepBinary($resp,$parameters,$text,$data,$email){
     }else{
         if($flag == true){
           if ($hours == 1) {
-            $answer = "Si, dovresti dormire di più. Infatti hai dormito ".$hours. " ora e " . $minutes . " minuti";
+            $answer = $GLOBALS['physical74'].$hours. $GLOBALS['physical44'] . $minutes . $GLOBALS['physical43'];
           }else{
-            $answer = "Si, dovresti dormire di più. Infatti hai dormito ".$hours. " ore e " . $minutes . " minuti";
+            $answer = $GLOBALS['physical74'].$hours. $GLOBALS['physical42'] . $minutes . $GLOBALS['physical43'];
           }
           
        }else{
         if ($hours == 1) {
-          $answer ="Gli ultimi in mio possesso risalgono al ".$data." e noto che dovresti dormire di più visto che hai dormito solamente per "
-          .$hours. " ora e " . $minutes . " minuti";
+          $answer =$GLOBALS['physical60'].$data.$GLOBALS['physical75']
+          .$hours. $GLOBALS['physical44'] . $minutes . $GLOBALS['physical43'];
         }else{
-          $answer ="Gli ultimi in mio possesso risalgono al ".$data." e noto che dovresti dormire di più visto che hai dormito solamente per "
-          .$hours. " ore e " . $minutes . " minuti";
+          $answer =$GLOBALS['physical60'].$data.$GLOBALS['physical75']
+          .$hours. $GLOBALS['physical42'] . $minutes . $GLOBALS['physical43'];
         }
           
        }
 
     }
 
-  }elseif (strpos($text,'poco')) {
+  }elseif (strpos($text,$GLOBALS['physical40'])) {
 
     if($minutesAsleep >= 390 ){
        
        if($flag == true){
         if ($hours == 1) {
-          $answer = "No, hai dormito abbastanza. Infatti hai dormito ".$hours. " ora e " . $minutes . " minuti";
+          $answer = $GLOBALS['physical76'].$hours. $GLOBALS['physical44'] . $minutes . $GLOBALS['physical43'];
         }else{
-          $answer = "No, hai dormito abbastanza. Infatti hai dormito ".$hours. " ore e " . $minutes . " minuti";
+          $answer = $GLOBALS['physical76'].$hours. $GLOBALS['physical42'] . $minutes . $GLOBALS['physical43'];
         }
           
        }else{
         if ($hours == 1) {
-          $answer ="Gli ultimi in mio possesso risalgono al ".$data." e noto che hai dormito abbastanza ovvero "
-          .$hours. " ora e " . $minutes . " minuti";
+          $answer =$GLOBALS['physical60'].$data.$GLOBALS['physical77']
+          .$hours. $GLOBALS['physical44'] . $minutes . $GLOBALS['physical43'];
         }else{
-          $answer ="Gli ultimi in mio possesso risalgono al ".$data." e noto che hai dormito abbastanza ovvero "
-          .$hours. " ore e " . $minutes . " minuti";
+          $answer =$GLOBALS['physical60'].$data.$GLOBALS['physical77']
+          .$hours. $GLOBALS['physical42'] . $minutes . $GLOBALS['physical43'];
         }
           
        }
@@ -962,18 +917,18 @@ function yestSleepBinary($resp,$parameters,$text,$data,$email){
     }else{
       if($flag == true){
         if ($hours == 1) {
-          $answer = "Si, dovresti dormire di più. Hai dormito ".$hours. " ora e " . $minutes . " minuti";
+          $answer = $GLOBALS['physical78'].$hours. $GLOBALS['physical44'] . $minutes . $GLOBALS['physical43'];
         }else{
-          $answer = "Si, dovresti dormire di più. Hai dormito ".$hours. " ore e " . $minutes . " minuti";
+          $answer = $GLOBALS['physical78'].$hours. $GLOBALS['physical42'] . $minutes . $GLOBALS['physical43'];
         }
           
       }else{
         if ($hours == 1) {
-          $answer ="Gli ultimi in mio possesso risalgono al ".$data." e noto che dovresti dormire di più. Hai dormito solamente "
-          .$hours. " ora e " . $minutes . " minuti";
+          $answer =$GLOBALS['physical60'].$data.$GLOBALS['physical79']
+          .$hours. $GLOBALS['physical44'] . $minutes . $GLOBALS['physical43'];
         }else{
-          $answer ="Gli ultimi in mio possesso risalgono al ".$data." e noto che dovresti dormire di più. Hai dormito solamente "
-          .$hours. " ore e " . $minutes . " minuti";
+          $answer =$GLOBALS['physical60'].$data.$GLOBALS['physical79']
+          .$hours. $GLOBALS['physical42'] . $minutes . $GLOBALS['physical43'];
         }
           
       }
@@ -983,15 +938,15 @@ function yestSleepBinary($resp,$parameters,$text,$data,$email){
 
       //Conversione minuti in ore e minuti
       if ($minutesAsleep < 1) {
-        return "Non mi risulta che tu abbia dormito &#x1F631;";
+        return $GLOBALS['physical34'];
       }
       $hours = floor($minutesAsleep / 60);
       $minutes = ($minutesAsleep % 60);
 
       if ($hours == 1) {
-          $answer = "Hai dormito ". $hours ." ora e " .$minutes . ' minuti'; 
+          $answer = $GLOBALS['physical80']. $hours .$GLOBALS['physical44'] .$minutes . $GLOBALS['physical43']; 
       }else{
-          $answer = "Hai dormito ". $hours ." ore e " .$minutes . ' minuti';
+          $answer = $GLOBALS['physical80'] . $hours .$GLOBALS['physical42'] .$minutes . $GLOBALS['physical43'];
       }
   }
 
@@ -1072,12 +1027,12 @@ function fetchYesterdaySleep($resp,$data,$email){
     if (isset($timestamp)) {
       $data2 = date('d-m-Y',$timestamp/1000);
     }else{
-      return "Non sono riuscito a recuperare i dati relativi al tuo sonno &#x1F62D; Controlla se sono presenti nel tuo profilo!";
+      return $GLOBALS['physical58'];
     }
 
 
 
-    $answer = "Gli ultimi dati in mio possesso sono relativi al ".$data2."<br>";
+    $answer = $GLOBALS['physical1'].$data2."<br>";
 
     if($result['minutesAsleep'] != null){
         $answer .= $resp;
@@ -1099,7 +1054,7 @@ function fetchYesterdaySleep($resp,$data,$email){
      $answer = str_replace('Y2', $minutesBed, $answer);
 
     }else{
-      $answer = "Non sono riuscito a recuperare i dati relativi al periodo che mi hai indicato &#x1F62D;";
+      $answer = $GLOBALS['physical6'];
     }
 
      return $answer;
@@ -1204,7 +1159,7 @@ function fetchPastSleep($endDate,$startDate,$email){
            $count++;  
         }
       }
-        $result = "dal ".$startDate ." al ".$endDate;
+        $result = $GLOBALS['physical81'].$startDate .$GLOBALS['physical82'] .$endDate;
 
        }else{
 
@@ -1237,7 +1192,7 @@ function fetchPastSleep($endDate,$startDate,$email){
   $hoursBed = floor($inBedAV / 60);
   $minutesBed = ($inBedAV % 60);
 
-  $result .= " in media hai dormito ".$hoursSleep ." ore e " .$minutesSleep ." minuti, trascorrendo nel letto ".$hoursBed." ore e " .$minutesSleep ." minuti";
+  $result .= $GLOBALS['physical83'].$hoursSleep .$GLOBALS['physical42'] .$minutesSleep .$GLOBALS['physical84'].$hoursBed.$GLOBALS['physical42'] .$minutesSleep .$GLOBALS['physical43'];
 
   return $result;
 

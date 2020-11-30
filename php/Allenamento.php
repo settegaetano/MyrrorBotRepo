@@ -187,7 +187,7 @@ function insertPreferenceTraining($parameters,$text,$email){
 
         curl_close ($ch);
 
-        return "Preferenza sull'allenamento inserita";
+        return $GLOBALS['trainpref'];
 
 	}
 
@@ -199,7 +199,7 @@ function insertPreferenceTraining($parameters,$text,$email){
 function checkGenreAllenamento($genere){
 
         // Open the file for reading
-        if (($h = fopen("../fileMyrror/allenamenti.csv", "r")) !== FALSE) {
+        if (($h = fopen("../fileMyrror/allenamenti".$GLOBALS['file'].".csv", "r")) !== FALSE) {
           
             // Convert each line into the local $data variable
             while (($data = fgetcsv($h, 1000, ",")) !== FALSE) {      

@@ -101,11 +101,11 @@ function getTodayUmore($oggi,$email){
     $mood = $result['sentiment'];
 
     if($mood == 1){
-      $answer = "Sei di buon umore";
+      $answer = $GLOBALS['goodmood'];
     }else if($mood == -1){
-      $answer = "Sei di cattivo umore";
+      $answer = $GLOBALS['badmood'];
     }else{
-      $answer = "Il tuo umore è neutro";
+      $answer = $GLOBALS['normalmood'];
     }
 
   }else{ //Se non sono presenti dati relativi ad oggi
@@ -126,17 +126,23 @@ function getTodayUmore($oggi,$email){
       }
     }
 
+    if(isset($result['sentiment'])){
+
+
     $mood = $result['sentiment'];
 
     if($mood == 1){
-      $response = "eri di buon umore";
+      $response =$GLOBALS['goodmoodp'];
     }else if($mood == -1){
-      $response = "eri di cattivo umore";
+      $response = $GLOBALS['badmoodp'];
     }else{
-      $response = "il tuo umore era neutro";
+      $response = $GLOBALS['normalmoodp'];
     }
     
-    $answer = "Nel tuo profilo non sono presenti dati della giornata odierna, in base agli ultimi dati relativi al giorno " .$date . ", ". $response;
+    $answer = $GLOBALS['lastdata'].$date . ", ". $response;
+  }else{
+    return $GLOBALS['nolastdata'];
+  }
   }
 
   return $answer;
@@ -167,11 +173,11 @@ function getPastUmore($ieri,$email){
     $mood = $result['sentiment'];
 
     if($mood == 1){
-      $answer = "Eri di buon umore";
+      $answer = $GLOBALS['goodmoodp'];
     }else if($mood == -1){
-      $answer = "Eri di cattivo umore";
+      $answer = $GLOBALS['badmoodp'];
     }else{
-      $answer = "Il tuo umore era neutro";
+      $answer = $GLOBALS['normalmoodp'];
     }
 
   }else{ //Se non sono presenti dati relativi a ieri
@@ -195,14 +201,14 @@ function getPastUmore($ieri,$email){
     $mood = $result['sentiment'];
 
     if($mood == 1){
-      $response = "eri di buon umore";
+      $response = $GLOBALS['goodmoodp'];
     }else if($mood == -1){
-      $response = "eri di cattivo umore";
+      $response = $GLOBALS['badmoodp'];
     }else{
-      $response = "il tuo umore era neutro";
+      $response = $GLOBALS['normalmoodp'];
     }
     
-  $answer = "Nel tuo profilo non sono presenti dati della giornata di ieri, in base agli ultimi dati relativi al giorno " .$date . ", ". $response;
+  $answer = $GLOBALS['lastdata'] .$date . ", ". $response;
 
   }
 
@@ -232,7 +238,7 @@ function getPast($ieri,$email){
   if(isset($result['emotion'] )){
 
     $emotion = getEmotion($result,$email);
-    $answer =  "Stavi provando " . $emotion ;
+    $answer =  $GLOBALS['felt']. $emotion ;
 
   }else{ //Se non sono presenti dati relativi a ieri
     
@@ -247,7 +253,7 @@ function getPast($ieri,$email){
     }
 
     $emotion = getEmotion($result,$email);
-    $answer = "Basandomi sugli ultimi dati rilevati il giorno " .$date . ", stavi provando " . $emotion;
+    $answer = $GLOBALS['lastdays'] .$date . ", ".$GLOBALS['felt']. $emotion;
 
   }
 
@@ -279,10 +285,10 @@ function getToday($oggi,$email){
 
       switch (rand(1,2)) {
       case '1':
-        $answer = "Stai provando " . $result;
+        $answer = $GLOBALS['feel1'] . $result;
         break;
       case '2':
-        $answer = "In questo momento provi " . $result;
+        $answer = $GLOBALS['feel2'] . $result;
         break;
     }
 
@@ -305,7 +311,7 @@ function getToday($oggi,$email){
     }
 
     $emotion = getEmotion($result,$email);
-    $answer = "Basandomi sugli ultimi dati rilevati il giorno " .$date . ", stavi provando " . $emotion;
+    $answer = $GLOBALS['lastdays'] .$date . ", ".$GLOBALS['felt']  . $emotion;
   }
 
   return $answer;
@@ -314,6 +320,11 @@ function getToday($oggi,$email){
 
 //EMOZIONE: ritorna l'emozione corrispondente
 function getEmotion($result,$email){
+
+
+  if(isset($result['emotion'])){
+
+
 
     if (strpos($result['emotion'], 'joy') !== false) {
       $emotion = "gioia";
@@ -328,8 +339,14 @@ function getEmotion($result,$email){
     }else if (strpos($result['emotion'], 'surprise') !== false) {
       $emotion = "sorpresa";
     }else{
-         return "al momento non stai provando alcuna emozione";
+         return $GLOBALS['nofeel'];
     }
+
+
+    }else{
+      return $GLOBALS['nofeel'];
+    }
+
 
   return $emotion;
 
@@ -436,27 +453,27 @@ function getPastUmoreBinario($ieri, $parameters,$email){
      $mood = $result['sentiment'];
 
      if ($mood == 1 && $parameters['UmoreBuono'] != "") {
-        $answer = "Si, eri di buon umore";
+        $answer = $GLOBALS['mood1'];
      }else if ($mood == -1 && $parameters['UmoreBuono'] != ""){
-        $answer = "No, il tuo umore era pessimo";
+        $answer = $GLOBALS['mood2'];
      }else if ($mood == 0 && $parameters['UmoreBuono'] != ""){
-        $answer = "No, il tuo umore era neutro";
+        $answer = $GLOBALS['mood3'];
      }
 
     if ($mood == -1 && $parameters['UmoreCattivo'] != "") {
-        $answer = "Si, eri di pessimo umore";
+        $answer = $GLOBALS['mood4'];
      }else if ($mood == 1 && $parameters['UmoreCattivo'] != ""){
-        $answer = "No, il tuo umore era positivo";
+        $answer = $GLOBALS['mood5'];
      }else if ($mood == 0 && $parameters['UmoreCattivo'] != ""){
-        $answer = "No, il tuo umore era neutro";
+        $answer =$GLOBALS['mood6'] ;
      }
 
       if ($mood == 0 && $parameters['UmoreNeutro'] != "") {
-        $answer = "Si, avevi un umore neutro";
+        $answer = $GLOBALS['mood7'];
      }else if ($mood == 1 && $parameters['UmoreNeutro'] != ""){
-        $answer = "No, il tuo umore era positivo";
+        $answer = $GLOBALS['mood8'] ;
      }else if ($mood == -1 && $parameters['UmoreNeutro'] != ""){
-        $answer = "No, il tuo umore era negativo";
+        $answer = $GLOBALS['mood9'];
      }
 
   }else{ //Se non sono presenti dati relativi a ieri
@@ -474,30 +491,30 @@ function getPastUmoreBinario($ieri, $parameters,$email){
     $mood = $result['sentiment'];
 
      if ($mood == 1 && $parameters['UmoreBuono'] != "") {
-        $risposta = "eri di buon umore";
+        $risposta = $GLOBALS['mood10'];
      }else if ($mood == -1 && $parameters['UmoreBuono'] != ""){
-        $risposta = "il tuo umore era pessimo";
+        $risposta = $GLOBALS['mood11'];
      }else if ($mood == 0 && $parameters['UmoreBuono'] != ""){
-        $risposta = "il tuo umore era neutro";
+        $risposta = $GLOBALS['mood12'];
      }
 
     if ($mood == -1 && $parameters['UmoreCattivo'] != "") {
-        $risposta = "eri di pessimo umore";
+        $risposta = $GLOBALS['mood13'];
      }else if ($mood == 1 && $parameters['UmoreCattivo'] != ""){
-        $risposta = "il tuo umore era positivo";
+        $risposta = $GLOBALS['mood14'];
      }else if ($mood == 0 && $parameters['UmoreCattivo'] != ""){
-        $risposta = "il tuo umore era neutro";
+        $risposta = $GLOBALS['mood15'];
      }
 
       if ($mood == 0 && $parameters['UmoreNeutro'] != "") {
-        $risposta = "avevi un umore neutro";
+        $risposta = $GLOBALS['mood16'];
      }else if ($mood == 1 && $parameters['UmoreNeutro'] != ""){
-        $risposta = "il tuo umore era positivo";
+        $risposta = $GLOBALS['mood17'];
      }else if ($mood == -1 && $parameters['UmoreNeutro'] != ""){
-        $risposta = "il tuo umore era negativo";
+        $risposta = $GLOBALS['mood18'];
      }
 
-       $answer = "Basandomi sugli ultimi dati rilevati il giorno " .$date . ", " . $risposta;
+       $answer = $GLOBALS['lastdays'] .$date . ", " . $risposta;
 
   }
 
@@ -528,27 +545,27 @@ function getTodayUmoreBinario($oggi, $parameters,$email){
     $mood = $result['sentiment'];
 
      if ($mood == 1 && $parameters['UmoreBuono'] != "") {
-        $answer = "Si, sei di buon umore";
+        $answer = $GLOBALS['mood19'];
      }else if ($mood == -1 && $parameters['UmoreBuono'] != ""){
-        $answer = "No, il tuo umore è pessimo";
+        $answer = $GLOBALS['mood20'];
      }else if ($mood == 0 && $parameters['UmoreBuono'] != ""){
-        $answer = "No, il tuo umore è neutro";
+        $answer = $GLOBALS['mood21'];
      }
 
     if ($mood == -1 && $parameters['UmoreCattivo'] != "") {
-        $answer = "Si, sei di pessimo umore";
+        $answer = $GLOBALS['mood22'];
      }else if ($mood == 1 && $parameters['UmoreCattivo'] != ""){
-        $answer = "No, il tuo umore è positivo";
+        $answer = $GLOBALS['mood23'];
      }else if ($mood == 0 && $parameters['UmoreCattivo'] != ""){
-        $answer = "No, il tuo umore è neutro";
+        $answer = $GLOBALS['mood24'];
      }
 
       if ($mood == 0 && $parameters['UmoreNeutro'] != "") {
-        $answer = "Si, hai un umore neutro";
+        $answer = $GLOBALS['mood25'];
      }else if ($mood == 1 && $parameters['UmoreNeutro'] != ""){
-        $answer = "No, il tuo umore è positivo";
+        $answer = $GLOBALS['mood26'];
      }else if ($mood == -1 && $parameters['UmoreNeutro'] != ""){
-        $answer = "No, il tuo umore è negativo";
+        $answer = $GLOBALS['mood27'];
      }
       
   }else{ //Se non sono presenti dati relativi ad oggi
@@ -572,31 +589,31 @@ function getTodayUmoreBinario($oggi, $parameters,$email){
     $mood = $result['sentiment'];
 
      if ($mood == 1 && $parameters['UmoreBuono'] != "") {
-        $risposta = "eri di buon umore";
+        $risposta =  $GLOBALS['mood28'];
      }else if ($mood == -1 && $parameters['UmoreBuono'] != ""){
-        $risposta = "il tuo umore era pessimo";
+        $risposta =  $GLOBALS['mood29'];
      }else if ($mood == 0 && $parameters['UmoreBuono'] != ""){
-        $risposta = "il tuo umore era neutro";
+        $risposta =  $GLOBALS['mood30'];
      }
 
     if ($mood == -1 && $parameters['UmoreCattivo'] != "") {
-        $risposta = "eri di pessimo umore";
+        $risposta =  $GLOBALS['mood31'];
      }else if ($mood == 1 && $parameters['UmoreCattivo'] != ""){
-        $risposta = "il tuo umore era positivo";
+        $risposta =  $GLOBALS['mood32'];
      }else if ($mood == 0 && $parameters['UmoreCattivo'] != ""){
-        $risposta = "il tuo umore era neutro";
+        $risposta =  $GLOBALS['mood33'];
      }
 
       if ($mood == 0 && $parameters['UmoreNeutro'] != "") {
-        $risposta = "avevi un umore neutro";
+        $risposta =  $GLOBALS['mood34'];
      }else if ($mood == 1 && $parameters['UmoreNeutro'] != ""){
-        $risposta = "il tuo umore era positivo";
+        $risposta =  $GLOBALS['mood35'];
      }else if ($mood == -1 && $parameters['UmoreNeutro'] != ""){
-        $risposta = "il tuo umore era negativo";
+        $risposta =  $GLOBALS['mood36'];
      }
 
 
-        $answer = "Basandomi sugli ultimi dati rilevati il giorno " . $date . ", " . $risposta;
+        $answer = $GLOBALS['lastdays'] . $date . ", " . $risposta;
   }
 
   return $answer;
@@ -630,53 +647,53 @@ function getPastBinario($ieri, $parameters,$email){
       case 'gioia':
         if ($parameters['EmotionJoy'] != "") {
           $entity = $parameters['EmotionJoy'];
-          $answer = "Si, eri " . $entity;
+          $answer = $GLOBALS['moody'] . $entity;
         }else{
-          $answer = "No, eri felice";
+          $answer = $GLOBALS['mood37'];
         }
         break;
       case 'paura':
         if ($parameters['EmotionFear'] != "") {
           $entity = $parameters['EmotionFear'];
-          $answer = "Si, eri " . $entity;
+          $answer = $GLOBALS['moody'] . $entity;
         }else{
-          $answer = "No, eri spaventato";
+          $answer = $GLOBALS['mood38'];
         }
         break;
       case 'rabbia':
         if ($parameters['EmotionAnger'] != "") {
           $entity = $parameters['EmotionAnger'];
-          $answer = "Si, eri " . $entity;
+          $answer = $GLOBALS['moody'] . $entity;
         }else{
-          $answer = "No, eri arrabbiato";
+          $answer = $GLOBALS['mood39'];
         }
         break;
       case 'disgusto':
         if ($parameters['EmotionDisgust'] != "") {
           $entity = $parameters['EmotionDisgust'];
-          $answer = "Si, eri " . $entity;
+          $answer = $GLOBALS['moody']. $entity;
         }else{
-          $answer = "No, eri disgustato";
+          $answer = $GLOBALS['mood40'];
         }
         break;
       case 'tristezza':
         if ($parameters['EmotionSad'] != "") {
           $entity = $parameters['EmotionSad'];
-          $answer = "Si, eri " . $entity;
+          $answer = $GLOBALS['moody'] . $entity;
         }else{
-          $answer = "No, eri triste";
+          $answer = $GLOBALS['mood41'];
         }
         break;
       case 'sorpresa':
         if ($parameters['EmotionSurprise'] != "") {
           $entity = $parameters['EmotionSurprise'];
-          $answer = "Si, eri " . $entity;
+          $answer = $GLOBALS['moody'] . $entity;
         }else{
-          $answer = "No, eri sorpreso";
+          $answer = $GLOBALS['mood42'];
         }
         break;
       default:
-          $answer = "No, non stavi provando alcuna emozione";
+          $answer = $GLOBALS['mood43'];
         break;
     }
 
@@ -699,57 +716,57 @@ function getPastBinario($ieri, $parameters,$email){
       case 'gioia':
         if ($parameters['EmotionJoy'] != "") {
           $entity = $parameters['EmotionJoy'];
-          $risposta = "Si, eri " . $entity;
+          $risposta =$GLOBALS['moody']  . $entity;
         }else{
-          $risposta = "No, eri felice";
+          $risposta = $GLOBALS['mood37'];
         }
         break;
       case 'paura':
         if ($parameters['EmotionFear'] != "") {
           $entity = $parameters['EmotionFear'];
-          $risposta = "Si, eri " . $entity;
+          $risposta = $GLOBALS['moody'] . $entity;
         }else{
-          $risposta = "No, eri spaventato";
+          $risposta = $GLOBALS['mood38'];
         }
         break;
       case 'rabbia':
         if ($parameters['EmotionAnger'] != "") {
           $entity = $parameters['EmotionAnger'];
-          $risposta = "Si, eri " . $entity;
+          $risposta = $GLOBALS['moody'] . $entity;
         }else{
-          $risposta = "No, eri arrabbiato";
+          $risposta = $GLOBALS['mood39'];
         }
         break;
       case 'disgusto':
         if ($parameters['EmotionDisgust'] != "") {
           $entity = $parameters['EmotionDisgust'];
-          $risposta = "Si, eri " . $entity;
+          $risposta = $GLOBALS['moody'] . $entity;
         }else{
-          $risposta = "No, eri disgustato";
+          $risposta = $GLOBALS['mood40'];
         }
         break;
       case 'tristezza':
         if ($parameters['EmotionSad'] != "") {
           $entity = $parameters['EmotionSad'];
-          $risposta = "Si, eri " . $entity;
+          $risposta = $GLOBALS['moody'] . $entity;
         }else{
-          $risposta = "No, eri triste";
+          $risposta = $GLOBALS['mood41'];
         }
         break;
       case 'sorpresa':
         if ($parameters['EmotionSurprise'] != "") {
           $entity = $parameters['EmotionSurprise'];
-          $risposta = "Si, eri " . $entity;
+          $risposta = $GLOBALS['moody']  . $entity;
         }else{
-          $risposta = "No, eri sorpreso";
+          $risposta = $GLOBALS['mood42'];
         }
         break;
       default:
-          $risposta = "No, non stavi provando alcuna emozione";
+          $risposta = $GLOBALS['mood43'];
         break;
     }
 
-    $answer = "Basandomi sugli ultimi dati presenti il giorno " . $date . ", " . $risposta;
+    $answer = $GLOBALS['lastdays'] . $date . ", " . $risposta;
 
   }
 
@@ -782,53 +799,53 @@ function getTodayBinario($oggi, $parameters,$email){
       case 'gioia':
         if ($parameters['EmotionJoy'] != "") {
           $entity = $parameters['EmotionJoy'];
-          $answer = "Si, sei " . $entity;
+          $answer = $GLOBALS['moody2'] . $entity;
         }else{
-          $answer = "No, sei felice";
+          $answer = $GLOBALS['mood44'];
         }
         break;
       case 'paura':
         if ($parameters['EmotionFear'] != "") {
           $entity = $parameters['EmotionFear'];
-          $answer = "Si, sei " . $entity;
+          $answer = $GLOBALS['moody2'] . $entity;
         }else{
-          $answer = "No, sei spaventato";
+          $answer = $GLOBALS['mood45'];
         }
         break;
       case 'rabbia':
         if ($parameters['EmotionAnger'] != "") {
           $entity = $parameters['EmotionAnger'];
-          $answer = "Si, sei " . $entity;
+          $answer = $GLOBALS['moody2'] . $entity;
         }else{
-          $answer = "No, sei arrabbiato";
+          $answer = $GLOBALS['mood46'];
         }
         break;
       case 'disgusto':
         if ($parameters['EmotionDisgust'] != "") {
           $entity = $parameters['EmotionDisgust'];
-          $answer = "Si, sei " . $entity;
+          $answer = $GLOBALS['moody2'] . $entity;
         }else{
-          $answer = "No, sei disgustato";
+          $answer = $GLOBALS['mood47'];
         }
         break;
       case 'tristezza':
         if ($parameters['EmotionSad'] != "") {
           $entity = $parameters['EmotionSad'];
-          $answer = "Si, sei " . $entity;
+          $answer = $GLOBALS['moody2'] . $entity;
         }else{
-          $answer = "No, sei triste";
+          $answer = $GLOBALS['mood48'];
         }
         break;
       case 'sorpresa':
         if ($parameters['EmotionSurprise'] != "") {
           $entity = $parameters['EmotionSurprise'];
-          $answer = "Si, sei " . $entity;
+          $answer = $GLOBALS['moody2'] . $entity;
         }else{
-          $answer = "No, sei sorpreso";
+          $answer = $GLOBALS['mood49'];
         }
         break;
       default:
-          $answer = "No, non stai provando alcuna emozione";
+          $answer = $GLOBALS['mood50'];
         break;
     }
       
@@ -856,57 +873,57 @@ function getTodayBinario($oggi, $parameters,$email){
       case 'gioia':
         if ($parameters['EmotionJoy'] != "") {
           $entity = $parameters['EmotionJoy'];
-          $risposta = "Si, eri " . $entity;
+          $risposta = $GLOBALS['moody'] . $entity;
         }else{
-          $risposta = "No, eri felice";
+          $risposta = $GLOBALS['mood37'];
         }
         break;
       case 'paura':
         if ($parameters['EmotionFear'] != "") {
           $entity = $parameters['EmotionFear'];
-          $risposta = "Si, eri " . $entity;
+          $risposta = $GLOBALS['moody'] . $entity;
         }else{
-          $risposta = "No, eri spaventato";
+          $risposta = $GLOBALS['mood38'];
         }
         break;
       case 'rabbia':
         if ($parameters['EmotionAnger'] != "") {
           $entity = $parameters['EmotionAnger'];
-          $risposta = "Si, eri " . $entity;
+          $risposta = $GLOBALS['moody'] . $entity;
         }else{
-          $risposta = "No, eri arrabbiato";
+          $risposta = $GLOBALS['mood39'];
         }
         break;
       case 'disgusto':
         if ($parameters['EmotionDisgust'] != "") {
           $entity = $parameters['EmotionDisgust'];
-          $risposta = "Si, eri " . $entity;
+          $risposta = $GLOBALS['moody'] . $entity;
         }else{
-          $risposta = "No, eri disgustato";
+          $risposta = $GLOBALS['mood40'];
         }
         break;
       case 'tristezza':
         if ($parameters['EmotionSad'] != "") {
           $entity = $parameters['EmotionSad'];
-          $risposta = "Si, eri " . $entity;
+          $risposta = $GLOBALS['moody'] . $entity;
         }else{
-          $risposta = "No, eri triste";
+          $risposta = $GLOBALS['mood41'];
         }
         break;
       case 'sorpresa':
         if ($parameters['EmotionSurprise'] != "") {
           $entity = $parameters['EmotionSurprise'];
-          $risposta = "Si, eri " . $entity;
+          $risposta = $GLOBALS['moody'] . $entity;
         }else{
-          $risposta = "No, eri sorpreso";
+          $risposta = $GLOBALS['mood42'];
         }
         break;
       default:
-          $risposta = "Non stavi provando alcuna emozione";
+          $risposta = $GLOBALS['mood43'];
         break;
     }
 
-    $answer = "Basandomi sugli ultimi dati presenti il giorno " . $date . ", " . $risposta;
+    $answer = $GLOBALS['lastdays'] . $date . ", " . $risposta;
   }
 
   return $answer;

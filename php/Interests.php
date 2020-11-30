@@ -47,16 +47,16 @@ function interessi($resp,$parameters,$email){
         	//Rimuovo lo spazio con la virgola finale
         	$answer = substr($answer, 0, -2);
 		}else {
-			$answer = "Purtroppo non sono riuscito a recuperare i tuoi interessi &#x1F613; Riprova più tardi oppure controlla se nel tuo profilo sono presenti gli interessi!";
+			$answer = $GLOBALS['interest2'];
 		}
 
 	}else{
-		$answer = "Purtroppo non sono riuscito a recuperare i tuoi interessi &#x1F613; Riprova più tardi oppure controlla se nel tuo profilo sono presenti gli interessi!";
+		$answer =$GLOBALS['interest2'];
 	}
 
 	//A volte la richiesta non restituisce nessun elenco perciò dovrà essere rifatta
 	if ($answer == null) {
-		$answer = "Non sono riuscito a caricare i tuoi interessi &#x1F613; Riprova più tardi";
+		$answer = $GLOBALS['interest1'];
 	}
 
 	return $answer;

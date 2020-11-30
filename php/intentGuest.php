@@ -24,12 +24,17 @@ if (isset($_POST{'testo'})) {
 if(isset($_POST{'city'})){
     $city = $_POST{'city'};
 }
-
+$lang = "en";
+if(isset($_POST['lang'])){ 
+        $lang = $_POST['lang']; 
+} 
+require_once('Language/lan_'.$lang.'.php');
+define("DIALOGFLOW", $GLOBALS['DIALOGFLOW_LANG']);
 //Email utente anonimo
 $email = "UtenteAnonimo";
 
 
-function detect_intent_texts($projectId,$city,$email, $text, $sessionId, $languageCode = 'it-IT')
+function detect_intent_texts($projectId,$city,$email, $text, $sessionId, $languageCode = DIALOGFLOW)
 {
     // new session
     $test = array('credentials' => 'myrrorbot-4f360-cbcab170b890.json');
@@ -65,7 +70,7 @@ function detect_intent_texts($projectId,$city,$email, $text, $sessionId, $langua
         
     }else{
 
-        $answer = "Purtroppo non ho capito la domanda. Prova a rifarla con altre parole! Devo ancora imparare molte cose &#x1F605;";
+        $answer =$GLOBALS['dontunderstand'];
 
         //Stampo la risposta relativa all'intent non identificato
         $arr = array('intentName' => "Non identificato", 'confidence' => "0",'answer' => $answer);
@@ -119,14 +124,14 @@ function selectIntent($email,$intent, $confidence,$text,$resp,$parameters,$city)
 
             default:
                
-                    $answer = "Questa funzione è disponibile solo dopo aver effettuato il login a myrror";
+                    $answer = $GLOBALS['nologin'];
 
                
                 break;
         }
 
     }else {
-            $answer = "Questa funzione è disponibile solo dopo aver effettuato il login a myrror ";
+            $answer = $GLOBALS['nologin'];
 
     }
 
@@ -146,7 +151,7 @@ function selectIntent($email,$intent, $confidence,$text,$resp,$parameters,$city)
                 break;
 
             default:
-                  $answer = "Questa funzione è disponibile solo dopo aver effettuato il login a myrror ";
+                  $answer = $GLOBALS['nologin'];
 
                 break;
         }

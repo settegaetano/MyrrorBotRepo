@@ -29,14 +29,14 @@ function contatti($resp,$parameters,$text,$email){
     				return $answer;
     			}else{
     				//print_r("Non sono presenti contatti sul social network richiesto");
-    				$answer = "C'è stato un problema durante il caricamento dei contatti. Effettua nuovamente il login!";
+    				$answer = $GLOBALS['social1'];
     				return $answer;
     			}
 
 
 			}else{
 				//print_r("Inserisci un solo social network");
-				$answer = "Scegli un solo social network";
+				$answer = $GLOBALS['social2'];
     			return $answer;
 			}
 		}
@@ -62,13 +62,13 @@ function contatti($resp,$parameters,$text,$email){
     				return $answer;
     			}else{
     				//print_r("Non sono presenti contatti sul social network richiesto");
-    				$answer = "C'è stato un problema durante il caricamento dei contatti. Effettua nuovamente il login!";
+    				$answer = $GLOBALS['social1'];
     				return $answer;
     			}
 
 			}else{
 				//print_r("Inserisci un solo social network");
-				$answer = "Scegli un solo social network";
+				$answer =$GLOBALS['social2'];
     			return $answer;
 			}
 		}
@@ -95,19 +95,19 @@ function contatti($resp,$parameters,$text,$email){
     				return $answer;
     			}else{
     				//print_r("Non sono presenti contatti sul social network richiesto");
-    				$answer = "C'è stato un problema durante il caricamento dei contatti. Effettua nuovamente il login!";
+    				$answer = $GLOBALS['social1'];
     				return $answer;
     			}
 
 			}else{
 				//print_r("Inserisci un solo social network");
-				$answer = "Scegli un solo social network";
+				$answer = $GLOBALS['social2'];
     			return $answer;
 			}
 		}
 	}else{
 		//print_r("Inserisci il nome di un social network");
-		$answer = "Inserisci il nome di un social network";
+		$answer = $GLOBALS['social3'];
     	return $answer;
 	}
 
@@ -163,7 +163,7 @@ function printAnswer($top3, $resp){
 		$answer = substr($answer,0,strlen($answer)-1);
 
 	}else{
-		$answer = "Sfortunatamente sembra che non ci siano contatti nel tuo profilo";
+		$answer = $GLOBALS['social4'];
 	}
 
 	return $answer;

@@ -10,9 +10,9 @@
     $cookie_name = "myrror";
 	$cookie_email = $email;
 
-	if(!isset($_COOKIE['token'])) {
+	if(!isset($_COOKIE['x-access-token'])) {
 		setcookie($cookie_name, $cookie_email, time() + (86400 * 30), "/"); // 86400 = 1 day
-		setcookie('token',$token, time() + (86400 * 30), "/");
+		setcookie('x-access-token',$token, time() + (86400 * 30), "/");
 	}
 	
 

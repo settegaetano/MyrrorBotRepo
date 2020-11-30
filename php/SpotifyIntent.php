@@ -26,9 +26,10 @@ function getMusic($resp,$parameters,$text,$email){
 	$spiegazione = "";
 	$param = "";
 	
-	$listaParoleBrano = array( 'brano', 'canzone', 'musica' );//brano
-	$listaParoleRaccomandazioni = array( 'musica adatta a me', 'consigliami', 'consigli', 'suggerisc', 'per me' , 'a me');//raccomandazioni
-	$listaParoleEmozioni = array( 'umore', 'emozioni','stato d\'animo');//emozioni
+	$listaParoleBrano = array( $GLOBALS['music1'], $GLOBALS['music2'], $GLOBALS['music3'] );//brano
+	$listaParoleRaccomandazioni = array( $GLOBALS['music4'],  $GLOBALS['music5'],  $GLOBALS['music6'], $GLOBALS['music7'],
+	 $GLOBALS['music8'] , $GLOBALS['music9'] );//raccomandazioni
+	$listaParoleEmozioni = array(  $GLOBALS['music10'], $GLOBALS['music11'], $GLOBALS['music12'],);//emozioni
 
     
 
@@ -182,7 +183,7 @@ function getRandomMusic(){
 			*/
 			$answer = substr_replace($url, "embed/", 25, 0);
 		}else{
-			$answer = "Scusami ma non sono riuscito a capire la canzone da riprodurre. Prova a riscriverla con altre parole";
+			$answer = $GLOBALS['music13'];
 		}
 
 		return $answer;
@@ -223,14 +224,14 @@ function getMusicByTrack($resp,$parameters,$text,$email){
 			*/
 			$answer = substr_replace($url, "embed/", 25, 0);
 		}else{
-			$answer = "Scusami ma non sono riuscito a capire la canzone da riprodurre. Prova a riscriverla con altre parole";
+			$answer = $GLOBALS['music13'];
 		}
 		return $answer;
 
 	}else{
 		$brano = "";
 		$artista = "";
-		return "Scusami ma non sono riuscito a capire la canzone da riprodurre. Prova a riscriverla con altre parole";
+		return $GLOBALS['music13'];
 	}
 
 }
@@ -245,7 +246,7 @@ function getMusicByArtist($resp,$parameters,$text,$email){
 		$artista = $parameters['music-artist']; //Artista del brano
 	}else{
 		$artista = "";
-		return "Scusami ma non sono riuscito ad identificare l'artista del brano. Prova a riscriverlo!";
+		return $GLOBALS['artist1'];
 	}
 
 	$results = $api->search($artista, 'track');
@@ -286,7 +287,7 @@ function getMusicByGenre($resp,$parameters,$text,$email){
 		$genere = $parameters['GeneriMusicali']; //Genere del brano
 	}else{
 		$genere = "";
-		return "Scusami ma non sono riuscito ad identificare il genere del brano. Prova a riscriverlo!";
+		return $GLOBALS['genre1'];
 	}
 
 	//Prendo la playlist di quel genere
@@ -331,7 +332,7 @@ function getPlaylistByArtist($resp,$parameters,$text,$email){
 		$artista = $parameters['music-artist']; //Genere del brano
 	}else{
 		$artista = "";
-		return "Scusami ma non sono riuscito ad identificare l'artista del brano. Prova a riscriverlo!";
+		return $GLOBALS['artist1'];
 	}
 
 	$results = $api->search($artista, 'track');
@@ -362,7 +363,7 @@ function getPlaylistByArtist($resp,$parameters,$text,$email){
     	'country' => 'it',
 		]);
 	}else{
-		return "Scusami ma non sono riuscito ad identificare l'artista richiesto Prova a riscriverlo!";
+		return $GLOBALS['artist2'] ;
 	}
 
 	$arrayAlbum = array();
@@ -528,31 +529,31 @@ function explainMusicEmotion($resp,$parameters,$text,$email){
 
  switch ($emotion) {
       case 'gioia':
-        $answer .= "sei felice  &#x1f601";
+        $answer .= $GLOBALS['musicemotion1'];
         break;
 
       case 'paura':
-       $answer .= "sei spaventato &#x1f628";
+       $answer .= $GLOBALS['musicemotion2'];
         break;
 
       case 'rabbia':
-        $answer .= "sei arrabbiato &#x1f621";
+        $answer .= $GLOBALS['musicemotion3'];
         break;
 
       case 'disgusto':
-        $answer .= "sei disgustato &#x1f629";
+        $answer .= $GLOBALS['musicemotion4'];
         break;
 
       case 'tristezza':
-       $answer .= "sei triste &#x1f625";
+       $answer .= $GLOBALS['musicemotion5'];
         break;
 
       case 'sorpresa':
-        $answer .= "sei sorpreso &#x1f631";
+        $answer .= $GLOBALS['musicemotion6'];
         break;
       
       default:
-       $answer .= "il tuo sato d'animo è neutro  &#x1f636";
+       $answer .= $GLOBALS['musicemotion7'];
         break;
     }
 
@@ -717,20 +718,20 @@ function  explainCustomMusic($resp,$parameters,$text,$email){
 	$valori = getLastAttivitaFisica($resp,$parameters,$text,$email); //Prendo i valori sull'attività fisica
 	$minutiEffettuati = $valori['abbastanzaAttiva'] + $valori['pocoAttiva'] + $valori['moltoAttiva'];
 
-	$answer = "Ti ho consigliato questa playlist perchè ";
+	$answer = $GLOBALS['playlist'];
 
 	if ($eta < 20 ) {
-		$answer .= "sei giovane ";
+		$answer .= $GLOBALS['musicage1'];
 	}elseif ($eta < 50 ) {
-		$answer .= "sei adulto "; 
+		$answer .= $GLOBALS['musicage2']; 
 	}else{
-        $answer .= "sei di età avanzata ";
+        $answer .= $GLOBALS['musicage3'];
 	}
 
 	if ($minutiEffettuati >= 30) {
-		$answer .= "e hai uno stile di vita attivo";
+		$answer .= $GLOBALS['musiclifestyle1'];
 	}else{
-		$answer .= "e sedentario";
+		$answer .= $GLOBALS['musiclifestyle2'];
 	}
 
 	return $answer;
@@ -1167,7 +1168,7 @@ function insertPreferenceMusic($parameters,$text,$email){
 
         curl_close ($ch);
 
-        return "Preferenza sulla musica inserita";
+        return $GLOBALS['musicpref'];
 
 	}
 

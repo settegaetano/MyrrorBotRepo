@@ -1,6 +1,6 @@
 <?php
 
-include "url.php";
+require_once("url.php");
 
 function queryMyrror($param, $credenziali){
 
@@ -17,6 +17,8 @@ function queryMyrror($param, $credenziali){
 
 	$server_output = curl_exec($ch);
 	$result = json_decode($server_output,true);
+	$username = $result['username'];
+	setcookie('username',$username, time() + (86400 * 30), "/");
 	curl_close ($ch);
 
 	// Further processing ...
@@ -45,5 +47,34 @@ function queryMyrror($param, $credenziali){
 	}
 
 }
+
+
+function queryMyrrorT($param, $token){
+	$ch = curl_init();
+
+		$headers =[
+			"x-access-token:".$token
+		];
+
+		if(isset($_COOKIE['username'])){
+		curl_setopt($ch, CURLOPT_URL, "http://".$GLOBALS['url'].":5000/api/profile/".$_COOKIE['username'].$param);
+
+		curl_setopt($ch, CURLOPT_POST, 0);
+		curl_setopt($ch, CURLOPT_HEADER, 0);
+		curl_setopt($ch, CURLOPT_HTTPHEADER,$headers);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);          
+
+		$result2 = curl_exec($ch);
+		//Decode JSON
+		$json_data = json_decode($result2,true);
+
+		curl_close ($ch);
+
+		return $json_data;
+		}
+		
+}
+
+
 
 ?>

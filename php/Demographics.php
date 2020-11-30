@@ -24,7 +24,7 @@ function identitaUtente($resp,$parameters,$text,$email){
 	if (isset($result)) {
 		$answer = str_replace("X",$result,$resp);
 	}else{
-		$answer = "Non sono riuscito a reperire le informazioni relative al tuo nome &#x1F62D;. Verifica che sia presente nel tuo account";
+		$answer = $GLOBALS['demographics1'];
 	}
 
 	return $answer;
@@ -53,7 +53,7 @@ function getEta($resp,$parameters,$text,$email){
 	}
 
 	if($result == null){
-		$answer = "Non sono riuscito a reperire le informazioni relative alla tua data di nascita &#x1F62D;. Verifica che sia presente nel tuo account";
+		$answer = $GLOBALS['demographics2'];
 	}else{
 		$today = date("Y-m-d");
 		$diff = abs(strtotime($today) - strtotime($result));
@@ -89,7 +89,7 @@ function getCountry($resp,$parameters,$text,$email){
 		$answer = str_replace("X",$result,$resp);
 
 	}else{
-		$answer = "Non sono riuscito a reperire le informazioni relative al tuo luogo di nascita &#x1F62D;. Verifica che sia presente nel tuo account";
+		$answer = $GLOBALS['demographics3'];
 	}
 
 	return $answer;
@@ -122,7 +122,7 @@ function getHeight($resp,$parameters,$text,$email){
 
 
 	}else{
-		$answer = "Non sono riuscito a reperire le informazioni relative alla tua altezza &#x1F62D;. Verifica che sia presente nel tuo account";
+		$answer = $GLOBALS['demographics4'];
 	}
 
 	return $answer;
@@ -152,7 +152,7 @@ function getWeight($resp,$parameters,$text,$email){
 		$answer = str_replace("X",$result,$resp);
 
 	}else{
-		$answer = "Non sono riuscito a reperire le informazioni relative al tuo peso &#x1F62D;. Verifica che sia presente nel tuo account";
+		$answer = $GLOBALS['demographics5'];
 	}
 
 	return $answer;
@@ -193,7 +193,7 @@ function lavoro($resp,$parameters,$text,$email){
 
 
 	}else{
-		$answer = "Non sono riuscito a reperire le informazioni relative al tuo lavoro &#x1F62D;. Verifica che sia presente nel tuo account";
+		$answer = $GLOBALS['demographics6'];
 	}
 
 	return $answer;
@@ -234,7 +234,7 @@ function email($resp,$parameters,$text,$email){
 		$answer = str_replace("X",$email,$resp);
 
 	}else{
-		$answer = "Non sono riuscito a reperire le informazioni relative alla tua email &#x1F62D;. Verifica che sia presente nel tuo account";
+		$answer = $GLOBALS['demographics7'];
 	}
 
 	return $answer;

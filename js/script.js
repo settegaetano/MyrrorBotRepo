@@ -3,6 +3,15 @@
   var imageURL;
   var email ;
   var flagcitta= false;
+  
+   var theLanguage = $('html').attr('lang');
+   var lang= lan_en;
+  
+
+  
+ 
+
+
 
   function getEmail() {
   	return email;  //commentare se usato in localhost
@@ -102,10 +111,16 @@
       email = decodeURIComponent(tempStr); //commentare se usato in localhost
       //email = 'cat@cat.it'; //usato in localhost
       //tempstr = 'cat@cat.it'; //usato in localhost
-
+   var Language = $('html').attr('lang');
       //console.log(email);
+      if(Language == 'it'){
+       lang = lan_it;
+    }else{
+      lang = lan_en;
+    }
      
-      if(text.match(/perchè/) || text.match(/spiegami/)){
+      if(text.match(lang.why) || text.match(lang.explain)){
+
            var testo = $("#spiegazione").val();
             $(".chat").append('<li class="replies"><img src="immagini/chatbot.png" alt="" /><p >'+testo+'</p></li>');
      
@@ -113,9 +128,9 @@
        
   
 
-      if (text.match(/cambia/) || text.match(/cambio/) || text.match(/dammi un'altra/) || text.match(/leggi un'altra/) || text.match(/dammene un'altra/)
-        || text.match(/leggine un'altra/) || text.match(/leggi altra news/) || text.match(/altra canzone/) || text.match(/dimmi un'altra/) || text.match(/riproducine un'altra/)
-        || text.match(/cambia video/) || text.match(/fammi vedere un altro/) || text.match(/dammi un altro/) || text.match(/altro video/) || text.match(/altra canzone/) || text.match(/altra news/)) {
+      if (text.match(lang.change) || text.match(lang.change1) || text.match(lang.change2) || text.match(lang.change3) || text.match(lang.change4)
+        || text.match(lang.change5) || text.match(lang.change6) || text.match(lang.change7) || text.match(lang.change8) || text.match(lang.change9)
+        || text.match(lang.another) || text.match(lang.another2) || text.match(lang.another3) || text.match(lang.another4) || text.match(lang.another5) || text.match(lang.another6)) {
 
         text = $('#contesto').val();
       }else{
@@ -128,7 +143,7 @@
       $.ajax({
                 type: "POST",
                 url: "php/intentDetection.php",
-                data: {testo:text,city:citta,mail:email},
+                data: {testo:text,city:citta,mail:email,lang:theLanguage},
                 success: function(data) {
                   setResponse(data);
                 }
@@ -150,16 +165,16 @@ function setResponse(val) {
 
       //the json is ok
       val = JSON.parse(val);
-      var musicaSpotify = "Ecco qui la tua richiesta!";
+      var musicaSpotify = lang.spotify1;
       var spiegazione = "";
 
-      var canzoneNomeSpotify = "Ecco qui la canzone richiesta!";
-      var canzoneArtistaSpotify = "Ecco qui la canzone dell'artista richiesto!";
-      var canzoneGenereSpotify = "Ecco una playlist di canzoni del genere richiesto!";
-      var playlistEmozioniSpotify = "Ecco qui una playlist di canzoni raccomandata in base al tuo umore";
-      var canzoneEmozioniSpotify = "Ecco qui un brano consigliato in base al tuo umore";
-      var canzoniPersonalizzateSpotify = "Ecco qui un brano consigliato che potrebbe piacerti";
-      var video = "Ecco qui il video richiesto";
+      var canzoneNomeSpotify = lang.spotify2;
+      var canzoneArtistaSpotify = lang.spotify2;
+      var canzoneGenereSpotify = lang.spotify3;
+      var playlistEmozioniSpotify = lang.spotify4;
+      var canzoneEmozioniSpotify = lang.spotify5;
+      var canzoniPersonalizzateSpotify = lang.spotify6;
+      var video = lang.video1;
 
       if (val["intentName"] == "Interessi" || val["intentName"] == "Contatti" || val["intentName"] == "Esercizio fisico" 
         || val["intentName"] == "Personalita" || val["intentName"] == "MusicPreference") {
@@ -206,7 +221,7 @@ function setResponse(val) {
       }else if (val["intentName"] == "meteo binario" ) {
 
         if( val['answer']['city'] == undefined ){
-           $(".chat").append('<li class="replies"><img src="immagini/chatbot.png" alt="" /><p >Inserisci la città</p></li>');
+           $(".chat").append('<li class="replies"><img src="immagini/chatbot.png" alt="" /><p >'+lang.inscity+'</p></li>');
            flagcitta = true;
             $(".messages").animate({ scrollTop:( $(document).height() * 100)  }, "fast");
         }else{
@@ -233,14 +248,14 @@ function setResponse(val) {
       }else if((val["intentName"] == "Meteo" ) && val['confidence'] > 0.60 ){
 
         if( val['answer']['city'] == undefined ){
-           $(".chat").append('<li class="replies"><img src="immagini/chatbot.png" alt="" /><p >Inserisci la città</p></li>');
+           $(".chat").append('<li class="replies"><img src="immagini/chatbot.png" alt="" /><p >'+lang.inscity+'</p></li>');
            flagcitta = true;
             $(".messages").animate({ scrollTop:( $(document).height() * 100)  }, "fast");
         }
            var json = val['answer']['res'];
        
            if( json == ""){
-            $(".chat").append('<li class="replies"><img src="immagini/chatbot.png" alt="" /><p >Sfortunatamente non sono disponibili dati riguardanti il periodo indicato</p></li>');
+            $(".chat").append('<li class="replies"><img src="immagini/chatbot.png" alt="" /><p >'+lang.unfor3+'</p></li>');
            }else{
               var res = json.split("<br>");
            var str = res[0].split(";");
@@ -381,7 +396,7 @@ function setResponse(val) {
             var timestampEnd = Date.now();
             rating(testo,question,'no',mail,timestampStart,timestampEnd,"");
         }else{*/
-           $('#par'+timestamp).append('<div class="rating-box"><h4>Sei soddisfatto della risposta?</h4><button id="yes'+timestamp+'" class="btn-yes">SI</button>'+
+           $('#par'+timestamp).append('<div class="rating-box"><h4>'+lang.satisfy+'</h4><button id="yes'+timestamp+'" class="btn-yes">'+lang.yes+'</button>'+
         '<button id="no'+timestamp+'" class="btn-no">NO</button></div>');
         
        // }
@@ -393,7 +408,7 @@ function setResponse(val) {
 }else{
 
   //the json is not ok
-    $(".chat").append('<li class="replies"><img src="immagini/chatbot.png" alt="" /><p >Non ho capito cosa vuoi dire. Prova a riformulare la tua domanda!</p></li>');
+    $(".chat").append('<li class="replies"><img src="immagini/chatbot.png" alt="" /><p >'+lang.donotunderstand+'</p></li>');
       
 
 }
@@ -405,7 +420,19 @@ function setResponse(val) {
 
     //Intent avviato all'inizio del dialogo per mostrare la frase di benvenuto e per impostare il nome dell'utente nella schermata
     function welcomeIntent(){
-      send("aiuto");
+
+
+    var Language = $('html').attr('lang');
+
+  
+
+    if(Language == 'it'){
+       lang = lan_it;
+    }else{
+      lang = lan_en;
+    }
+ 
+      send(lang.help);
       var value = "; " + document.cookie;
       
       if (value.match(/myrror/)) {
@@ -491,4 +518,33 @@ $("ul.chat").on("click","span.close",function(evnt) {
       });
 
 });
+
+ setInterval(function(){ 
+ 
+
+    var value = "; " + document.cookie;
+      var token;
+      if (value.match(/x-access-token/)) {
+            var parts = value.split("; " + 'x-access-token' + "="); 
+
+            var tempStr = null;
+            while(tempStr == null){
+              tempStr =  parts.pop().split(";").shift();
+              
+            } 
+           token = tempStr;
+      }
+//console.log(token);
+ $.ajax({
+          type: "POST",
+          url: "php/JSON_upload.php",
+          data: {accesstoken: token,mail:email},
+        success: function(data) {
+          console.log(data);
+        }
+        });
+
+}, 40000);
+
+ 
 

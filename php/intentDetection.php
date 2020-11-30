@@ -23,22 +23,30 @@ include 'Meteo.php';
 include 'Programmatv.php';
 include 'Recipes.php';
 
+$lang = "en";
+if(isset($_POST['lang'])){ 
+        $lang = $_POST['lang']; 
+} 
+require_once('Language/lan_'.$lang.'.php');
+
+
 $city = "Bari";
 header('Content-type: text/plain; charset=utf-8');
  ini_set('display_errors', 1);
 //Controllo se la variabile 'testo' ricevuta è nulla
 if (isset($_POST{'testo'})) {
     $testo = $_POST{'testo'};
-    if( stripos($testo, 'weekend') !== false  
-        && stripos($testo, 'prossimo') == false ){
-      $pos = stripos($testo, 'weekend');
-  $testo = substr_replace($testo, ' prossimo ', $pos, 0);
+    if( stripos($testo, $GLOBALS["WEEKEND2"]) !== false  
+        && stripos($testo, $GLOBALS['next']) == false ){
+      $pos = stripos($testo, $GLOBALS["WEEKEND2"]);
+  $testo = substr_replace($testo, ' '.$GLOBALS["WEEKEND2"].' ', $pos, 0);
 
-    }elseif ( stripos($testo, 'fine settimana') !== false  && stripos($testo, 'prossimo') == false) {
-        $pos = stripos($testo, 'fine settimana');
-        $testo = substr_replace($testo, ' prossimo ', $pos, 0);
+    }elseif ( stripos($testo, $GLOBALS["WEEKEND"] ) !== false  && stripos($testo, $GLOBALS['next']) == false) {
+        $pos = stripos($testo, $GLOBALS["WEEKEND"]);
+        $testo = substr_replace($testo, ' '.$GLOBALS["WEEKEND2"].' ', $pos, 0);
     }
 }
+
 
 if(isset($_POST{'city'})){
     $city = $_POST{'city'};
@@ -48,8 +56,16 @@ if(isset($_POST{'mail'})){
     $email = $_POST{'mail'};
 }
 
-function detect_intent_texts($projectId,$city,$email, $text, $sessionId, $languageCode = 'it-IT')
-{
+
+
+$GLOBALS["answer"] = $GLOBALS["dontunderstand"];
+
+define("DIALOGFLOW", $GLOBALS['DIALOGFLOW_LANG']);
+
+function detect_intent_texts($projectId,$city,$email,
+ $text, $sessionId, $languageCode = DIALOGFLOW){
+
+
     // new session
     $test = array('credentials' => 'myrrorbot-4f360-cbcab170b890.json');
     $sessionsClient = new SessionsClient($test);
@@ -84,8 +100,8 @@ function detect_intent_texts($projectId,$city,$email, $text, $sessionId, $langua
         
     }else{
 
-        $answer = "Purtroppo non ho capito la domanda. Prova a rifarla con altre parole! Devo ancora imparare molte cose &#x1F605;";
-
+        
+        $answer = $GLOBALS["answer"];
         //Stampo la risposta relativa all'intent non identificato
         $arr = array('intentName' => "Non identificato", 'confidence' => "0",'answer' => $answer);
         printf(json_encode($arr,JSON_UNESCAPED_UNICODE));  //JSON_UNESCAPED_UNICODE utilizzato per il formato UTF8
@@ -286,14 +302,14 @@ function selectIntent($email,$intent, $confidence,$text,$resp,$parameters,$city)
                 if ($resp != "") { //Small Talk
                     $answer = $resp;
                 }else{
-                    $answer = "Purtroppo non ho capito la domanda. Prova a rifarla con altre parole! Devo ancora imparare molte cose &#x1F605;";
+                   $answer = $GLOBALS["answer"];
 
                 }
                 break;
         }
 
     }else {
-        $answer = "Purtroppo non ho capito la domanda. Prova a rifarla con altre parole! Devo ancora imparare molte cose &#x1F605;";
+       $answer = $GLOBALS["answer"];
     }
 
 
@@ -318,7 +334,7 @@ function selectIntent($email,$intent, $confidence,$text,$resp,$parameters,$city)
                 break;
 
             default:
-                $answer = "Purtroppo non ho capito la domanda. Prova a rifarla con altre parole! Devo ancora imparare molte cose &#x1F605;";
+                $answer = $GLOBALS["answer"];
                 break;
         }
     }

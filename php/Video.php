@@ -12,34 +12,34 @@
 function explainVideo($email){
 
   $emotion = getLastEmotion($email);
-  $answer = "Ti ho consigliato questo video perchè ";
+  $answer = $GLOBALS['video1'];
     switch ($emotion) {
       case 'gioia':
-        $answer .= "sei felice  &#x1f601";
+        $answer .= $GLOBALS['musicemotion1'];
         break;
 
       case 'paura':
-       $answer .= "sei spaventato &#x1f628";
+       $answer .= $GLOBALS['musicemotion2'];
         break;
 
       case 'rabbia':
-        $answer .= "sei arrabbiato &#x1f621";
+        $answer .= $GLOBALS['musicemotion3'];
         break;
 
       case 'disgusto':
-        $answer .= "sei disgustato &#x1f629";
+        $answer .= $GLOBALS['musicemotion4'];
         break;
 
       case 'tristezza':
-       $answer .= "sei triste &#x1f625";
+       $answer .= $GLOBALS['musicemotion5'];
         break;
 
       case 'sorpresa':
-        $answer .= "sei sorpreso &#x1f631";
+        $answer .= $GLOBALS['musicemotion6'];
         break;
       
       default:
-       $answer .= "il tuo sato d'animo è neutro  &#x1f636";
+       $answer .= $GLOBALS['musicemotion7'];
         break;
     }
 
@@ -62,31 +62,31 @@ function explainVideo($email){
     try {
     switch ($emotion) {
       case 'gioia':
-        $q = "video divertenti";
+        $q = $GLOBALS['video2'];
         break;
 
       case 'paura':
-        $q = "video motivazionali";
+        $q = $GLOBALS['video3'];
         break;
 
       case 'rabbia':
-        $q = "video rilassanti";
+        $q = $GLOBALS['video4'];
         break;
 
       case 'disgusto':
-        $q = "video simpatici";
+        $q = $GLOBALS['video5'];
         break;
 
       case 'tristezza':
-        $q = "video divertenti";
+        $q = $GLOBALS['video6'];
         break;
 
       case 'sorpresa':
-        $q = "video notizie";
+        $q = $GLOBALS['video7'];
         break;
       
       default:
-        $q = "video notizie";
+        $q = $GLOBALS['video7'];
         break;
     }
 
@@ -149,7 +149,7 @@ function explainVideo($email){
       $q = $parameters['any']; //Genere del brano
     }else{
       $q = "";
-      return "Frase non riconosciuto. riprova!";
+      return $GLOBALS['video8'] ;
     }
 
       if( $searchResponse == ""){
@@ -239,7 +239,7 @@ function insertPreferenceVideo($parameters,$text,$email){
 
         curl_close ($ch);
 
-        return "Preferenza sui video inserita";
+        return $GLOBALS['videopref'];
 
   }
 

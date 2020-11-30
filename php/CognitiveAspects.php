@@ -48,40 +48,40 @@ function personalita($resp,$parameters,$email){
 
 	//openness
 	if ($openness > 0.5){
-		$personalita1 = "inventivo e curioso";
+		$personalita1 = $GLOBALS['cognitive1'];
 	} else{
-		$personalita1 = "concreto e cauto";
+		$personalita1 = $GLOBALS['cognitive2'];
 	}
 
 	//conscientiousness
 	if ($conscientiousness > 0.5){
-		$personalita2 = "efficiente ed organizzato";
+		$personalita2 = $GLOBALS['cognitive3'];
 	} else{
-		$personalita2 = "rilassato e negligente";
+		$personalita2 = $GLOBALS['cognitive4'];
 	}
 
 	//extroversion
 	if ($extroversion > 0.5){
-		$personalita3 = "estroverso ed energico";
+		$personalita3 = $GLOBALS['cognitive5'];
 	} else{
-		$personalita3 = "solitario e riservato";
+		$personalita3 = $GLOBALS['cognitive6'];
 	}
 
 	//agreeableness 
 	if ($agreeableness  > 0.5){
-		$personalita4 = "amichevole e compassionevole";
+		$personalita4 = $GLOBALS['cognitive7'];
 	} else{
-		$personalita4 = "distaccato";
+		$personalita4 = $GLOBALS['cognitive8'];
 	}
 	
 	//neuroticism
 	if ($neuroticism > 0.5){
-		$personalita5 = "sensibile e nervoso";
+		$personalita5 = $GLOBALS['cognitive9'];
 	} else{
-		$personalita5 = "fiducioso";
+		$personalita5 = $GLOBALS['cognitive10'];
 	}
 
-	$answer = $resp . " " . $personalita1 . ", " . $personalita2 . ", " . $personalita3 . ".<br>Inoltre sei anche " . $personalita4 . ", " . $personalita5;
+	$answer = $resp . " " . $personalita1 . ", " . $personalita2 . ", " . $personalita3 . $GLOBALS['cognitive11'] . $personalita4 . ", " . $personalita5;
 
 	return $answer;
 
@@ -91,7 +91,7 @@ function personalita($resp,$parameters,$email){
 //Funzione che permette di fornire risposte binarie relative a domande sulla personalità
 function personalitaBinario($resp,$parameters,$email){
 
-    $answer = "non sono riuscito a stabilirlo, riprova con altre parole";
+    $answer = $GLOBALS['cognitive12'];
 	$param = "";
 	$json_data = queryMyrror($param,$email);
 	$result = null;
@@ -141,87 +141,87 @@ function personalitaBinario($resp,$parameters,$email){
 		$entity = $parameters['OpennessSi'];
 		
 		if ($openness > 0.5) {
-			$answer = "Si, sei " . $entity;
+			$answer = $GLOBALS['cognitive13'] . $entity;
 		}else{
-			$answer = "No, sei concreto e cauto";
+			$answer = $GLOBALS['cognitive14'];
 		}
 		
 	}else if ($parameters['OpennessNo'] != ""){
 		$entity = $parameters['OpennessNo'];
 
 		if ($openness <= 0.5) {
-			$answer = "Si, sei " . $entity;
+			$answer = $GLOBALS['cognitive13'] . $entity;
 		}else{
-			$answer = "No, sei creativo e curioso";
+			$answer = $GLOBALS['cognitive15'];
 		}
 
 	}else if ($parameters['ConscientiousnessSi'] != ""){
 		$entity = $parameters['ConscientiousnessSi'];
 
 		if ($conscientiousness > 0.5) {
-			$answer = "Si, sei " . $entity;
+			$answer = $GLOBALS['cognitive13'] . $entity;
 		}else{
-			$answer = "No, sei rilassato e negligente";
+			$answer = $GLOBALS['cognitive16'];
 		}
 
 	}else if ($parameters['ConscientiousnessNo'] != ""){
 		$entity = $parameters['ConscientiousnessNo'];
 
 		if ($conscientiousness <= 0.5) {
-			$answer = "Si, sei " . $entity;
+			$answer = $GLOBALS['cognitive13'] . $entity;
 		}else{
-			$answer = "No, sei efficiente ed organizzato";
+			$answer = $GLOBALS['cognitive17'];
 		}
 	}else if ($parameters['ExtroversionSi'] != ""){
 		$entity = $parameters['ExtroversionSi'];
 
 		if ($extroversion > 0.5) {
-			$answer = "Si, sei " . $entity;
+			$answer = $GLOBALS['cognitive13'] . $entity;
 		}else{
-			$answer = "No, sei solitario e riservato";
+			$answer = $GLOBALS['cognitive18'];
 		}
 
 	}else if ($parameters['ExtroversionNo'] != ""){
 		$entity = $parameters['ExtroversionNo'];
 
 		if ($extroversion <= 0.5) {
-			$answer = "Si, sei " . $entity;
+			$answer = $GLOBALS['cognitive13'] . $entity;
 		}else{
-			$answer = "No, sei estroverso ed energico";
+			$answer = $GLOBALS['cognitive19'];
 		}
 	}else if ($parameters['AgreeablenessSi'] != ""){
 		$entity = $parameters['AgreeablenessSi'];
 
 		if ($agreeableness > 0.5) {
-			$answer = "Si, sei " . $entity;
+			$answer = $GLOBALS['cognitive13'] . $entity;
 		}else{
-			$answer = "No, sei distaccato";
+			$answer = $GLOBALS['cognitive20'];
 		}
 
 	}else if ($parameters['AgreeablenessNo'] != ""){
 		$entity = $parameters['AgreeablenessNo'];
 
 		if ($agreeableness <= 0.5) {
-			$answer = "Si, sei " . $entity;
+			$answer = $GLOBALS['cognitive13'] . $entity;
 		}else{
-			$answer = "No, sei amichevole e compassionevole";
+			$answer = $GLOBALS['cognitive21'];
 		}
 	}else if ($parameters['NeuroticismSi'] != ""){
 		$entity = $parameters['NeuroticismSi'];
 
 		if ($neuroticism > 0.5) {
-			$answer = "Si, sei " . $entity;
+			$answer = $GLOBALS['cognitive13'] . $entity;
 		}else{
-			$answer = "No, sei fiducioso";
+			$answer = $GLOBALS['cognitive22'];
 		}
 
 	}else if ($parameters['NeuroticismNo'] != ""){
 		$entity = $parameters['NeuroticismNo'];
 
 		if ($neuroticism <= 0.5) {
-			$answer = "Si, sei " . $entity;
+			$answer = $GLOBALS['cognitive13'] . $entity;
 		}else{
-			$answer = "No, sei sensibile e nervoso";
+			$answer = $GLOBALS['cognitive23'];
 		}
 	}
 

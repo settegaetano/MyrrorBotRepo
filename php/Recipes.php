@@ -31,7 +31,7 @@ function getRecipe($file,$ricetta){
 function insertRecipesPreference($parameters,$text,$email){
 
     
-        $file = "ricette.csv";
+        $file = "ricette".$GLOBALS['file'].".csv";
         if($parameters['PreferenceNegative'] != null){
 	       $like = 0;
         }else{
@@ -79,11 +79,11 @@ function insertRecipesPreference($parameters,$text,$email){
         curl_close ($ch);
         
 
-        return "preferenza inserita correttamente";
+        return $GLOBALS['pref'];
 
 	}
     
-    return "non ho capito la tua preferenza,riprova.";
+    return $GLOBALS['notpref'];
     
 }
 
