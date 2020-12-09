@@ -1,7 +1,7 @@
 <?php
 require_once('url.php');
 
-function getRecipe($file,$ricetta){
+function GetRecipeslist($file,$ricetta){
 
         // Open the file for reading
      if (($h = fopen("../fileMyrror/".$file, "r")) !== FALSE) {
@@ -27,11 +27,11 @@ function getRecipe($file,$ricetta){
      }
 }
 
-//echo getRecipe("ricette.csv","pasta al sugo");
+//echo GetRecipeslist("ricette.csv","pasta al sugo");
 function insertRecipesPreference($parameters,$text,$email){
 
     
-        $file = "ricette".$GLOBALS['file'].".csv";
+        $file = "ricette.csv";
         if($parameters['PreferenceNegative'] != null){
 	       $like = 0;
         }else{
@@ -40,7 +40,7 @@ function insertRecipesPreference($parameters,$text,$email){
     
     
         if($parameters['any'] != null){
-            $res = getRecipe($file,$parameters['any']);
+            $res = GetRecipeslist($file,$parameters['any']);
         }else if($parameters['FoodType'] != null){
             $res = 'Type:'.$parameters['FoodType'];
         }
@@ -79,11 +79,11 @@ function insertRecipesPreference($parameters,$text,$email){
         curl_close ($ch);
         
 
-        return $GLOBALS['pref'];
+        return "preferenza inserita correttamente";
 
 	}
     
-    return $GLOBALS['notpref'];
+    return "non ho capito la tua preferenza,riprova.";
     
 }
 

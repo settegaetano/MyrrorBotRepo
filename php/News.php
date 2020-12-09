@@ -160,7 +160,7 @@ foreach ($list as $key => $value){
               $arr[0] = $url;
 	          $arr[1] = $image;
 	          $arr[2] = $title;
-	          $arr[3] = $GLOBALS['news1'] .$key;
+	          $arr[3] = "Ti ho consigliato questo articolo perchè sei interessato a ".$key;
 	          array_push($articles, $arr);
 
             }
@@ -205,7 +205,7 @@ foreach ($list as $key => $value){
 	$json = googleNewsQuery($link);
 	
 	if(!isset($json['articles'] ))
-        return $GLOBALS['news2'];
+        return "Non è possibile fornire una spiegazione &#x1f614";
 
 
 	if($json['totalResults'] != 0){
@@ -214,7 +214,7 @@ foreach ($list as $key => $value){
 	        $title = $value2['title'];
 		    $url =  $value2['url'];
 
-			return $GLOBALS['news1'].$key ."  &#x1f600";
+			return "Ti ho consigliato questo articolo perchè sei interessato a ".$key ."  &#x1f600";
 			
 		}
 		
@@ -226,7 +226,7 @@ foreach ($list as $key => $value){
 se non viene trovato alcun articolo relativo agli interessi
 principali dell'utente vengono restituite le notizie odierne
 */
-return $GLOBALS['news3'];
+return "Non ho trovato articoli adatti a te e ti ho dato l'ultima notizia  &#x1f600";
 
 }
 
@@ -281,33 +281,33 @@ $res = "";
 
 if ($parameters['sports'] != null) {
 	$val = $parameters['sports'];
-	$res = 'Topic:'.checkTopic($val,"sport".$GLOBALS['file'].".csv");
+	$res = 'Topic:'.checkTopic($val,'sport.csv');
 
 	
 }elseif ($parameters['health'] != null) {
 	$val = $parameters['health'];
-	$res = 'Topic:'.checkTopic($val,"health".$GLOBALS['file'].".csv");
+	$res = 'Topic:'.checkTopic($val,'health.csv');
 	
 }elseif ($parameters['science'] != null) {
 	$res = 'Topic:'.'scienza';
 	
 }elseif ($parameters['entertainment'] != null) {
 	$val = $parameters['entertainment'];
-	$res = checkTopic($val,"entertainment".$GLOBALS['file'].".csv");
+	$res = checkTopic($val,'entertainment.csv');
 	
 }elseif ($parameters['Technology'] != null) {
 	$res = 'Topic:'.'tecnologia';
 	
 }elseif ($parameters['business'] != null) {
 	$val = $parameters['business'];
-	$res = 'Topic:'.checkTopic($val,"business".$GLOBALS['file'].".csv");
+	$res = 'Topic:'.checkTopic($val,'business.csv');
 	
     
 }elseif($parameters['any'] != null){
     $res = $parameters['any'];
     
 }else{
-	return $GLOBALS['news4'];
+	return "non ho capito la tua preferenza,riprova";
 
 }
 
@@ -326,7 +326,7 @@ if($parameters['preferencenegative'] != null){
 
 	if (isset($_COOKIE['x-access-token'] )) {
 		$token =  $_COOKIE['x-access-token'];
-
+		
 		$ch = curl_init();
         $headers =[
             "x-access-token:".$token
@@ -350,11 +350,11 @@ if($parameters['preferencenegative'] != null){
 
         curl_close ($ch);
 
-        return $GLOBALS['news5'];
+        return "preferenza inserita correttamente";
 
 	}
 
-		return $GLOBALS['news4'];
+		return "non ho capito la tua preferenza,riprova.";
 	
 
 
@@ -492,12 +492,11 @@ if ($parameters['Sports'] != null || $parameters['Health'] != null || $parameter
 	$answer = getNewsTopic($parameters);
 }elseif($parameters['any'] != null ){
     $answer = cercaNews($parameters);
-}elseif (stripos($text, $GLOBALS['news6']) !== false || stripos($text,$GLOBALS['news7']) !== false || 
-	stripos($text, $GLOBALS['news8'])  ||
- stripos($text, $GLOBALS['news9'])  !== false ){
+}elseif (stripos($text, 'oggi') !== false || stripos($text, 'odierne') !== false || stripos($text, 'quotidiane')  ||
+ stripos($text, 'ultime')  !== false ){
 	$answer = getTodayNews();
-}elseif (stripos($text, $GLOBALS['news10']) !== false || stripos($text, $GLOBALS['news11']) !== false || 
-	stripos($text, $GLOBALS['news12']) !== false || stripos($text, $GLOBALS['news13']) !== false) {
+}elseif (stripos($text, 'interessi') !== false || stripos($text, 'consigliami') !== false || 
+	stripos($text, 'interessano') !== false || stripos($text, 'interessano') !== false) {
 
 	if ($email == '') {
 		return '';

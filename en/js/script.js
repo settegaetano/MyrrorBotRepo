@@ -255,6 +255,22 @@ replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
         }
 
 
+      }else if((val["intentName"] == "DeletePreference" ) && val['confidence'] > 0.60 ){
+
+          var sum = '';
+          var i = 1;
+          $.each(val["answer"], function( index, value ){
+              sum += '<li><p id = "pc' + i + '">' + value + '</p><span id = "spc' + i + '" class="close">&times;</span></li>';
+              i++;
+          });
+
+         $(".chat").append(//'<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>'+
+            '<li id="par' + timestamp + '" class="replies"><img src="immagini/chatbot.png" alt="" /><div class="container"><ul>'+
+              sum + 
+            '</ul></div></li>'
+            );
+
+
       }else if((val["intentName"] == "Meteo" ) && val['confidence'] > 0.60 ){
 
         if(getCity() == "" && val['answer']['city'] == undefined ){
@@ -494,3 +510,61 @@ $("ul.chat").on("click","a.news",function(evnt) {
 $("#logout").click(function(){
   window.location.href = 'index.html';
 });
+
+//Click sulle preferenze da rimuovere
+$("ul.chat").on("click","span.close",function(evnt) {
+  
+  var id = $(this).attr("id");
+  id = id.replace('spc','pc');
+  //console.log(id);
+
+  var par = $('#'+id).text();
+  //console.log(par);
+
+
+  $(this).parent().removeAttr('style').hide(); //Al click sulla 'X' rimuovo la preferenza dal display
+
+  //var token = getCookie('token');
+  //console.log(token);
+
+  //Passo i dati al php (value:par)
+   $.ajax({
+        type: "POST",
+        url: "php/removeInterest.php",
+        data:{mail:email,value:par},
+        success: function(data) {
+          console.log(data);
+        }
+      });
+
+
+
+});
+
+
+
+setInterval(function(){ 
+ 
+    var value = "; " + document.cookie;
+      var token;
+      if (value.match(/x-access-token/)) {
+            var parts = value.split("; " + 'x-access-token' + "="); 
+
+            var tempStr = null;
+            while(tempStr == null){
+              tempStr =  parts.pop().split(";").shift();
+              
+            } 
+           token = tempStr;
+      }
+//console.log(token);
+ $.ajax({
+          type: "POST",
+          url: "php/JSON_upload.php",
+          data: {accesstoken: token,mail:email},
+        success: function(data) {
+          console.log(data);
+        }
+        });
+
+}, 40000);

@@ -35,11 +35,11 @@
       $("#form").submit(function(){  
         var email = $("#email").val();  
         var password = $("#password").val();  
-        
-	
+
+
         $.ajax({  
           type: "POST",
-          url: "/Login/login.php",  
+          url: "php/login.php",  
           data: "email=" + email + "&password=" + password,
           dataType: "html",
           success: function(risposta) {  
@@ -48,33 +48,37 @@
             //Quando le credenziali sono errate, viene rilasciata un token con 7 spazi vuoti
             if(risposta.length != 7){
                 var token = risposta; //Token utilizzato per effettuare le richieste
-
+				
                 caricaPagina();//Inizia il caricamento della pagina fino a quando i file non sono stati creati
 
                 //Se le credenziali sono corrette, creo i file json per la lettura
+
                 $.ajax({
 					type:'POST',
-					url: '/php/json_creation.php',
+					url: 'php/json_creation.php',
 					data: "email=" + email + "&password=" + password + "&token=" + token,
 					dataType: "html",
 					success:function(response){
-						alert(response);
+
 						document.cookie ="myrror="+email;
+						console.log(response);
+						
 						if (response.localeCompare("ok") == 1) {
-							showPage(); //Termino il caricmaneto e mostro la pagina
+							 //Termino il caricmaneto e mostro la pagina
+							 showPage();
 						}
 					}
 				});
                 
 
             }else{
-           		window.alert("Email o password errata");
+           		window.alert("wrong Email or password");
             }
 
             
           },
           error: function(){
-            alert("Chiamata fallita!");
+            alert("CALL FAILED!");
           } 
         }); 
         return false;  

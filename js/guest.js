@@ -9,14 +9,6 @@ var flagcitta= false;
 var timestampStart = 0;//Quando l'utente invia la domanda
 var timestampEnd = 0;//Quando l'utente clicca su Si/No
 
-var theLanguage = $('html').attr('lang');
-   var lang= lan_en;
-  
-  
-
-
-
-
 function getEmail() {
   var email = "UtenteAnonimo";
   return email;
@@ -87,17 +79,11 @@ function getTimestampStart(){
       
       var citta = getCity();
       var name = "myrror";
-var Language = $('html').attr('lang');
-      //console.log(email);
-      if(Language == 'it'){
-       lang = lan_it;
-    }else{
-      lang = lan_en;
-    }
+
   
-     if (text.match(lang.change) || text.match(lang.change1) || text.match(lang.change2) || text.match(lang.change3) || text.match(lang.change4)
-        || text.match(lang.change5) || text.match(lang.change6) || text.match(lang.change7) || text.match(lang.change8) || text.match(lang.change9)
-        || text.match(lang.another) || text.match(lang.another2) || text.match(lang.another3) || text.match(lang.another4) || text.match(lang.another5) || text.match(lang.another6)) {
+    if (text.match(/cambia/) || text.match(/cambio/) || text.match(/dammi un'altra/) || text.match(/leggi un'altra/) || text.match(/dammene un'altra/)
+      || text.match(/leggine un'altra/) || text.match(/leggi altra news/) || text.match(/altra canzone/) || text.match(/dimmi un'altra/) || text.match(/riproducine un'altra/)
+      || text.match(/cambia video/) || text.match(/fammi vedere un altro/) || text.match(/dammi un altro/) || text.match(/altro video/) || text.match(/altra canzone/) || text.match(/altra news/)) {
 
       text = $('#contesto').val();
     }else{
@@ -110,7 +96,7 @@ var Language = $('html').attr('lang');
     $.ajax({
         type: "POST",
         url: "php/intentGuest.php",
-        data: {testo:text,city:citta,mail:email,lang:theLanguage},
+        data: {testo:text,city:citta,mail:email},
         success: function(data) {
           setResponse(data);
         }
@@ -129,16 +115,16 @@ replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
 
   //the json is ok
  val = JSON.parse(val);
-      var musicaSpotify = lang.spotify1;
+    var musicaSpotify = "Ecco qui la tua richiesta!";
       var spiegazione = "";
 
-      var canzoneNomeSpotify = lang.spotify2;
-      var canzoneArtistaSpotify = lang.spotify2;
-      var canzoneGenereSpotify = lang.spotify3;
-      var playlistEmozioniSpotify = lang.spotify4;
-      var canzoneEmozioniSpotify = lang.spotify5;
-      var canzoniPersonalizzateSpotify = lang.spotify6;
-      var video = lang.video1;
+      var canzoneNomeSpotify = "Ecco qui la canzone richiesta!";
+      var canzoneArtistaSpotify = "Ecco qui la canzone dell'artista richiesto!";
+      var canzoneGenereSpotify = "Ecco una playlist di canzoni del genere richiesto!";
+      var playlistEmozioniSpotify = "Ecco qui una playlist di canzoni raccomandata in base al tuo umore";
+      var canzoneEmozioniSpotify = "Ecco qui un brano consigliato in base al tuo umore";
+      var canzoniPersonalizzateSpotify = "Ecco qui un brano consigliato che potrebbe piacerti";
+      var video = "Ecco qui il video richiesto";
 
       if(val["intentName"] == "attiva debug"){
         	setDebug(true);
@@ -151,7 +137,7 @@ replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
       }else if(val['intentName'] == "Musica"){
         
         if (val['answer']['url'] == ""){
-              $(".chat").append('<li class="replies"><img src="immagini/chatbot.png" alt="" /><p>'+lang.login1+'</p></li>');
+              $(".chat").append('<li class="replies"><img src="immagini/chatbot.png" alt="" /><p>Per questa funzione occorre effettuare il login</p></li>');
          }else{
             if (val['answer']['explain'] != ""){
             spiegazione = val['answer']['explain'];
@@ -165,7 +151,7 @@ replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
 
 
           if (val['answer'] == ""){
-              $(".chat").append('<li class="replies"><img src="immagini/chatbot.png" alt="" /><p>'+lang.login1+'</p></li>');
+              $(".chat").append('<li class="replies"><img src="immagini/chatbot.png" alt="" /><p>Per questa funzione occorre effettuare il login</p></li>');
          }else{
             if (val['answer']['explain'] != null){
               spiegazione = val['answer']['explain'];
@@ -188,7 +174,7 @@ replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
       }else if((val["intentName"] == "Meteo" ) && val['confidence'] > 0.60 ){
 
            if(getCity() == "" && val['answer']['city'] == undefined ){
-           $(".chat").append('<li class="replies"><img src="immagini/chatbot.png" alt="" /><p >'+lang.inscity+'</p></li>');
+           $(".chat").append('<li class="replies"><img src="immagini/chatbot.png" alt="" /><p >Inserisci la città</p></li>');
            flagcitta = true;
         }
 
@@ -196,7 +182,7 @@ replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
         var json = val['answer']['res'];
        
            if( json == ""){
-          $(".chat").append('<li class="replies"><img src="immagini/chatbot.png" alt="" /><p >'+lang.unfor3+'</p></li>');
+          $(".chat").append('<li class="replies"><img src="immagini/chatbot.png" alt="" /><p >Sfortunatamente non sono disponibili dati riguardanti il periodo indicato</p></li>');
       
            }else{
               var res = json.split("<br>");
@@ -321,7 +307,7 @@ replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
           }
 
         }else {
-          var answer = val['answer'] +lang.register+"  <a href='http://90.147.102.243:9090'>90.147.102.243</a>";
+          var answer = val['answer'] +"Per poter sfruttare le altre funzioni, occorre registrarsi a Myrror al seguente indirizzo  <a href='http://90.147.102.243:9090'>90.147.102.243</a>";
           $(".chat").append('<li class="replies"><img src="immagini/chatbot.png" alt="" /><p>' + answer + '</p></li>');
       }
 
@@ -330,8 +316,8 @@ replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
       }else if(isDebugEnabled()){
         var risposta = val['answer'];
         risposta = risposta.toString().toLowerCase();
-        if(val['confidence'] < 0.6  || risposta.includes(lang.retry) || risposta.includes(lang.unfor)
-          || risposta.includes(lang.unfor2) || risposta == "" ){   
+        if(val['confidence'] < 0.6  || risposta.includes('riprova') || risposta.includes('sfortunatamente')
+          || risposta.includes('purtroppo') || risposta == "" ){   
              
             
       
@@ -342,7 +328,7 @@ replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
             var timestampEnd = Date.now();
             rating(testo,question,'no',mail,timestampStart,timestampEnd,"");
         }else{
-           $('#par'+timestamp).append('<div class="rating-box"><h4>'+lang.satisfy+'</h4><button id="yes'+timestamp+'" class="btn-yes">'+lang.yes+'</button>'+
+           $('#par'+timestamp).append('<div class="rating-box"><h4>Sei soddisfatto della risposta?</h4><button id="yes'+timestamp+'" class="btn-yes">SI</button>'+
         '<button id="no'+timestamp+'" class="btn-no">NO</button></div>');
         
         }
@@ -354,7 +340,7 @@ replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
 }else{
 
   //the json is not ok
-    $(".chat").append('<li class="replies"><img src="immagini/chatbot.png" alt="" /><p >'+lang.donotunderstand+'</p></li>');
+    $(".chat").append('<li class="replies"><img src="immagini/chatbot.png" alt="" /><p >Non ho capito cosa vuoi dire. Prova a riformulare la tua domanda!</p></li>');
       
 
 }
@@ -366,16 +352,7 @@ replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
 
     //Intent avviato all'inizio del dialogo per mostrare la frase di benvenuto e per impostare il nome dell'utente nella schermata
     function welcomeIntent(){
-
-var Language = $('html').attr('lang');
-      //console.log(email);
-      if(Language == 'it'){
-       lang = lan_it;
-    }else{
-      lang = lan_en;
-    }
-
-    send(lang.help);
+      send("aiuto");
       var value = "; " + document.cookie;
 if (value.match(/myrror/)) {
     var parts = value.split("; " + name + "=");   
@@ -383,7 +360,7 @@ if (value.match(/myrror/)) {
    while(tempStr == null){
     tempStr =  parts.pop().split(";").shift();
      if(tempStr.match(/@/)){
-        window.location.href = 'chatbot.html';
+        //alert(tempStr);
      }
    }
 

@@ -22,13 +22,10 @@ include 'Allenamento.php';
 include 'Meteo.php';
 include 'Programmatv.php';
 include 'Recipes.php';
-
-$lang = "en";
-if(isset($_POST['lang'])){ 
-        $lang = $_POST['lang']; 
-} 
-require_once('Language/lan_'.$lang.'.php');
-
+include 'Food.php';
+include 'Workout.php';
+include 'GetValuesFunctions.php';
+include 'Tv.php';
 
 $city = "Bari";
 header('Content-type: text/plain; charset=utf-8');
@@ -36,36 +33,27 @@ header('Content-type: text/plain; charset=utf-8');
 //Controllo se la variabile 'testo' ricevuta è nulla
 if (isset($_POST{'testo'})) {
     $testo = $_POST{'testo'};
-    if( stripos($testo, $GLOBALS["WEEKEND2"]) !== false  
-        && stripos($testo, $GLOBALS['next']) == false ){
-      $pos = stripos($testo, $GLOBALS["WEEKEND2"]);
-  $testo = substr_replace($testo, ' '.$GLOBALS["WEEKEND2"].' ', $pos, 0);
+    if( stripos($testo, 'weekend') !== false  
+        && stripos($testo, 'prossimo') == false ){
+      $pos = stripos($testo, 'weekend');
+  $testo = substr_replace($testo, ' prossimo ', $pos, 0);
 
-    }elseif ( stripos($testo, $GLOBALS["WEEKEND"] ) !== false  && stripos($testo, $GLOBALS['next']) == false) {
-        $pos = stripos($testo, $GLOBALS["WEEKEND"]);
-        $testo = substr_replace($testo, ' '.$GLOBALS["WEEKEND2"].' ', $pos, 0);
+    }elseif ( stripos($testo, 'fine settimana') !== false  && stripos($testo, 'prossimo') == false) {
+        $pos = stripos($testo, 'fine settimana');
+        $testo = substr_replace($testo, ' prossimo ', $pos, 0);
     }
 }
-
 
 if(isset($_POST{'city'})){
     $city = $_POST{'city'};
 }
 
 if(isset($_POST{'mail'})){
-    $email = $_POST{'mail'};
+    $email = urldecode($_POST{'mail'});
 }
 
-
-
-$GLOBALS["answer"] = $GLOBALS["dontunderstand"];
-
-define("DIALOGFLOW", $GLOBALS['DIALOGFLOW_LANG']);
-
-function detect_intent_texts($projectId,$city,$email,
- $text, $sessionId, $languageCode = DIALOGFLOW){
-
-
+function detect_intent_texts($projectId,$city,$email, $text, $sessionId, $languageCode = 'it-IT')
+{
     // new session
     $test = array('credentials' => 'myrrorbot-4f360-cbcab170b890.json');
     $sessionsClient = new SessionsClient($test);
@@ -100,8 +88,8 @@ function detect_intent_texts($projectId,$city,$email,
         
     }else{
 
-        
-        $answer = $GLOBALS["answer"];
+        $answer = "Purtroppo non ho capito la domanda. Prova a rifarla con altre parole! Devo ancora imparare molte cose &#x1F605;";
+
         //Stampo la risposta relativa all'intent non identificato
         $arr = array('intentName' => "Non identificato", 'confidence' => "0",'answer' => $answer);
         printf(json_encode($arr,JSON_UNESCAPED_UNICODE));  //JSON_UNESCAPED_UNICODE utilizzato per il formato UTF8
@@ -175,6 +163,26 @@ function selectIntent($email,$intent, $confidence,$text,$resp,$parameters,$city)
                 $answer = getHeight($resp,$parameters,$text,$email);
                 break;
 
+             case 'Ore di Sonno':
+                $answer = getOreDiSonno($resp, $parameters, $text, $email);
+                break;
+
+            case 'Cardio':
+                $answer = getCardioMinutes($resp,$parameters,$text,$email);
+                break;
+            case 'Cardio binario':
+                $answer = getCardioMinutesBinario($resp,$parameters,$text,$email);
+                break;
+            case 'Apporto calorico':
+                $answer = getCalorieAssunte($resp,$parameters,$text,$email);
+                break;
+            case 'Apporto calorico binario':
+                $answer = getCalorieAssunteBinario($resp,$parameters,$text,$email);
+                break;
+            case 'Ore di veglia':
+                $answer = getOreDiVeglia($resp,$parameters,$text,$email);
+                break;
+
             case 'Emozioni':
                 $answer = getSentiment(1,$resp,$parameters,$email);
                 break;
@@ -189,6 +197,16 @@ function selectIntent($email,$intent, $confidence,$text,$resp,$parameters,$city)
 
             case 'Umore binario':
                 $answer = getSentimentBinario(0,$resp,$parameters,$email);
+                break;
+
+            case 'Forma fisica':
+                $answer = getFormaFisica($resp, $parameters, $text, $email);
+                break;
+            case 'Sesso':
+                $answer = getSesso($resp, $parameters, $text, $email);
+                break;
+            case 'Nazione':
+                $answer = getNazione($resp, $parameters, $text, $email);
                 break;
 
             case 'Eta':
@@ -209,6 +227,10 @@ function selectIntent($email,$intent, $confidence,$text,$resp,$parameters,$city)
 
             case 'Luogo di nascita':
                 $answer = getCountry($resp,$parameters,$text,$email);
+                break;
+
+             case 'Ultima citta':
+                $answer = Ultimacitta($email);
                 break;
 
             case 'Personalita':
@@ -267,6 +289,7 @@ function selectIntent($email,$intent, $confidence,$text,$resp,$parameters,$city)
             case 'AllenamentoPreference':
                 $answer = insertPreferenceTraining($parameters,$text,$email);
                 break;
+
             case 'Preference-allenamento':
                 $answer = $resp;
                 break;
@@ -298,18 +321,191 @@ function selectIntent($email,$intent, $confidence,$text,$resp,$parameters,$city)
                 $answer = $resp;
                 break;
 
+            case 'Allenamento personalizzato':
+                $answer = recommendWorkout($resp, $parameters, $text, $email);
+                break;
+
+            case 'Allenamento generico':
+                $answer = retriveWorkout($resp, $parameters, $text, $email);
+                break;
+
+            case 'Ritrovamento programma':
+                $answer = retriveTV($resp, $parameters, $text, $email);
+                break;
+
+            case 'Raccomandazione programma':
+                $answer = recommendTV($resp, $parameters, $text, $email);
+                break;
+
+            case 'Diagnosi':
+                $answer = getDiagnosis($resp, $parameters, $email);
+                break;
+
+            case 'Diagnosi periodo':
+                $answer = getDiagnosisPeriod($resp, $parameters, $email);
+                break;
+
+            case 'Ultima diagnosi':
+                $answer = getLastDiagnosy($resp, $parameters, $email);
+                break;
+
+            case 'Analisi':
+                $answer = getAnalysis($resp, $parameters, $email);
+                break;
+
+            case 'Andamento risultati analisi':
+                $answer = getAnalysisTrend($resp, $parameters, $email);
+                break;
+
+            case 'Ultima analisi':
+                $answer = getLastAnalysis($resp, $parameters, $email);
+                break;
+
+            case 'Ultima analisi specifica':
+                $answer = getLastAnalysisSpecified($resp, $parameters, $email);
+                break;
+
+            case 'Analisi binario':
+                $answer = getAnalysisBinary($resp, $parameters, $email);
+                break;
+
+            case 'Analisi periodo':
+                $answer = getAnalysisPeriod($resp, $parameters, $text, $email);
+                break;
+            case 'Distanza':
+                $answer = getDistance($resp, $parameters, $text, $email);
+                break;
+            case 'Proteine':
+                $answer = getProteine($resp, $parameters, $text, $email);
+                break;
+            case 'Carboidrati':
+                $answer = getCarboidrati($resp, $parameters, $text, $email);
+                break;
+            case 'Fibre':
+                $answer = getFibre($resp, $parameters, $text, $email);
+                break;
+            case 'Grassi':
+                $answer = getGrassi($resp, $parameters, $text, $email);
+                break;
+            case 'Massa Grassa':
+                $answer = getMassaGrassa($resp, $parameters, $text, $email);
+                break;
+            case 'Idratazione':
+                $answer = getIdratazione($resp, $parameters, $text, $email);
+                break;
+            case 'Idratazione binario':
+                $answer = getIdratazioneBinario($resp, $parameters, $text, $email);
+                break;
+            case 'Analisi sotto controllo':
+                $answer = getAnalysisControl($resp, $parameters, $email);
+                break;
+            case 'Analisi sotto controllo binario':
+                $answer = getAnalysisControlBinary($resp, $parameters, $email);
+                break;
+            case 'Dettagli analisi':
+                $answer = getAnalysisDetails($parameters, $email);
+                break;
+
+            case 'Risultati analisi':
+                $answer = getAnalysisResult($resp, $parameters, $email);
+                break;
+
+            case 'Terapie':
+                $answer = getTherapies($resp, $parameters, $email);
+                break;
+
+            case 'Ultima terapia':
+                $answer = getLastTherapy($resp, $parameters, $email);
+                break;
+
+            case 'Terapie periodo':
+                $answer = getTherapiesPeriod($resp, $parameters, $email);
+                break;
+
+            case 'Terapie in corso/concluse':
+                $answer = getTherapiesInProgEnded($resp, $parameters, $email);
+                break;
+
+            case 'Farmaco oggi':
+                $answer = getDrugToday($resp, $parameters, $email);
+                break;
+
+            case 'Dettagli terapia':
+                $answer = getTherapyDetails($parameters, $email);
+                break;
+
+            case 'Area medica':
+                $answer = getMedicalAreas($resp, $parameters, $email);
+                break;
+
+            case 'Ultima area medica':
+                $answer = getLastMedicalArea($resp, $parameters, $email);
+                break;
+
+            case 'Visite mediche':
+                $answer = getMedicalVisits($resp, $parameters, $email);
+                break;
+
+            case 'Visite mediche periodo':
+                $answer = getMedicalVisitsPeriod($resp, $parameters, $email);
+                break;
+
+            case 'Dettagli visita medica':
+                $answer = getMedicalVisitDetails($parameters, $email);
+                break;
+
+            case 'Ultima visita medica':
+                $answer = getLastMedicalVisit($resp, $parameters, $email);
+                break;
+
+            case 'Patologie':
+                $answer = getDiseases($resp, $parameters, $email);
+                break;
+
+            case 'Patologie periodo':
+                $answer = getDiseasesPeriod($resp, $parameters, $email);
+                break;
+
+            case 'Patologie binario':
+                $answer = getDiseasesBinary($parameters, $email);
+                break;
+
+            case 'Dettagli patologia':
+                $answer = getDiseaseDetails($parameters, $email);
+                break;
+
+            case 'Ospedalizzazioni':
+                $answer = getHospitalizations($resp, $parameters, $email);
+                break;
+
+            case 'Ospedalizzazioni periodo':
+                $answer = getHospitalizationsPeriod($resp, $parameters, $email);
+                break;
+
+            case 'Ultima ospedalizzazione':
+                $answer = getLastHospitalization($resp, $parameters, $email);
+                break;
+
+            case 'Dettagli ospedalizzazione':
+                $answer = getHospitalizationDetails($parameters, $email);
+                break;
+
+            case 'Ultima visita medica specifica':
+                $answer = getLastMedicalVisitSpecified($resp, $parameters, $email);
+                break;
+
             default:
                 if ($resp != "") { //Small Talk
                     $answer = $resp;
                 }else{
-                   $answer = $GLOBALS["answer"];
+                    $answer = "Purtroppo non ho capito la domanda. Prova a rifarla con altre parole! Devo ancora imparare molte cose &#x1F605;";
 
                 }
                 break;
         }
 
     }else {
-       $answer = $GLOBALS["answer"];
+        $answer = "Purtroppo non ho capito la domanda. Prova a rifarla con altre parole! Devo ancora imparare molte cose &#x1F605;";
     }
 
 
@@ -334,7 +530,7 @@ function selectIntent($email,$intent, $confidence,$text,$resp,$parameters,$city)
                 break;
 
             default:
-                $answer = $GLOBALS["answer"];
+                $answer = "Purtroppo non ho capito la domanda. Prova a rifarla con altre parole! Devo ancora imparare molte cose &#x1F605;";
                 break;
         }
     }

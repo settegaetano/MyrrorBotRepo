@@ -109,7 +109,7 @@ function insertPreferenceProgrammitv($parameters,$text,$email){
 
         curl_close ($ch);
 
-        return $GLOBALS['tvpref'];
+        return "Preferenza sui programmi tv inserita";
 
 	}
 
@@ -121,7 +121,7 @@ function insertPreferenceProgrammitv($parameters,$text,$email){
 function checkCanale($genere){
 
         // Open the file for reading
-        if (($h = fopen("../fileMyrror/programmitv".$GLOBALS['file'].".csv", "r")) !== FALSE) {
+        if (($h = fopen("../fileMyrror/programmitv.csv", "r")) !== FALSE) {
           
             // Convert each line into the local $data variable
             while (($data = fgetcsv($h, 1000, ",")) !== FALSE) {      
@@ -149,7 +149,7 @@ function checkCanale($genere){
 function checkGenere($genere){
 
         // Open the file for reading
-        if (($h = fopen("../fileMyrror/generitv".$GLOBALS['file'].".csv", "r")) !== FALSE) {
+        if (($h = fopen("../fileMyrror/generitv.csv", "r")) !== FALSE) {
           
             // Convert each line into the local $data variable
             while (($data = fgetcsv($h, 1000, ",")) !== FALSE) {      

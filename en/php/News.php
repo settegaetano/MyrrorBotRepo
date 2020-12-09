@@ -10,7 +10,7 @@ URL verrà restituito , altrimenti viene restituito un messaggio d'errore
 function getNewsTopic($parameters){
 $arr  = array('','','');
 $list = array();
-$link = "https://newsapi.org/v2/top-headlines?country=us&category=";
+$link = "https://newsapi.org/v2/top-headlines?country=it&category=";
 $apiKey = "&apiKey=17c1953c3cc7450d958ff14f9e262c02";
 $val = "";
 
@@ -31,7 +31,8 @@ if ($parameters['Sports'] != null) {
 	$link .= "Technology".$apiKey;
 }elseif ($parameters['Business'] != null) {
 	$val = $parameters['Business'];
-	$link .= "Business&q=".$val. $apiKey;
+	//$link .= "Business&q=".$val. $apiKey;
+    $link .= "Business". $apiKey;
 }else{
 	return "";
 }
@@ -41,8 +42,37 @@ if ($parameters['Sports'] != null) {
 $json = googleNewsQuery($link);
 $url = "";
 
-if(!isset($json['articles'] ))
-   return "";
+if(!isset($json['articles'] )){
+
+if ($parameters['Sports'] != null) {
+	$val = $parameters['Sports'];
+	$link .= "Sports". $apiKey;
+}elseif ($parameters['Health'] != null) {
+	$val = $parameters['Health'];
+	$link .= "Health". $apiKey;
+}elseif ($parameters['Science'] != null) {
+	$val = $parameters['Science'];
+	$link .= "Science".$apiKey;
+}elseif ($parameters['Entertainment'] != null) {
+	$val = $parameters['Entertainment'];
+	$link .= "Entertainment". $apiKey;
+}elseif ($parameters['Technology'] != null) {
+	$val = $parameters['Technology'];
+	$link .= "Technology".$apiKey;
+}elseif ($parameters['Business'] != null) {
+	$val = $parameters['Business'];
+	//$link .= "Business&q=".$val. $apiKey;
+    $link .= "Business". $apiKey;
+}else{
+	return "";
+}
+
+$json = googleNewsQuery($link);
+$url = "";
+  
+}
+
+
 
 foreach ($json['articles'] as $key => $value) {
 	$url = $value['url'];
@@ -65,7 +95,7 @@ foreach ($json['articles'] as $key => $value) {
 
 if(count($list) == 0){
 $every= "https://newsapi.org/v2/everything?q=".$val
-."&language=en&sortBy=publishedAt&apiKey=17c1953c3cc7450d958ff14f9e262c02";
+."&language=it&sortBy=publishedAt&apiKey=17c1953c3cc7450d958ff14f9e262c02";
 $json = googleNewsQuery($every);
 foreach ($json['articles'] as $key => $value) {
 	$url = $value['url'];
@@ -87,7 +117,8 @@ foreach ($json['articles'] as $key => $value) {
 }
 
 if($url == "")
-	return "";
+	return getTodayNews();
+
 
 }else{
 	$i = rand(0,count($list)-1);
@@ -198,6 +229,140 @@ principali dell'utente vengono restituite le notizie odierne
 return "I didn't found articles for you and i gave you the latest news  &#x1f600";
 
 }
+
+
+
+function checkTopic($topic,$file){
+
+        // Open the file for reading
+     if (($h = fopen("../fileMyrror/".$file, "r")) !== FALSE) {
+          
+
+          		$flag = false;
+                $bestk = 10;
+                $best = "";
+            // Convert each line into the local $data variable
+            while (($data = fgetcsv($h, 1000, ",")) !== FALSE) {      
+                
+                // Read the data from a single line
+                $i = 0;
+        
+                    //echo "<br>";
+                while (isset($data[$i])){
+                    //print($data[$i]."\r\n");
+                    $k = abs(strcmp(strtolower($data[$i]),strtolower($topic)));
+                   if (strpos(strtolower($data[$i]),strtolower($topic)) !== false   || strpos(strtolower($topic),strtolower($data[$i])) !== false)  {
+                    //|| 
+                        $flag = true;
+                        return $data[0];
+                    }else if($k <= 3 && $k<$bestk){
+                        $best = $data[0];
+                        $bestk = $k;
+                    }
+  
+                    $i++;
+                }
+                
+            }
+
+            if($flag == false){
+                return $best;
+            }
+            
+
+            // Close the file
+            fclose($h);
+        }
+}
+
+function insertNewsPreference($parameters,$text,$email){
+
+$res = "";
+
+if ($parameters['sports'] != null) {
+	$val = $parameters['sports'];
+	$res = 'Topic:'.checkTopic($val,'sport.csv');
+
+	
+}elseif ($parameters['health'] != null) {
+	$val = $parameters['health'];
+	$res = 'Topic:'.checkTopic($val,'health.csv');
+	
+}elseif ($parameters['science'] != null) {
+	$res = 'Topic:'.'scienza';
+	
+}elseif ($parameters['entertainment'] != null) {
+	$val = $parameters['entertainment'];
+	$res = checkTopic($val,'entertainment.csv');
+	
+}elseif ($parameters['Technology'] != null) {
+	$res = 'Topic:'.'tecnologia';
+	
+}elseif ($parameters['business'] != null) {
+	$val = $parameters['business'];
+	$res = 'Topic:'.checkTopic($val,'business.csv');
+	
+    
+}elseif($parameters['any'] != null){
+    $res = $parameters['any'];
+    
+}else{
+	return "I didn't understand your preference";
+
+}
+
+if($parameters['preferencenegative'] != null){
+	$like = 0;
+}else{
+	$like = 1;
+}
+
+        $Preference = [
+			        'email'=> $email,
+			        'topic'=> $res,
+			        'like'=> $like,
+			        'timestamp'=> time()
+			    ];
+
+			
+
+	if (isset($_COOKIE['x-access-token'] )) {
+		$token =  $_COOKIE['x-access-token'];
+
+		
+		$ch = curl_init();
+        $headers =[
+            "x-access-token:".$token
+        ];
+
+        curl_setopt($ch, CURLOPT_URL, "http://".$GLOBALS['url'].
+        	":5000/api/news/");
+
+
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_HTTPHEADER,$headers);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($Preference));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);       
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);   
+
+        curl_exec($ch);
+
+        //Decode JSON
+        //$json_data = json_decode($result2,true);
+
+        curl_close ($ch);
+
+        return "preference inserted correctly";
+
+	}
+
+		return "I didn't understand your preference,retry.";
+	
+
+
+}
+
 
 /*
 Questo metodo usa googleNewsQuery($link) per ottenere

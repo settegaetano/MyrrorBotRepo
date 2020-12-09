@@ -19,6 +19,16 @@ include 'SpotifyIntent.php';
 include 'Video.php';
 include 'News.php';
 include 'Meteo.php';
+include 'Allenamento.php';
+include 'Programmatv.php';
+include 'Recipes.php';
+include 'Food.php';
+
+include 'Workout.php';
+
+include 'GetValuesFunctions.php';
+
+include 'Tv.php';
 
 
 header('Content-type: text/plain; charset=utf-8');
@@ -44,7 +54,7 @@ if(isset($_POST{'city'})){
 }
 
 if(isset($_POST{'mail'})){
-    $email = $_POST{'mail'};
+    $email = urldecode($_POST{'mail'});
 }
 
 
@@ -101,7 +111,7 @@ function detect_intent_texts($projectId,$city,$email, $text, $sessionId, $langua
 
 function selectIntent($email,$intent, $confidence,$text,$resp,$parameters,$city){
 
-    if(($confidence > 0.86 ||  str_word_count($text) >= 3) && $confidence >= 0.35){              
+    if(($confidence > 0.86 ||  str_word_count($text) >= 3) && $confidence >= 0.3){              
 
         $answer = null;
 
@@ -158,6 +168,24 @@ function selectIntent($email,$intent, $confidence,$text,$resp,$parameters,$city)
             case 'Altezza':
                 $answer = getHeight($resp,$parameters,$text,$email);
                 break;
+            case 'Ore di Sonno':
+                $answer = getOreDiSonno($resp, $parameters, $text, $email);
+                break;
+            case 'Cardio':
+                $answer = getCardioMinutes($resp,$parameters,$text,$email);
+                break;
+            case 'Cardio binario':
+                $answer = getCardioMinutesBinario($resp,$parameters,$text,$email);
+                break;
+            case 'Apporto calorico':
+                $answer = getCalorieAssunte($resp,$parameters,$text,$email);
+                break;
+            case 'Apporto calorico binario':
+                $answer = getCalorieAssunteBinario($resp,$parameters,$text,$email);
+                break;
+            case 'Ore di veglia':
+                $answer = getOreDiVeglia($resp,$parameters,$text,$email);
+                break;
 
             case 'Emozioni':
                 $answer = getSentiment(1,$resp,$parameters,$email);
@@ -165,6 +193,15 @@ function selectIntent($email,$intent, $confidence,$text,$resp,$parameters,$city)
 
             case 'Emozioni binario':
                 $answer = getSentimentBinario(1,$resp,$parameters,$email);
+                break;
+            case 'Forma fisica':
+                $answer = getFormaFisica($resp, $parameters, $text, $email);
+                break;
+            case 'Sesso':
+                $answer = getSesso($resp, $parameters, $text, $email);
+                break;
+            case 'Nazione':
+                $answer = getNazione($resp, $parameters, $text, $email);
                 break;
 
             case 'Umore':
@@ -255,6 +292,26 @@ function selectIntent($email,$intent, $confidence,$text,$resp,$parameters,$city)
                 $answer = $resp;
                 break;
 
+            case 'VideoPreference':
+                $answer = insertPreferenceVideo($parameters,$text,$email);
+                break;
+            case 'Preference-video':
+                $answer = $resp;
+                break;
+            case 'ProgrammitvPreference':
+                $answer = insertPreferenceProgrammitv($parameters,$text,$email);
+                break;
+            case 'Preference-programmitv':
+                $answer = $resp;
+                break;
+                
+            case 'RicettePreference':
+                $answer = insertRecipesPreference($parameters,$text,$email);
+                break;
+
+            case 'DeletePreference':
+                $answer = getLastInterest($email);
+                break;
 
             case 'attiva debug':
                 $answer = $resp;
@@ -262,6 +319,179 @@ function selectIntent($email,$intent, $confidence,$text,$resp,$parameters,$city)
 
             case 'disattiva debug':
                 $answer = $resp;
+                break;
+
+             case 'Allenamento personalizzato':
+                $answer = recommendWorkout($resp, $parameters, $text, $email);
+                break;
+
+            case 'Allenamento generico':
+                $answer = retriveWorkout($resp, $parameters, $text, $email);
+                break;
+
+            case 'Ritrovamento programma':
+                $answer = retriveTV($resp, $parameters, $text, $email);
+                break;
+
+            case 'Raccomandazione programma':
+                $answer = recommendTV($resp, $parameters, $text, $email);
+                break;
+
+            case 'Diagnosi':
+                $answer = getDiagnosis($resp, $parameters, $email);
+                break;
+
+            case 'Diagnosi periodo':
+                $answer = getDiagnosisPeriod($resp, $parameters, $email);
+                break;
+
+            case 'Ultima diagnosi':
+                $answer = getLastDiagnosy($resp, $parameters, $email);
+                break;
+
+            case 'Analisi':
+                $answer = getAnalysis($resp, $parameters, $email);
+                break;
+
+            case 'Andamento risultati analisi':
+                $answer = getAnalysisTrend($resp, $parameters, $email);
+                break;
+
+            case 'Ultima analisi':
+                $answer = getLastAnalysis($resp, $parameters, $email);
+                break;
+
+            case 'Ultima analisi specifica':
+                $answer = getLastAnalysisSpecified($resp, $parameters, $email);
+                break;
+
+            case 'Analisi binario':
+                $answer = getAnalysisBinary($resp, $parameters, $email);
+                break;
+
+            case 'Analisi periodo':
+                $answer = getAnalysisPeriod($resp, $parameters, $text, $email);
+                break;
+            case 'Distanza':
+                $answer = getDistance($resp, $parameters, $text, $email);
+                break;
+            case 'Proteine':
+                $answer = getProteine($resp, $parameters, $text, $email);
+                break;
+            case 'Carboidrati':
+                $answer = getCarboidrati($resp, $parameters, $text, $email);
+                break;
+            case 'Fibre':
+                $answer = getFibre($resp, $parameters, $text, $email);
+                break;
+            case 'Grassi':
+                $answer = getGrassi($resp, $parameters, $text, $email);
+                break;
+            case 'Massa Grassa':
+                $answer = getMassaGrassa($resp, $parameters, $text, $email);
+                break;
+            case 'Idratazione':
+                $answer = getIdratazione($resp, $parameters, $text, $email);
+                break;
+            case 'Idratazione binario':
+                $answer = getIdratazioneBinario($resp, $parameters, $text, $email);
+                break;
+            case 'Analisi sotto controllo':
+                $answer = getAnalysisControl($resp, $parameters, $email);
+                break;
+            case 'Analisi sotto controllo binario':
+                $answer = getAnalysisControlBinary($resp, $parameters, $email);
+                break;
+            case 'Dettagli analisi':
+                $answer = getAnalysisDetails($parameters, $email);
+                break;
+
+            case 'Risultati analisi':
+                $answer = getAnalysisResult($resp, $parameters, $email);
+                break;
+
+            case 'Terapie':
+                $answer = getTherapies($resp, $parameters, $email);
+                break;
+
+            case 'Ultima terapia':
+                $answer = getLastTherapy($resp, $parameters, $email);
+                break;
+
+            case 'Terapie periodo':
+                $answer = getTherapiesPeriod($resp, $parameters, $email);
+                break;
+
+            case 'Terapie in corso/concluse':
+                $answer = getTherapiesInProgEnded($resp, $parameters, $email);
+                break;
+
+            case 'Farmaco oggi':
+                $answer = getDrugToday($resp, $parameters, $email);
+                break;
+
+            case 'Dettagli terapia':
+                $answer = getTherapyDetails($parameters, $email);
+                break;
+
+            case 'Area medica':
+                $answer = getMedicalAreas($resp, $parameters, $email);
+                break;
+
+            case 'Ultima area medica':
+                $answer = getLastMedicalArea($resp, $parameters, $email);
+                break;
+
+            case 'Visite mediche':
+                $answer = getMedicalVisits($resp, $parameters, $email);
+                break;
+
+            case 'Visite mediche periodo':
+                $answer = getMedicalVisitsPeriod($resp, $parameters, $email);
+                break;
+
+            case 'Dettagli visita medica':
+                $answer = getMedicalVisitDetails($parameters, $email);
+                break;
+
+            case 'Ultima visita medica':
+                $answer = getLastMedicalVisit($resp, $parameters, $email);
+                break;
+
+            case 'Patologie':
+                $answer = getDiseases($resp, $parameters, $email);
+                break;
+
+            case 'Patologie periodo':
+                $answer = getDiseasesPeriod($resp, $parameters, $email);
+                break;
+
+            case 'Patologie binario':
+                $answer = getDiseasesBinary($parameters, $email);
+                break;
+
+            case 'Dettagli patologia':
+                $answer = getDiseaseDetails($parameters, $email);
+                break;
+
+            case 'Ospedalizzazioni':
+                $answer = getHospitalizations($resp, $parameters, $email);
+                break;
+
+            case 'Ospedalizzazioni periodo':
+                $answer = getHospitalizationsPeriod($resp, $parameters, $email);
+                break;
+
+            case 'Ultima ospedalizzazione':
+                $answer = getLastHospitalization($resp, $parameters, $email);
+                break;
+
+            case 'Dettagli ospedalizzazione':
+                $answer = getHospitalizationDetails($parameters, $email);
+                break;
+
+            case 'Ultima visita medica specifica':
+                $answer = getLastMedicalVisitSpecified($resp, $parameters, $email);
                 break;
 
             default:

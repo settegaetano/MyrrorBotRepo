@@ -31,37 +31,50 @@ function identitaUtente($resp,$parameters,$text,$email){
 }
 
 
+function getEtaFromMyrror($json_data)
+{
+    $years = null;
+
+    foreach ($json_data as $key1 => $value1) {
+
+        if (isset($value1['dateOfBirth'])) {
+
+            foreach ($value1['dateOfBirth'] as $key2 => $value2) {
+
+                if ($key2 == "value") {
+                    $result = $value2;
+                }
+            }
+        }
+    }
+
+    if ($result != null) {
+        $today = date("Y-m-d");
+        $diff = abs(strtotime($today) - strtotime($result["value"]));
+        $years = floor($diff / (365 * 60 * 60 * 24));
+    }
+
+    return $years;
+}
+
 //ETA'
-function getEta($resp,$parameters,$text,$email){
+function getEta($resp, $parameters, $text, $email)
+{
 
-	$param = "";
-	$json_data = queryMyrror($param,$email);
-	$result = null;
-	$answer = "";
+    $param = "";
+    $json_data = queryMyrror($param, $email);
+    $eta = getEtaFromMyrror($json_data);
+    $answer = "";
 
-	foreach ($json_data as $key1 => $value1) {
-	
-		if(isset($value1['dateOfBirth'])){
 
-			foreach ($value1['dateOfBirth'] as $key2 => $value2) {
+    if ($eta == null) {
+        $answer = "Non sono riuscito a reperire le informazioni relative alla tua data di nascita &#x1F62D;. Verifica che sia presente nel tuo account";
+    } else {
 
-				if ($key2 == "value") {
-					$result = $value2;
-				} 	
-        	}	
-		}
-	}
+        $answer = str_replace("X", $eta, $resp);
+    }
 
-	if($result == null){
-		$answer = "I was unable to find information about your age &#x1F62D ;. Check if it is present in your account";
-	}else{
-		$today = date("Y-m-d");
-		$diff = abs(strtotime($today) - strtotime($result));
-    	$years = floor($diff / (365*60*60*24));
-		$answer = str_replace("X",$years,$resp);
-	}
-
-	return $answer;
+    return $answer;
 }
 
 
@@ -86,7 +99,7 @@ function getCountry($resp,$parameters,$text,$email){
 
 	if (isset($result)) {
 
-		$answer = str_replace("X",$result,$resp);
+		$answer = str_replace("X",$result['value'],$resp);
 
 	}else{
 		$answer = "I was unable to find information about your country &#x1F62D ;. Check if it is present in your account";
@@ -95,68 +108,143 @@ function getCountry($resp,$parameters,$text,$email){
 	return $answer;
 }
 
+//Funzione che legge il parametro Location[{"value"}] del profilo olistico e restituisce
+//una risposta relativa alla città dove si vive
+function Ultimacitta($email)
+{
+		$answer = "";
+		$city = citta($email);
+		if(isset($city)) {
+			$answer = "You live in ".$city."";
+		}else{
+			$answer = "I was unable to find information about your current city. Check if it is present in your account";
+		}
+		return $answer;
 
+}
+
+//Ultima location per meteo sperimentazione
+function citta($email)
+{
+		$param = "";
+		$json_data = queryMyrror($param,$email);
+		$result = null;
+		$città = null;
+		//echo"la mail e".$email;
+		foreach ($json_data as $key1 => $value1) {
+			if(isset($value1['location'])){
+
+				foreach ($value1['location'] as $key2 => $value2) {
+					if ($key2 == "value") {
+						$result = $value2;
+					} 	
+	        	}	
+			}
+		}
+
+		if(isset($result['value'])){
+			$città = $result['value'];
+		}
+		return $città;
+
+}
+
+
+
+
+
+
+function getHeightFromMyrror($json){
+    $altezza = 0.0;
+
+    foreach ($json as $key1 => $value1) {
+        if (isset($value1['height'])) {
+
+            $max = 0;
+
+            foreach ($value1['height'] as $key2 => $value2) {
+                if ($key2 == "value") {
+                    $timestamp = $value2['timestamp'];
+                    $altezza = $value2['value'];
+
+                    if ($timestamp > $max) {
+                        $max = $timestamp;
+                        $altezza = $value2['value'];
+                    }
+                }
+            }
+        }
+    }
+    return $altezza;
+}
 
 //ALTEZZA
-function getHeight($resp,$parameters,$text,$email){
+function getHeight($resp, $parameters, $text, $email)
+{
 
-	$param = "";
-	$json_data = queryMyrror($param,$email);
-	$result = null;
+    $param = "";
+    $json_data = queryMyrror($param, $email);
 
-	foreach ($json_data as $key1 => $value1) {
-		if(isset($value1['height'])){
-
-			foreach ($value1['height'] as $key2 => $value2) {
-				if ($key2 == "value") {
-					$result = $value2;
-				} 	
-        	}	
-		}
-	}
-
-	if (isset($result)) {
+    $altezza = getHeightFromMyrror($json_data);
 
 
-		$answer = str_replace("X",$result,$resp);
 
+    if ($altezza !=0.0) {
+        $answer = str_replace("X", $altezza, $resp);
 
-	}else{
-		$answer = "I was unable to find information about your height &#x1F62D ;. Check if it is present in your account";
-	}
+    } else {
+        $answer = "Non sono riuscito a reperire le informazioni relative alla tua altezza &#x1F62D;. Verifica che sia presente nel tuo account";
+    }
 
-	return $answer;
+    return $answer;
 }
 
+function getWeightFromMyrror($json){
+    $peso = 0.0;
+    foreach ($json as $key1 => $value1) {
+        if (isset($value1['weight'])) {
+
+            $max = 0;
+
+            foreach ($value1['weight'] as $key2 => $value2) {
+                if ($key2 == "value") {
+                    $timestamp = $value2['timestamp'];
+                    $peso = $value2['value'];
+
+                    if ($timestamp > $max) {
+                        $max = $timestamp;
+                        $peso = $value2['value'];
+                    }
+                }
+            }
+        }
+    }
+    return $peso;
+}
 
 //PESO
-function getWeight($resp,$parameters,$text,$email){ 
+function getWeight($resp, $parameters, $text, $email)
+{
 
-	$param = "";
-	$json_data = queryMyrror($param,$email);
-	$result = null;
+    $param = "";
+    $json_data = queryMyrror($param, $email);
+    $result = null;
 
-	foreach ($json_data as $key1 => $value1) {
-		if(isset($value1['weight'])){
+    $peso = getWeightFromMyrror($json_data);
 
-			foreach ($value1['weight'] as $key2 => $value2) {
-				if ($key2 == "value") {
-					$result = $value2;
-				} 	
-        	}	
-		}
-	}
+    //print_r($result);
 
-	if (isset($result)) {
+    if ($peso != 0.0) {
 
-		$answer = str_replace("X",$result,$resp);
+        $answer = str_replace("X", $peso, $resp); //prima era solo $result, io ho messo $result['value']
 
-	}else{
-		$answer = "I was unable to find information about your weight &#x1F62D ;. Check if it is present in your account";
-	}
+    } else {
+        $answer = "Non sono riuscito a reperire le informazioni relative al tuo peso &#x1F62D;. Verifica che sia presente nel tuo account";
+    }
 
-	return $answer;
+    return $answer;
 }
+
 
 
 
@@ -188,7 +276,7 @@ function lavoro($resp,$parameters,$text,$email){
 	}
 
 	if (isset($industry)) {
-
+		
 		$answer = str_replace("X",$industry,$resp);
 
 
@@ -239,4 +327,69 @@ function email($resp,$parameters,$text,$email){
 
 	return $answer;
 }
+
+function getSesso($resp, $parameters, $text, $email)
+{
+    $param = "";
+    $json_data = queryMyrror($param, $email);
+    $result = null;
+
+    foreach ($json_data as $key1 => $value1) {
+        if (isset($value1['gender'])) {
+
+            foreach ($value1['gender'] as $key2 => $value2) {
+                if (isset($value2["value"])) {
+                    $gender = $value2["value"];
+
+                    if ($gender == 'MALE') {
+                        $result = 'MALE';
+                    } elseif ($gender == 'FEMALE') {
+                        $result = 'FEMALE';
+                    } else {
+                        $result = 'Not specified';
+                    }
+                }
+            }
+        }
+    }
+
+    if (isset($gender)) {
+
+        $answer = str_replace("X", $result, $resp);
+
+    } else {
+        $answer = "I was unable to find information about your sex &#x1F62D ;. Check if it is present in your account";
+    }
+
+    return $answer;
+}
+
+function getNazione($resp, $parameters, $text, $email)
+{
+    $param = "";
+    $json_data = queryMyrror($param, $email);
+    $result = null;
+
+    foreach ($json_data as $key1 => $value1) {
+        if (isset($value1['country'])) {
+
+            foreach ($value1['country'] as $key2 => $value2) {
+                if ($key2 == "value") {
+                    $result = $value2;
+                }
+            }
+        }
+    }
+
+    if (isset($result)) {
+
+        $answer = str_replace("X", $result['value'], $resp);
+
+    } else {
+        $answer = "I was unable to find information about your Nationality &#x1F62D ;. Check if it is present in your account";
+    }
+
+    return $answer;
+}
+
 
