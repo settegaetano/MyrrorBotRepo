@@ -4354,3 +4354,28 @@ answer: res: 2019-10-01;03:00;18.55;cielo sereno<br>2019-10-01;06:00;19.61;cielo
 city: Bari
 feedback:si
 
+user: rakes@rakes.it
+timestampStart: 1608052705898
+timestampEnd: 1608052889703
+message: consigliami delle news
+intent: News
+confidence: 1
+answer: link: https://news.google.com/__i/rss/rd/articles/CBMiQmh0dHBzOi8vY3J5cHRvbm9taXN0LmNoLzIwMjAvMTIvMTQvamltLWNyYW1lci1oYS1jb21wcmF0by1iaXRjb2luL9IBRmh0dHBzOi8vY3J5cHRvbm9taXN0LmNoLzIwMjAvMTIvMTQvamltLWNyYW1lci1oYS1jb21wcmF0by1iaXRjb2luL2FtcC8?oc=5
+url: https://news.google.com/__i/rss/rd/articles/CBMiQmh0dHBzOi8vY3J5cHRvbm9taXN0LmNoLzIwMjAvMTIvMTQvamltLWNyYW1lci1oYS1jb21wcmF0by1iaXRjb2luL9IBRmh0dHBzOi8vY3J5cHRvbm9taXN0LmNoLzIwMjAvMTIvMTQvamltLWNyYW1lci1oYS1jb21wcmF0by1iaXRjb2luL2FtcC8?oc=5
+image: https://cryptonomist.ch/wp-content/uploads/2020/12/jim-cramer-1.jpg
+title: Jim Cramer ha comprato bitcoin - Cryptonomist
+explain: 
+click: false
+feedback:si
+
+user: rakes@rakes.it
+timestampStart: 1608055543821
+timestampEnd: 1608055627682
+message: consigliami una canzone
+intent: Musica
+confidence: 1
+answer: param: 
+url: https://open.spotify.com/embed/track/0bK3jxkbq5cDKWr68KtO8G
+explain: Ti ho consigliato questa playlist perchè sei giovane e sedentario
+feedback:si
+

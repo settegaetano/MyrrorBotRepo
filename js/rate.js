@@ -38,6 +38,7 @@ if(flag != null && flag != undefined){
 
   $("ul.chat").on("click","button.btn-yes",function() {
 
+
     var timestamp = $(this).attr("id");
     $(this).attr("disabled", true);
     var mail = getEmail();
@@ -93,3 +94,5 @@ if(flag == ""){
     
 }
       
+
+

@@ -48,7 +48,7 @@ function getEtaFromMyrror($json_data)
         }
     }
 
-    if ($result != null) {
+    if (isset($result)) {
         $today = date("Y-m-d");
         $diff = abs(strtotime($today) - strtotime($result["value"]));
         $years = floor($diff / (365 * 60 * 60 * 24));

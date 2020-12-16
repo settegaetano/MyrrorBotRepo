@@ -127,6 +127,33 @@ if($url == "")
 }
 
 }
+
+function retrieveContent($res){
+
+$arr = array();
+
+ if (($h = fopen("../newsIta.csv", "r")) !== FALSE) {
+    
+    while (($data = fgetcsv($h, 1000, ";")) !== FALSE) { 
+        
+        if(isset($data[1])){
+            #print_r($data);
+            if (in_array($data[1], $res)){
+                array_push($arr,$data);
+        }
+        }
+       
+    }
+
+ }
+
+return $arr;
+
+
+ }
+
+
+
 /*
 il metodo chiama getInterestsList per ottenere la lista
 dei 30 maggiori interessi dell'utente , per ogni interesse 
@@ -139,7 +166,28 @@ function getInterestsNews($email){
 
 $arr  = array('','','','');
 $articles = array();
-$list = getInterestsList($email);
+#$list = getInterestsList($email);
+
+        
+ $res  = array();
+ if (($h = fopen("../ratings.csv", "r")) !== FALSE) {
+    $counter = 0;
+    while (($data = fgetcsv($h, 1000, ";")) !== FALSE) { 
+        if($data[0] == $email && $data[2] > 0.5 &&  !(in_array($data[1], $res))){
+            array_push($res,$data[1]);
+
+            if(++$counter == 5)
+                break;
+            #print_r($data);
+             #echo "<br>";
+        }
+    }
+
+     $lista = retrieveContent($res);
+     $r = rand(0,$counter-1);
+     return array('link' => $lista[$r][5],'url' => $lista[$r][1],'image' => $lista[$r][2], 'title' => $lista[$r][0],'explain' => '' );
+ }
+/*
 //echo $list[0];
 foreach ($list as $key => $value){
 
@@ -184,6 +232,8 @@ if(count($articles) == 0){
 
     
 }
+*/
+
 
 /*
 se non viene trovato alcun articolo relativo agli interessi
@@ -273,6 +323,7 @@ function checkTopic($topic,$file){
             fclose($h);
         }
 }
+
 
 
 function insertNewsPreference($parameters,$text,$email){
@@ -496,7 +547,8 @@ if ($parameters['Sports'] != null || $parameters['Health'] != null || $parameter
  stripos($text, 'ultime')  !== false ){
 	$answer = getTodayNews();
 }elseif (stripos($text, 'interessi') !== false || stripos($text, 'consigliami') !== false || 
-	stripos($text, 'interessano') !== false || stripos($text, 'interessano') !== false) {
+	stripos($text, 'interessano') !== false || stripos($text, 'interessano') !== false || 
+	stripos($text, 'raccom') !== false) {
 
 	if ($email == '') {
 		return '';

@@ -1,4 +1,6 @@
 <?php
+
+/*
         $topic = "spettacolo";
         $file = 'entertainment.csv';
            // Open the file for reading
@@ -42,6 +44,63 @@
             // Close the file
             fclose($h);
         }
+
+*/
+
+function retrieveContent($res){
+
+$arr = array();
+
+ if (($h = fopen("../newsIta.csv", "r")) !== FALSE) {
+    
+    while (($data = fgetcsv($h, 1000, ";")) !== FALSE) { 
+        
+        if(isset($data[1])){
+            #print_r($data);
+            if (in_array($data[1], $res)){
+                array_push($arr,$data);
+
+        }
+        }
+       
+
+    }
+
+ }
+
+
+return $arr;
+
+
+ }
+
+
+
+
+        $email="rakes@rakes.it";
+        $res  = array();
+ if (($h = fopen("../ratings.csv", "r")) !== FALSE) {
+    $counter = 0;
+    while (($data = fgetcsv($h, 1000, ";")) !== FALSE) { 
+        if($data[0] == $email && $data[2] > 0.5){
+            array_push($res,$data[1]);
+            if(++$counter == 5)
+                break;
+            #print_r($data);
+             #echo "<br>";
+        }
+    }
+    
+
+
+ }
+
+ $arr = retrieveContent($res);
+ print_r($arr)
+
+
+
+
 
 ?>
 

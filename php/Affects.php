@@ -313,20 +313,25 @@ function getToday($oggi,$email){
 
 function getEmotion($result,$email){
 
-    if (strpos($result['emotion'], 'joy') !== false) {
-      $emotion = "gioia";
-    }else if (strpos($result['emotion'], 'fear') !== false) {
-       $emotion = "paura";
-    }else if (strpos($result['emotion'], 'anger') !== false) {
-      $emotion = "rabbia";
-    }else if (strpos($result['emotion'], 'disgust') !== false) {
-      $emotion = "disgusto";
-    }else if (strpos($result['emotion'], 'sad') !== false) {
-      $emotion = "tristezza";
-    }else if (strpos($result['emotion'], 'surprise') !== false) {
-      $emotion = "sorpresa";
-    }else if (strpos($result['emotion'] , 'none')   !== false ){
-      $emotion = 'neutro';
+    if (isset($result['emotion'])){
+      if (strpos($result['emotion'], 'joy') !== false) {
+        $emotion = "gioia";
+      }else if (strpos($result['emotion'], 'fear') !== false) {
+        $emotion = "paura";
+      }else if (strpos($result['emotion'], 'anger') !== false) {
+        $emotion = "rabbia";
+      }else if (strpos($result['emotion'], 'disgust') !== false) {
+        $emotion = "disgusto";
+      }else if (strpos($result['emotion'], 'sad') !== false) {
+       $emotion = "tristezza";
+      }else if (strpos($result['emotion'], 'surprise') !== false) {
+       $emotion = "sorpresa";
+      }else if (strpos($result['emotion'] , 'none')   !== false ){
+        $emotion = 'neutro';
+      }else{
+         return "al momento non stai provando alcuna emozione";
+    }
+
     }else{
          return "al momento non stai provando alcuna emozione";
     }

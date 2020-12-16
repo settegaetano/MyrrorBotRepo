@@ -141,6 +141,25 @@ $arr  = array('','','','');
 $articles = array();
 $list = getInterestsList($email);
 //echo $list[0];
+     
+ $res  = array();
+ if (($h = fopen("../../ratingsEN.csv", "r")) !== FALSE) {
+    $counter = 0;
+    while (($data = fgetcsv($h, 1000, ";")) !== FALSE) { 
+        if($data[0] == $email && $data[2] > 0.5 &&  !(in_array($data[1], $res))){
+            array_push($res,$data[1]);
+            if(++$counter == 5)
+                break;
+            #print_r($data);
+             #echo "<br>";
+        }
+    }
+
+     $lista = retrieveContent($res);
+     $r = rand(0,$counter-1);
+     return array('link' => $lista[$r][5],'url' => $lista[$r][1],'image' => $lista[$r][2], 'title' => $lista[$r][0],'explain' => '' );
+ }
+ /*
 foreach ($list as $key => $value){
 
 	$link = "https://newsapi.org/v2/everything?q=".$key."&sortBy=publishedAt&apiKey=17c1953c3cc7450d958ff14f9e262c02";
@@ -193,6 +212,30 @@ return getTodayNews();
 
 
 }
+
+function retrieveContent($res){
+
+$arr = array();
+
+ if (($h = fopen("../../newsEn.csv", "r")) !== FALSE) {
+    
+    while (($data = fgetcsv($h, 1000, ";")) !== FALSE) { 
+        
+        if(isset($data[1])){
+            #print_r($data);
+            if (in_array($data[1], $res)){
+                array_push($arr,$data);
+        }
+        }
+       
+    }
+
+ }
+
+return $arr;
+
+
+ }
 
 function explainNews($email){
 

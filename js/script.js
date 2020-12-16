@@ -3,6 +3,7 @@
   var imageURL;
   var email ;
   var flagcitta= false;
+  var question;
 
   function getEmail() {
   	return email;  //commentare se usato in localhost
@@ -39,7 +40,7 @@
 
       //Scroll verso il basso quando viene inviata una domanda
     	$(".messages").animate({ scrollTop:( $(document).height() * 100)}, "fast");
-
+      question = message;
       return message;
   	}
   };
@@ -192,7 +193,7 @@ function setResponse(val) {
               spiegazione = val['answer']['explain'];
               $("#spiegazione").val(spiegazione);
             }
-              $(".chat").append('<li class="replies"><img src="immagini/chatbot.png" alt="" /><p id="par'+timestamp+'"><img style="width: 100%;height: 100%;" src= "'+val['answer']['image']+'"/><a id="nw'+timestamp+'" class="news" target="_blank" href="'+val['answer']['url']+'">"'+val["answer"]['title']+'"</a></p></li>');
+              $(".chat").append('<li class="replies"><img src="immagini/chatbot.png" alt="" /><p id="par'+timestamp+'"><img style="width: 100%;height: 100%;" src= "'+val['answer']['image']+'"/><a id="nw'+timestamp+'" class="news" target="_blank" href="'+val['answer']['url']+'">"'+val["answer"]['link']+'"</a></p></li>');
               $(".chat").append('<input value="false" type="hidden" id= "flagNews'+timestamp+'" >')
          }                 
        
@@ -362,8 +363,13 @@ function setResponse(val) {
           $(".chat").append('<li class="replies"><img src="immagini/chatbot.png" alt="" /><p id="par'+timestamp+'">' + val["answer"] + '</p></li>');
       }
 
+
       if(val['intentName'] == "Default Welcome Intent"){
       
+      }else if(val["intentName"] == "News" && (question.match("raccom") || question.match("consi") || question.match("interess"))  ){
+           $('#par'+timestamp).append('<div class="rating-box"><h4>Ti è piaciuto il seguente articolo?</h4><button id="yes'+timestamp+'" class="btnlike">SI</button>'+
+        '<button id="no'+timestamp+'" class="btndislike">NO</button></div>');
+
       }else if(isDebugEnabled()){
        
         var risposta = val['answer'];
@@ -525,3 +531,31 @@ setInterval(function(){
         });
 
 }, 40000);
+
+
+$("ul.chat").on("click","button.btnlike",function(evnt) {
+
+    
+    var timestamp = $(this).attr("id");
+    $(this).attr("disabled", true);
+    var mail = getEmail();
+    timestamp = timestamp.substr(3,timestamp.length); 
+    
+    $("#no"+timestamp).attr("disabled", true);
+    var testo  = $("#nw"+timestamp).html();
+    var link = $("#nw"+timestamp).attr('href');
+
+
+   $.ajax({
+        type: "POST",
+        url: "php/insertArticle.php",
+        data:  {mail:email,url:link,descrizione:testo},
+        success: function(data) {
+            console.log(data);
+        }
+      }); 
+    
+ 
+
+
+});

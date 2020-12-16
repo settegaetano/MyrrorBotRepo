@@ -3,6 +3,7 @@ var timestamp;
 var imageURL;
 var email;
 var flagcitta= false;
+var question;
 
 function getEmail() {
 	return email;
@@ -83,7 +84,7 @@ if (text == "Disattiva modalità di debug"){
 
     //Scroll verso il basso quando viene inviata una domanda
   	$(".messages").animate({ scrollTop:( $(document).height() * 100)}, "fast");
-
+    question = message;
     return message;
   	}
 
@@ -409,6 +410,10 @@ replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
 
       if(val['intentName'] == "Default Welcome Intent"){
       
+      }else if(val["intentName"] == "News" && (question.match("recom")  || question.match("interest"))  ){
+           $('#par'+timestamp).append('<div class="rating-box"><h4>Did you liked it?</h4><button id="yes'+timestamp+'" class="btnlike">SI</button>'+
+        '<button id="no'+timestamp+'" class="btndislike">NO</button></div>');
+
       }else if(isDebugEnabled()){
         var risposta = val['answer'];
         risposta = risposta.toString().toLowerCase();
@@ -568,3 +573,31 @@ setInterval(function(){
         });
 
 }, 40000);
+
+
+$("ul.chat").on("click","button.btnlike",function(evnt) {
+
+    
+    var timestamp = $(this).attr("id");
+    $(this).attr("disabled", true);
+    var mail = getEmail();
+    timestamp = timestamp.substr(3,timestamp.length); 
+    
+    $("#no"+timestamp).attr("disabled", true);
+    var testo  = $("#nw"+timestamp).html();
+    var link = $("#nw"+timestamp).attr('href');
+
+
+   $.ajax({
+        type: "POST",
+        url: "php/insertArticle.php",
+        data:  {mail:email,url:link,descrizione:testo},
+        success: function(data) {
+            console.log(data);
+        }
+      }); 
+    
+ 
+
+
+});

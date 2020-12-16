@@ -314,6 +314,7 @@ function getToday($oggi,$email){
 //EMOZIONE: ritorna l'emozione corrispondente
 function getEmotion($result,$email){
 
+ if (isset($result['emotion'])){
     if (strpos($result['emotion'], 'joy') !== false) {
       $emotion = "gioia";
     }else if (strpos($result['emotion'], 'fear') !== false) {
@@ -329,7 +330,9 @@ function getEmotion($result,$email){
     }else{
          return "in this moment you don't feel anything";
     }
-
+}else{
+         return "in this moment you don't feel anything";
+    }
   return $emotion;
 
 }
