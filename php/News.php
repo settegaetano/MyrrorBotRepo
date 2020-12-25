@@ -170,7 +170,7 @@ $articles = array();
 
         
  $res  = array();
- if (($h = fopen("../ratings.csv", "r")) !== FALSE) {
+ if (($h = fopen("../rec_it.csv", "r")) !== FALSE) {
     $counter = 0;
     while (($data = fgetcsv($h, 1000, ";")) !== FALSE) { 
         if($data[0] == $email && $data[2] > 0.5 &&  !(in_array($data[1], $res))){

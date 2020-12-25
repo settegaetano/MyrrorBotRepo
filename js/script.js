@@ -544,12 +544,12 @@ $("ul.chat").on("click","button.btnlike",function(evnt) {
     $("#no"+timestamp).attr("disabled", true);
     var testo  = $("#nw"+timestamp).html();
     var link = $("#nw"+timestamp).attr('href');
-
+    var valutazione = "1";
 
    $.ajax({
         type: "POST",
         url: "php/insertArticle.php",
-        data:  {mail:email,url:link,descrizione:testo},
+        data:  {mail:email,url:link,descrizione:testo,like:valutazione},
         success: function(data) {
             console.log(data);
         }

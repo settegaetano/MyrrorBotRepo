@@ -143,7 +143,7 @@ $list = getInterestsList($email);
 //echo $list[0];
      
  $res  = array();
- if (($h = fopen("../../ratingsEN.csv", "r")) !== FALSE) {
+ if (($h = fopen("../../rec_en.csv", "r")) !== FALSE) {
     $counter = 0;
     while (($data = fgetcsv($h, 1000, ";")) !== FALSE) { 
         if($data[0] == $email && $data[2] > 0.5 &&  !(in_array($data[1], $res))){
