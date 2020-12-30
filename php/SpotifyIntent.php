@@ -907,7 +907,8 @@ function insertPreferenceMusic($parameters,$text,$email){
 				if ($genres == null){
 					$genre = null;
 				}else{
-					$genre = checkGenre($genres[0]);
+					#$genre = checkGenre($genres[0]);
+					$genre = implode(" ",$genres);
 				}
 
 				$musicPreference = [
@@ -932,7 +933,8 @@ function insertPreferenceMusic($parameters,$text,$email){
 				if ($genres == null){
 					$genre = null;
 				}else{
-					$genre = checkGenre($genres[0]);
+					#$genre = checkGenre($genres[0]);
+					$genre = implode(" ",$genres);
 				}
 
 				$musicPreference = [
@@ -959,7 +961,8 @@ function insertPreferenceMusic($parameters,$text,$email){
 				if ($genres == null){
 					$genre = null;
 				}else{
-					$genre = checkGenre($genres[0]);
+					#$genre = checkGenre($genres[0]);
+					$genre = implode(" ",$genres);
 				}
 
 				$musicPreference = [
@@ -999,7 +1002,8 @@ function insertPreferenceMusic($parameters,$text,$email){
 				if ($genres == null){
 					$genre = null;
 				}else{
-					$genre = checkGenre($genres[0]);
+					#$genre = checkGenre($genres[0]);
+					$genre = implode(" ",$genres);
 				}
 
 				$musicPreference = [
@@ -1025,7 +1029,8 @@ function insertPreferenceMusic($parameters,$text,$email){
 				if ($genres == null){
 					$genre = null;
 				}else{
-					$genre = checkGenre($genres[0]);
+					#$genre = checkGenre($genres[0]);
+					$genre = implode(" ",$genres);
 				}
 
 				$musicPreference = [
@@ -1052,7 +1057,8 @@ function insertPreferenceMusic($parameters,$text,$email){
 				if ($genres == null){
 					$genre = null;
 				}else{
-					$genre = checkGenre($genres[0]);
+					#$genre = checkGenre($genres[0]);
+					$genre = implode(" ",$genres);
 				}
 
 				$musicPreference = [
@@ -1102,7 +1108,8 @@ function insertPreferenceMusic($parameters,$text,$email){
 			if ($genres == null){
 				$genre = null;
 			}else{
-				$genre = checkGenre($genres[0]);
+				#$genre = checkGenre($genres[0]);
+				$genre = implode(" ",$genres);
 			}
 
 			$musicPreference = [
@@ -1129,7 +1136,8 @@ function insertPreferenceMusic($parameters,$text,$email){
 			if ($genres == null){
 				$genre = null;
 			}else{
-				$genre = checkGenre($genres[0]);
+				#$genre = checkGenre($genres[0]);
+				$genre = implode(" ",$genres);
 			}
 
 			$musicPreference = [

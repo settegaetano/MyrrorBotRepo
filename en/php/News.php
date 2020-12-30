@@ -157,7 +157,13 @@ $list = getInterestsList($email);
 
      $lista = retrieveContent($res);
      $r = rand(0,$counter-1);
-     return array('link' => $lista[$r][5],'url' => $lista[$r][1],'image' => $lista[$r][2], 'title' => $lista[$r][0],'explain' => '' );
+     if(!empty($lista)){
+     	return array('link' => $lista[$r][5],'url' => $lista[$r][1],'image' => $lista[$r][2], 'title' => $lista[$r][0],
+     	'explain' => '' );
+     }else{
+     	return "";
+     }
+     
  }
  /*
 foreach ($list as $key => $value){

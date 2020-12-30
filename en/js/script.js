@@ -410,7 +410,7 @@ replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
 
       if(val['intentName'] == "Default Welcome Intent"){
       
-      }else if(val["intentName"] == "News" && (question.match("recom")  || question.match("interest"))  ){
+      }else if(val["intentName"] == "News"  ){
            $('#par'+timestamp).append('<div class="rating-box"><h4>Did you liked it?</h4><button id="yes'+timestamp+'" class="btnlike">SI</button>'+
         '<button id="no'+timestamp+'" class="btndislike">NO</button></div>');
 
