@@ -27,7 +27,7 @@ function getMusic($resp,$parameters,$text,$email){
 	$param = "";
 	
 	$listaParoleBrano = array( 'track', 'song', 'music' );//brano
-	$listaParoleRaccomandazioni = array( 'suitable for me', 'recommend', 'recommend me', 'suggest', 'for me' , 'me');//raccomandazioni
+	$listaParoleRaccomandazioni = array( 'suitable for me', 'recommend', 'recommend me', 'suggest', 'for me' , 'me','give me');//raccomandazioni
 	$listaParoleEmozioni = array( 'mood', 'emotion');//emozioni
 
 	//Controllo se sono presenti le parole delle raccomandazioni allora vado nella sezione delle PLAYLIST RACCOMANDATE
@@ -70,6 +70,10 @@ function getMusic($resp,$parameters,$text,$email){
 	}else{
 		if ($flagRaccomandazioni == true) { //PLAYLIST RACCOMANDATE
 
+			$answer = getInterestsArtist($email);
+
+
+			/*
 	   	 	if ($parameters['GeneriMusicali'] != "") {
 	   	 		$flagGenere = true;
 	   	 		//echo "playlist in base al genere richiesto";
@@ -82,7 +86,7 @@ function getMusic($resp,$parameters,$text,$email){
 	   	 		//echo "playlist raccomandata";
 	   	 		$answer = getMusicCustom($resp,$parameters,$text,$email);
 	   	 		$spiegazione = explainCustomMusic($resp,$parameters,$text,$email);
-	   	 	}
+	   	 	}*/
 
    		} else{//Effettuo i controlli e verifico se si tratta di un brano oppure una playlist
 
@@ -1238,3 +1242,85 @@ function checkGenre($genere){
             fclose($h);
         }
 }
+
+// Raccomandazioni 
+function getInterestsArtist($email){
+
+	$arr  = array('','','','');
+	$articles = array();
+	        
+	$res  = array();
+	if (($h = fopen("../../rec_music.csv", "r")) !== FALSE) {
+		$counter = 0;
+		while (($data = fgetcsv($h, 1000, ";")) !== FALSE) { 
+		    if($data[0] == $email && $data[2] > 0.2 &&  !(in_array($data[1], $res))){
+		        array_push($res,$data[1]);
+
+		        if(++$counter == 5)
+		            break;
+		    }
+		}
+
+		$r = rand(0,$counter-1);
+		$artista = $res[$r];
+		$api = getApi();
+
+		#print($artista);
+
+		$results = $api->search($artista, 'track');
+		#print_r($results);
+
+		//Cerco il nome dell'artista in $results e prendo il suo id
+		foreach ($results->tracks  as $track) {
+			if (is_array($track)) {
+				foreach ($track as $value) {
+					foreach ($value->album as $album) {
+						if (is_array($album)) {
+							foreach ($album as $value) {
+								if (isset($value->name)) {
+									if ($value->name == $artista) {
+										$idArtist = $value->id;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			
+		}
+
+		if (isset($idArtist)) {
+			$brani = $api->getArtistTopTracks($idArtist,[
+	    	'country' => 'it',
+			]);
+		}else{
+			return "Artist not found!";
+		}
+
+		$arrayAlbum = array();
+		foreach ($brani->tracks as $track) {
+			foreach ($track as  $value) {
+				if (isset($value->external_urls)) {
+					foreach ($value->external_urls as $value2) {
+						array_push($arrayAlbum, $value2);
+					}
+				}
+			}
+		}
+
+		$i = rand(0,count($arrayAlbum) -1);
+		$url = $arrayAlbum[$i];	
+
+		/*
+		Aggiungo alla url di Spotify la parola embed/ altrimenti l'iframe non verrà visualizzato per problemi di Copyright
+		Esempio:
+		https://open.spotify.com/track/2J9TGb5CRT4omfAgnKmXn5 ----> https://open.spotify.com/embed/track/2J9TGb5CRT4omfAgnKmXn5
+		*/
+		$answer = substr_replace($url, "embed/", 25, 0);
+
+
+		return $answer;
+	}
+}
+
