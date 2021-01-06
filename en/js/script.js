@@ -414,6 +414,10 @@ replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
            $('#par'+timestamp).append('<div class="rating-box"><h4>Did you liked it?</h4><button id="yes'+timestamp+'" class="btnlike">SI</button>'+
         '<button id="no'+timestamp+'" class="btndislike">NO</button></div>');
 
+      }else if(val["intentName"] == "Musica"){
+           $('#par'+timestamp).append('<div class="rating-box"><h4>Did you like the artist?<p id="art'+ timestamp + '">'+ val["answer"]["param"]+'</p></h4><button id="yes'+timestamp+'" class="btnlikeMusic">SI</button>'+
+        '<button id="no'+timestamp+'" class="btndislikeMusic">NO</button></div>');
+
       }else if(isDebugEnabled()){
         var risposta = val['answer'];
         risposta = risposta.toString().toLowerCase();
@@ -601,4 +605,52 @@ $("ul.chat").on("click","button.btnlike",function(evnt) {
  
 
 
+});
+
+
+$("ul.chat").on("click","button.btnlikeMusic",function(evnt) {
+
+    var timestamp = $(this).attr("id");
+    $(this).attr("disabled", true);
+    var mail = getEmail();
+    timestamp = timestamp.substr(3,timestamp.length); 
+    
+    $("#no"+timestamp).attr("disabled", true);
+    var artista  = $("#art"+timestamp).html();
+    //var link = $("#nw"+timestamp).attr('href');
+    var valutazione = "1";
+
+   $.ajax({
+        type: "POST",
+        url: "php/musicFeedback.php",
+        data:  {mail:email,artista:artista,like:valutazione},
+        success: function(data) {
+            console.log(data);
+        }
+      }); 
+    
+});
+
+
+$("ul.chat").on("click","button.btndislikeMusic",function(evnt) {
+
+    var timestamp = $(this).attr("id");
+    $(this).attr("disabled", true);
+    var mail = getEmail();
+    timestamp = timestamp.substr(2,timestamp.length); 
+    
+    $("#yes"+timestamp).attr("disabled", true);
+    var artista  = $("#art"+timestamp).html();
+    //var link = $("#nw"+timestamp).attr('href');
+    var valutazione = "0";
+
+   $.ajax({
+        type: "POST",
+        url: "php/musicFeedback.php",
+        data:  {mail:email,artista:artista,like:valutazione},
+        success: function(data) {
+            console.log(data);
+        }
+      }); 
+    
 });

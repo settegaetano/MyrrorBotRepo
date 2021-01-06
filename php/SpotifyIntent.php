@@ -73,7 +73,9 @@ function getMusic($resp,$parameters,$text,$email){
 	}else{
 		if ($flagRaccomandazioni == true) { //PLAYLIST RACCOMANDATE
 
-			$answer = getInterestsArtist($email);
+			$art = getInterestsArtist($email);
+			$answer = $art['answer'];
+			$param = $art['artista'];
 
 			/*
 	   	 	if ($parameters['GeneriMusicali'] != "") {
@@ -1376,7 +1378,7 @@ function getInterestsArtist($email){
 		$answer = substr_replace($url, "embed/", 25, 0);
 
 
-		return $answer;
+		return array('answer' => $answer, 'artista' => $artista);
 	}
 }
 
