@@ -18,6 +18,7 @@ function getMusic($resp,$parameters,$text,$email){
 	
 	$flagBrano = false;
 	$flagRaccomandazioni = false;
+	$flagNuovaRaccomandazione = false;
 	$flagAny = false;
 	$flagArtist = false;
 	$flagGenere = false;
@@ -26,15 +27,25 @@ function getMusic($resp,$parameters,$text,$email){
 	$spiegazione = "";
 	$param = "";
 	
+	$listaParoleEmozioni = array( 'mood', 'emotion');//emozioni
 	$listaParoleBrano = array( 'track', 'song', 'music' );//brano
 	$listaParoleRaccomandazioni = array( 'suitable for me', 'recommend', 'recommend me', 'suggest', 'for me' , 'me','give me');//raccomandazioni
-	$listaParoleEmozioni = array( 'mood', 'emotion');//emozioni
+	$listaParoleNuoveRaccomandazioni = array( 'new', 'never listen', 'never listened', 'not listened', 'no listened', 'listened before'); //nuove raccomandazioni
 
 	//Controllo se sono presenti le parole delle raccomandazioni allora vado nella sezione delle PLAYLIST RACCOMANDATE
 	foreach($listaParoleRaccomandazioni as $parola)  {  
    		if (stripos($text, $parola) !== false) {
     		//Contiene la parola
    			$flagRaccomandazioni = true;
+   			break;
+		} 
+   	}
+
+   	// Controllo se devono essere 'nuove' raccomandazioni e quindi che non contengono gli artisti che all'utente già piacciono
+   	foreach($listaParoleNuoveRaccomandazioni as $parola)  {  
+   		if (stripos($text, $parola) !== false) {
+    		//Contiene la parola
+   			$flagNuovaRaccomandazione = true;
    			break;
 		} 
    	}
@@ -70,7 +81,14 @@ function getMusic($resp,$parameters,$text,$email){
 	}else{
 		if ($flagRaccomandazioni == true) { //PLAYLIST RACCOMANDATE
 
-			$answer = getInterestsArtist($email);
+			/* 
+			Alla funzione viene passato il parametro per vedere se la raccomandazione deve essere nuova e 
+			quindi non deve includere gli artisti che già piacciono all'utente
+			*/
+			$art = getInterestsArtist($email, $flagNuovaRaccomandazione);
+
+			$answer = $art['answer'];
+      		$param = $art['artista'];
 
 
 			/*
@@ -1244,7 +1262,9 @@ function checkGenre($genere){
 }
 
 // Raccomandazioni 
-function getInterestsArtist($email){
+function getInterestsArtist($email, $flagNuovaRaccomandazione){
+
+	$artistsLiked = getPreferenceArtistList($email); # prendo gli artisti che già piaccion all'utente
 
 	$arr  = array('','','','');
 	$articles = array();
@@ -1256,22 +1276,23 @@ function getInterestsArtist($email){
 	}
 
 
- $res  = array();
- $file = "";
- switch ($technique) {
- 	case 'W2V':
- 		$file = "rec_music_w2v.csv";
- 		break;
- 	case 'D2V':
- 		$file = "rec_music_d2v.csv";
- 		break;
- 	case 'LSI':
- 		$file = "rec_music_lsi.csv";
- 		break;
- 	case 'FASTTEXT':
- 		$file = "rec_music_ft.csv";
- 		break;
- }
+	$res  = array();
+	$file = "";
+	switch ($technique) {
+		case 'W2V':
+			$file = "rec_music_w2v.csv";
+			break;
+		case 'D2V':
+			$file = "rec_music_d2v.csv";
+			break;
+		case 'LSI':
+			$file = "rec_music_lsi.csv";
+			break;
+		case 'FASTTEXT':
+			$file = "rec_music_ft.csv";
+			break;
+	}
+
 	if (($h = fopen("../../".$file, "r")) !== FALSE) {
 		$counter = 0;
 		while (($data = fgetcsv($h, 1000, ";")) !== FALSE) { 
@@ -1285,8 +1306,29 @@ function getInterestsArtist($email){
 		if($counter == 0){
     		return array('answer' => '', 'artista' =>'');
     	}
-		$r = rand(0,$counter-1);
-		$artista = $res[$r];
+
+
+    	// Verifico se la raccomandazione deve essere nuova e quindi non deve includere gli artisti che già piacciono all'utente
+		if ($flagNuovaRaccomandazione == true){
+
+			$r = rand(0,$counter-1); // numero casuale dell'artista
+			$flagNotFound = false;
+			while ($flagNotFound == false) {
+				if (!in_array(strtolower($res[$r]), $artistsLiked)) { // non è nella lista degli artisti già piaciuti
+				    $flagNotFound = true;
+				    $artista = $res[$r];
+				}else{
+					$r = rand(0,$counter-1); // numero casuale dell'artista
+					$flagNotFound = false;
+				}
+			}
+			
+
+		} else {
+			$r = rand(0,$counter-1); // numero casuale dell'artista
+			$artista = $res[$r];
+		}
+
 		$api = getApi();
 
 		#print($artista);
@@ -1348,3 +1390,39 @@ function getInterestsArtist($email){
 	}
 }
 
+
+// Prende gli artisti che già piacciono all'utente
+function getPreferenceArtistList($email){
+
+    $artistsLiked = array(); # artisti che già piacciono
+	$param = "";
+	$json_data = queryMyrror($param,$email);
+
+	$categorieArray = array();
+	if($json_data != ""){
+	foreach ($json_data as $key1 => $value1) {
+
+		if($key1 == "interests"){
+			foreach ($value1 as $key => $value) {
+				if (isset($value['value'])) { //Verifico se è valorizzata la variabile 'value'
+
+					$preferences = $value['value']; //stringa delle preferenze
+					$listPreferences = explode(";", $preferences); //lista delle preferenze
+
+					# Prendo solo gli artisti che gli piacciono all'utente
+					foreach ($listPreferences as $key => $value) {
+						if (strpos($value, 'Like:Artist:') !== false) {
+						    $value = substr($value, 12);
+						    $value = strtolower($value);
+						    array_push($artistsLiked, $value);
+						} 
+					}
+					
+					
+				}
+			}
+        }	
+    }
+}
+	return $artistsLiked;
+}
