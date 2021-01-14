@@ -141,9 +141,30 @@ $arr  = array('','','','');
 $articles = array();
 $list = getInterestsList($email);
 //echo $list[0];
-     
+ if(isset($_COOKIE['technique'])){
+	$technique = $_COOKIE['technique'];
+}else{
+	$technique = "W2V";
+}
+
+
  $res  = array();
- if (($h = fopen("../../rec_en.csv", "r")) !== FALSE) {
+ $file = "";
+ switch ($technique) {
+ 	case 'W2V':
+ 		$file = "rec_news_w2v_en.csv";
+ 		break;
+ 	case 'D2V':
+ 		$file = "rec_news_d2v_en.csv";
+ 		break;
+ 	case 'LSI':
+ 		$file = "rec_news_lsi_en.csv";
+ 		break;
+ 	case 'FASTTEXT':
+ 		$file = "rec_news_ft_en.csv";
+ 		break;
+ }
+ if (($h = fopen("../../".$file, "r")) !== FALSE) {
     $counter = 0;
     while (($data = fgetcsv($h, 1000, ";")) !== FALSE) { 
         if($data[0] == $email && $data[2] > 0.5 &&  !(in_array($data[1], $res))){

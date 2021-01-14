@@ -102,6 +102,14 @@ function detect_intent_texts($projectId,$city,$email, $text, $sessionId, $langua
 }
 
 
+function setTecnique($resp,$parameters,$email){
+    if(isset($parameters['rectec'])){
+        $technique = $parameters['rectec'];
+        setcookie('technique',$technique, time() + (86400 * 30), "/");
+        
+    }
+    
+}
 
 function selectIntent($email,$intent, $confidence,$text,$resp,$parameters,$city){
 
@@ -492,6 +500,10 @@ function selectIntent($email,$intent, $confidence,$text,$resp,$parameters,$city)
 
             case 'Ultima visita medica specifica':
                 $answer = getLastMedicalVisitSpecified($resp, $parameters, $email);
+                break;
+            case 'setTechnique':
+                setTecnique($resp,$parameters,$email);
+                $answer = $resp;
                 break;
 
             default:

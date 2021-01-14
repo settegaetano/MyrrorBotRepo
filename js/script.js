@@ -177,17 +177,25 @@ function setResponse(val) {
    
       }else if(val['intentName'] == "Musica"){
         
-        if (val['answer']['explain'] != ""){
+
+        if (val['answer']['url']['answer'] == ""){
+              $(".chat").append('<li class="replies"><img src="immagini/chatbot.png" alt="" /><p> le raccomandazioni non sono ancora state generate, torna tra un pò</p></li>');
+         }else{
+         	if (val['answer']['explain'] != ""){
           spiegazione = val['answer']['explain'];
           $("#spiegazione").val(spiegazione);
+
           //$(".chat").append('<li class="replies"><img src="immagini/chatbot.png" alt="" /><p id="par'+timestamp+'"> "<br>"' + musicaSpotify + '&#x1F603;' +'<br>'+ '<iframe src="' + val['answer']['url'] + '" width="250" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe></p></li>');
         }
           $(".chat").append('<li class="replies"><img src="immagini/chatbot.png" alt="" /><p id="par'+timestamp+'">'+ musicaSpotify + '&#x1F603;' +'<br>'+ '<iframe src="' + val['answer']['url'] + '" width="250" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe></p></li>');
-        
+     
+         }
+
+          
       }else if(val["intentName"] == "News" ){
 
           if (val['answer'] == ""){
-              $(".chat").append('<li class="replies"><img src="immagini/chatbot.png" alt="" /><p> sfortunatamente non sono stati trovati articoli a riguardo</p></li>');
+              $(".chat").append('<li class="replies"><img src="immagini/chatbot.png" alt="" /><p> le raccomandazioni non sono ancora state generate, torna tra un pò</p></li>');
          }else{
             if (val['answer']['explain'] != undefined && val['answer']['explain'] != null){
               spiegazione = val['answer']['explain'];

@@ -1249,8 +1249,30 @@ function getInterestsArtist($email){
 	$arr  = array('','','','');
 	$articles = array();
 	        
-	$res  = array();
-	if (($h = fopen("../../rec_music.csv", "r")) !== FALSE) {
+	if(isset($_COOKIE['technique'])){
+		$technique = $_COOKIE['technique'];
+	}else{
+		$technique = "W2V";
+	}
+
+
+ $res  = array();
+ $file = "";
+ switch ($technique) {
+ 	case 'W2V':
+ 		$file = "rec_music_w2v.csv";
+ 		break;
+ 	case 'D2V':
+ 		$file = "rec_music_d2v.csv";
+ 		break;
+ 	case 'LSI':
+ 		$file = "rec_music_lsi.csv";
+ 		break;
+ 	case 'FASTTEXT':
+ 		$file = "rec_music_ft.csv";
+ 		break;
+ }
+	if (($h = fopen("../../".$file, "r")) !== FALSE) {
 		$counter = 0;
 		while (($data = fgetcsv($h, 1000, ";")) !== FALSE) { 
 		    if($data[0] == $email && $data[2] > 0.2 &&  !(in_array($data[1], $res))){
@@ -1260,7 +1282,9 @@ function getInterestsArtist($email){
 		            break;
 		    }
 		}
-
+		if($counter == 0){
+    		return array('answer' => '', 'artista' =>'');
+    	}
 		$r = rand(0,$counter-1);
 		$artista = $res[$r];
 		$api = getApi();
@@ -1295,7 +1319,7 @@ function getInterestsArtist($email){
 	    	'country' => 'it',
 			]);
 		}else{
-			return "Artist not found!";
+			return array('answer' => '', 'artista' =>'');
 		}
 
 		$arrayAlbum = array();
@@ -1320,7 +1344,7 @@ function getInterestsArtist($email){
 		$answer = substr_replace($url, "embed/", 25, 0);
 
 
-		return $answer;
+		return array('answer' => $answer, 'artista' => $artista);
 	}
 }
 

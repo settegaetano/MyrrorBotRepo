@@ -167,10 +167,31 @@ function getInterestsNews($email){
 $arr  = array('','','','');
 $articles = array();
 #$list = getInterestsList($email);
+if(isset($_COOKIE['technique'])){
+	$technique = $_COOKIE['technique'];
+}else{
+	$technique = "W2V";
+}
 
-        
+
  $res  = array();
- if (($h = fopen("../rec_it.csv", "r")) !== FALSE) {
+ $file = "";
+ switch ($technique) {
+ 	case 'W2V':
+ 		$file = "rec_news_w2v_it.csv";
+ 		break;
+ 	case 'D2V':
+ 		$file = "rec_news_d2v_it.csv";
+ 		break;
+ 	case 'LSI':
+ 		$file = "rec_news_lsi_it.csv";
+ 		break;
+ 	case 'FASTTEXT':
+ 		$file = "rec_news_ft_it.csv";
+ 		break;
+ }
+
+ if (($h = fopen("../".$file, "r")) !== FALSE) {
     $counter = 0;
     while (($data = fgetcsv($h, 1000, ";")) !== FALSE) { 
         if($data[0] == $email && $data[2] > 0.5 &&  !(in_array($data[1], $res))){
@@ -182,7 +203,9 @@ $articles = array();
              #echo "<br>";
         }
     }
-
+    if($counter == 0){
+    	return "";
+    }
      $lista = retrieveContent($res);
      $r = rand(0,$counter-1);
      return array('link' => $lista[$r][5],'url' => $lista[$r][1],'image' => $lista[$r][2], 'title' => $lista[$r][0],'explain' => '' );
