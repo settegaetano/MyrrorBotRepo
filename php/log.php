@@ -6,7 +6,7 @@ if (isset($_POST['answer']) && isset($_POST['rating']) && isset($_POST['quest'])
 	
 	 // $answer = $_POST['answer'];
 
-$answer = get_magic_quotes_gpc() ?
+    $answer = get_magic_quotes_gpc() ?
     stripslashes($_POST['answer']) : $_POST['answer'];
 
     //$answer = str_replace( "'",0);
@@ -17,8 +17,6 @@ $answer = get_magic_quotes_gpc() ?
     $intent = $arr['intentName'];
     $confidence = $arr['confidence'];
     $ans = $arr['answer'];
-
-
    
     $rate = $_POST['rating'];
     $quest = $_POST['quest'];
@@ -43,26 +41,21 @@ $answer = get_magic_quotes_gpc() ?
     fwrite($file,"confidence: ". $confidence."\r\n");
      fwrite($file,"answer: ");
     if(is_array($ans)){
-           foreach ($ans as $key => $value) {
-        fwrite($file, $key.": ".$value."\r\n");
-    }
-}else{
+        foreach ($ans as $key => $value) {
+            fwrite($file, $key.": ".$value."\r\n");
+        }
+    }else{
      fwrite($file,$ans);
       fwrite($file, "\r\n");
-}
+    }
    
-
- 
     //fwrite($file, serialize($ans));
-   
-    
     if(isset($_POST['flag'])){
       $flag = $_POST['flag'];
       fwrite($file,"click: ". $flag."\r\n");
     }
 
     $current = "feedback:".$rate."\r\n\r\n";
-
     //Write the contents back to the file
     //file_put_contents($file, $current);
     fwrite($file, $current);

@@ -17,7 +17,7 @@
 	
 
     $credenziali = "email=" . $email . "&password=" . $password;
-
+    $email = urldecode($email);
 	$response = queryMyrror("", $credenziali);
 	$fp = fopen('../fileMyrror/past_'. $email . ".json", 'w+');
 	fwrite($fp, json_encode($response));

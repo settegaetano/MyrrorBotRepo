@@ -5,6 +5,8 @@
   var flagcitta= false;
   var question;
 
+
+
   function getEmail() {
   	return email;  //commentare se usato in localhost
     //return 'cat@cat.it'; //usato in localhost
@@ -545,6 +547,58 @@ setInterval(function(){
 }, 40000);
 
 
+function logNews(mail,url,title,rate){
+
+ 	var value = "; " + document.cookie;
+    var name = "technique"
+    var technique = "W2V";
+  
+    if (value.match(/technique/)) {
+      	var parts = value.split("; " + name + "=");   
+        technique =  parts.pop().split(";").shift(); 
+            
+    }
+
+	$.ajax({
+		type: "POST",
+		url: "php/recommender_log.php",
+		data: {title:title, url:url, rating:rate, tec:technique, email:mail},
+		success:function(data){
+		console.log(data);
+		}
+
+
+	});
+
+}
+
+function logMusic(mail,artista,rate){
+
+	var value = "; " + document.cookie;
+    var name = "technique"
+    var technique = "W2V";
+  
+    if (value.match(/technique/)) {
+      	var parts = value.split("; " + name + "=");   
+        technique =  parts.pop().split(";").shift(); 
+            
+    }
+
+
+	$.ajax({
+		type: "POST",
+		url: "php/recommender_log.php",
+		data: {artist:artista, rating:rate, tec:technique, email:mail},
+		success:function(data){
+		console.log(data);
+		}
+
+
+	});
+
+
+}
+
 $("ul.chat").on("click","button.btnlike",function(evnt) {
 
     
@@ -566,10 +620,36 @@ $("ul.chat").on("click","button.btnlike",function(evnt) {
             console.log(data);
         }
       }); 
-    
+
+
+
+    logNews(mail,link,testo,valutazione);
+
+
 
 });
 
+
+
+
+$("ul.chat").on("click","button.btndislike",function(evnt) {
+
+	var timestamp = $(this).attr("id");
+    $(this).attr("disabled", true);
+    var mail = getEmail();
+    timestamp = timestamp.substr(2,timestamp.length); 
+    
+    $("#yes"+timestamp).attr("disabled", true);
+    var testo  = $("#nw"+timestamp).html();
+    var link = $("#nw"+timestamp).attr('href');
+    var valutazione = "0";
+
+
+    logNews(mail,link,testo,valutazione);
+
+
+
+});
 
 $("ul.chat").on("click","button.btnlikeMusic",function(evnt) {
 
@@ -591,6 +671,8 @@ $("ul.chat").on("click","button.btnlikeMusic",function(evnt) {
             console.log(data);
         }
       }); 
+
+   logMusic(mail,artista,valutazione);
     
 });
 
@@ -615,5 +697,7 @@ $("ul.chat").on("click","button.btndislikeMusic",function(evnt) {
             console.log(data);
         }
       }); 
+
+   logMusic(mail,artista,valutazione);
     
 });

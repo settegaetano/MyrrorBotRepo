@@ -7,6 +7,8 @@ include "myrrorlogin.php";
 	
     $token  = trim($_POST['accesstoken']);
     $email = trim($_POST['mail']);
+    $email = urldecode($email);
+    
 
 	$response = queryMyrrorT("", $token);
 	if(!is_null($response)){

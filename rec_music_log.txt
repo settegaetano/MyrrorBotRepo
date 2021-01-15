@@ -1,0 +1,12 @@
+user: rakes%40rakes.it
+artist: Nancy Wilson
+recommendation_strategy: D2V
+feedback: 0
+user: rakes@rakes.it
+artist: William Fitzsimmons
+recommendation_strategy: D2V
+feedback: 1
+user: rakes%40rakes.it
+artist: William Fitzsimmons
+recommendation_strategy: D2V
+feedback: 1

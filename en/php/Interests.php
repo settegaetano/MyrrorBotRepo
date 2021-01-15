@@ -2,7 +2,7 @@
 
 //Restuisce l'elenco dei maggiori interessi dell'utente. N.B. Non vengono presi in considerazione quelli che hanno la dicitura "Category:"
 function interessi($resp,$parameters,$email){
-
+	
 	$param = "";
 	$json_data = queryMyrror($param,$email);
 
@@ -145,5 +145,6 @@ function getLastInterest($email){
 			}
         }	
     }
+    
 	return $top10;
 }

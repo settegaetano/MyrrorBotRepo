@@ -160,7 +160,7 @@ $list = getInterestsList($email);
  	case 'LSI':
  		$file = "rec_news_lsi_en.csv";
  		break;
- 	case 'FASTTEXT':
+ 	case 'Fasttext':
  		$file = "rec_news_ft_en.csv";
  		break;
  }

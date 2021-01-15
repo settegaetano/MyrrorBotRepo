@@ -317,6 +317,7 @@ function selectIntent($email,$intent, $confidence,$text,$resp,$parameters,$city)
                 break;
 
             case 'DeletePreference':
+
                 $answer = getLastInterest($email);
                 break;
 

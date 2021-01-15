@@ -8,6 +8,7 @@ function queryMyrror($param,$email){
 	if (isset($_COOKIE['myrror'])) {
 
 	  	$email = $_COOKIE['myrror'];
+	  	$email = urldecode($email);
     }
      	if($param == "today"){
 			$json = file_get_contents('../../fileMyrror/today_' . $email . '.json');

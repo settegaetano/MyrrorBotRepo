@@ -146,5 +146,6 @@ function getLastInterest($email){
 			}
         }	
     }
+    
 	return $top10;
 }

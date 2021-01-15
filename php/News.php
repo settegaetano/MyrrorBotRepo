@@ -186,7 +186,7 @@ if(isset($_COOKIE['technique'])){
  	case 'LSI':
  		$file = "rec_news_lsi_it.csv";
  		break;
- 	case 'FASTTEXT':
+ 	case 'Fasttext':
  		$file = "rec_news_ft_it.csv";
  		break;
  }
