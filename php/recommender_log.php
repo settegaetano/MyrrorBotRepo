@@ -34,13 +34,24 @@ if (isset($_POST['artist'])  && isset($_POST['rating']) && isset($_POST['tec']) 
     $rating = $_POST['rating'];
     $tecnique = $_POST['tec'];
     $email = $_POST['email'];
-
+    $genre = "";
 
     $file = fopen("../rec_music_log.txt", "a") or die("Unable to open file!");
+
+    // recupero il genere dell'artista consigliato
+    $handle = fopen("artistCleanOutput.csv", "r");
+	for ($i = 0; $row = fgetcsv($handle ); ++$i) {
+	    if ($row[1] == $artista){
+	    	$genre = $row[2];
+	    }
+	}
+	fclose($handle);
+
 
     //fwrite($file, "time: ".$timestamp."\r\n");
     fwrite($file, "user: ".$email."\r\n");
     fwrite($file, "artist: ".$artista."\r\n");
+    fwrite($file, "genre: ".$genre."\r\n");
     fwrite($file,  "recommendation_strategy: ".$tecnique."\r\n");
     fwrite($file,  "feedback: ".$rating."\r\n");
     fclose($file);
@@ -49,6 +60,9 @@ if (isset($_POST['artist'])  && isset($_POST['rating']) && isset($_POST['tec']) 
 
 
 }
+
+
+
 
 
 ?>	

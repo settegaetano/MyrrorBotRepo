@@ -1402,6 +1402,7 @@ function getInterestsArtist($email, $flagNuovaRaccomandazione){
 								if (isset($value->name)) {
 									if ($value->name == $artista) {
 										$idArtist = $value->id;
+										break;
 									}
 								}
 							}
@@ -1441,6 +1442,7 @@ function getInterestsArtist($email, $flagNuovaRaccomandazione){
 		https://open.spotify.com/track/2J9TGb5CRT4omfAgnKmXn5 ----> https://open.spotify.com/embed/track/2J9TGb5CRT4omfAgnKmXn5
 		*/
 		$answer = substr_replace($url, "embed/", 25, 0);
+
 
 
 		return array('answer' => $answer, 'artista' => $artista);
