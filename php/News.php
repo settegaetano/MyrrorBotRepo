@@ -194,7 +194,7 @@ if(isset($_COOKIE['technique'])){
  if (($h = fopen("../Recommender/".$file, "r")) !== FALSE) {
     $counter = 0;
     while (($data = fgetcsv($h, 1000, ";")) !== FALSE) { 
-        if($data[0] == $email && $data[2] > 0.5 &&  !(in_array($data[1], $res))){
+        if($data[0] == $email && $data[2] > 0.3 &&  !(in_array($data[1], $res))){
             array_push($res,$data[1]);
 
             if(++$counter == 5)

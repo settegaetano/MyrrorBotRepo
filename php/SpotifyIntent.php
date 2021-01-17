@@ -1345,7 +1345,7 @@ function getInterestsArtist($email, $flagNuovaRaccomandazione){
 	 	case 'LSI':
 	 		$file = "rec_music_lsi.csv";
 	 		break;
-	 	case 'FASTTEXT':
+	 	case 'Fasttext':
 	 		$file = "rec_music_ft.csv";
 	 		break;
 	 }
@@ -1393,6 +1393,7 @@ function getInterestsArtist($email, $flagNuovaRaccomandazione){
 		#print_r($results);
 
 		//Cerco il nome dell'artista in $results e prendo il suo id
+		$flagRicerca = false;
 		foreach ($results->tracks  as $track) {
 			if (is_array($track)) {
 				foreach ($track as $value) {
@@ -1400,15 +1401,30 @@ function getInterestsArtist($email, $flagNuovaRaccomandazione){
 						if (is_array($album)) {
 							foreach ($album as $value) {
 								if (isset($value->name)) {
-									if ($value->name == $artista) {
+									if (strtolower($value->name) == strtolower($artista)) {
 										$idArtist = $value->id;
+										$artista = $value->name;
+										$flagRicerca = true;
 										break;
 									}
 								}
 							}
 						}
+
+						if ($flagRicerca == true){
+							break;
+						}
+
 					}
+
+					if ($flagRicerca == true){
+						break;
+					}
+
 				}
+			}
+			if ($flagRicerca == true){
+				break;
 			}
 			
 		}
