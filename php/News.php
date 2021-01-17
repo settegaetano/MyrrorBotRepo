@@ -132,7 +132,7 @@ function retrieveContent($res){
 
 $arr = array();
 
- if (($h = fopen("../newsIta.csv", "r")) !== FALSE) {
+ if (($h = fopen("../Recommender/newsIta.csv", "r")) !== FALSE) {
     
     while (($data = fgetcsv($h, 1000, ";")) !== FALSE) { 
         
@@ -191,7 +191,7 @@ if(isset($_COOKIE['technique'])){
  		break;
  }
 
- if (($h = fopen("../".$file, "r")) !== FALSE) {
+ if (($h = fopen("../Recommender/".$file, "r")) !== FALSE) {
     $counter = 0;
     while (($data = fgetcsv($h, 1000, ";")) !== FALSE) { 
         if($data[0] == $email && $data[2] > 0.5 &&  !(in_array($data[1], $res))){

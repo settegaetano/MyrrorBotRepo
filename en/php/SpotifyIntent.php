@@ -1288,12 +1288,12 @@ function getInterestsArtist($email, $flagNuovaRaccomandazione){
 		case 'LSI':
 			$file = "rec_music_lsi.csv";
 			break;
-		case 'Fasttext':
+		case 'FASTTEXT':
 			$file = "rec_music_ft.csv";
 			break;
 	}
 
-	if (($h = fopen("../../".$file, "r")) !== FALSE) {
+	if (($h = fopen("../../Recommender/".$file, "r")) !== FALSE) {
 		$counter = 0;
 		while (($data = fgetcsv($h, 1000, ";")) !== FALSE) { 
 		    if($data[0] == $email && $data[2] > 0.2 &&  !(in_array($data[1], $res))){
@@ -1361,7 +1361,8 @@ function getInterestsArtist($email, $flagNuovaRaccomandazione){
 	    	'country' => 'it',
 			]);
 		}else{
-			return array('answer' => '', 'artista' =>'');
+			return getInterestsArtist($email,$flagNuovaRaccomandazione);
+			//return array('answer' => '', 'artista' =>'');
 		}
 
 		$arrayAlbum = array();
