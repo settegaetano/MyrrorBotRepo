@@ -164,10 +164,12 @@ $list = getInterestsList($email);
  		$file = "rec_news_ft_en.csv";
  		break;
  }
+
  if (($h = fopen("../../Recommender/".$file, "r")) !== FALSE) {
     $counter = 0;
+   
     while (($data = fgetcsv($h, 1000, ";")) !== FALSE) { 
-        if($data[0] == $email && $data[2] > 0.3 &&  !(in_array($data[1], $res))){
+        if($data[0] == $email && $data[2] > 0.2 &&  !(in_array($data[1], $res))){
             array_push($res,$data[1]);
             if(++$counter == 5)
                 break;
@@ -175,7 +177,7 @@ $list = getInterestsList($email);
              #echo "<br>";
         }
     }
-
+    #print_r($res);
      $lista = retrieveContent($res);
      $r = rand(0,$counter-1);
      if(!empty($lista)){

@@ -3,7 +3,7 @@
     //Recupero email e password
     $email      = trim($_POST['email']);
     $password  = trim($_POST['password']);
-
+    $email = urldecode($email);
     //Url per inviare la richiesta POST
     $url = 'http://90.147.102.243:5000/auth/login';
 

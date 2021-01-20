@@ -4,6 +4,7 @@
     //Recupero email e password
     $email      = trim($_POST['email']);
     $password  = trim($_POST['password']);
+    $email = urldecode($email);
 
     //Url per inviare la richiesta POST
     $url = "http://".$GLOBALS['url'].":5000/auth/login";

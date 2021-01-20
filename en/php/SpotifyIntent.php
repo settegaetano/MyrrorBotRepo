@@ -1288,7 +1288,7 @@ function getInterestsArtist($email, $flagNuovaRaccomandazione){
 		case 'LSI':
 			$file = "rec_music_lsi.csv";
 			break;
-		case 'Fasttext':
+		case 'FASTTEXT':
 			$file = "rec_music_ft.csv";
 			break;
 	}
